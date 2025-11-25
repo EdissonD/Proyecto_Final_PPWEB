@@ -1,0 +1,19 @@
+.inicio-container {
+    max-width: 600px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.inicio-container h1 {
+    margin-bottom: 16px;
+}
+
+.inicio-container a {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+}

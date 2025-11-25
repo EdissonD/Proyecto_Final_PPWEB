@@ -1,0 +1,22 @@
+<app-menu></app-menu>
+
+<div class="usuarios-container">
+    <h2>Listado de usuarios</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let u of usuarios">
+                <td>{{ u.id }}</td>
+                <td>{{ u.nombre }}</td>
+                <td>{{ u.correo }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

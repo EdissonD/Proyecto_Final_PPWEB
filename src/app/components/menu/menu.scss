@@ -1,0 +1,15 @@
+.menu {
+    display: flex;
+    gap: 16px;
+    padding: 10px 20px;
+    background-color: #f2f2f2;
+}
+
+.menu a {
+    text-decoration: none;
+}
+
+.menu a.activo {
+    font-weight: bold;
+    text-decoration: underline;
+}
