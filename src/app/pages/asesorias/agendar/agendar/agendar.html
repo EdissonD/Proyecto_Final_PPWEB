@@ -1,0 +1,31 @@
+<h2>Agendar asesoría</h2>
+
+<div *ngIf="programador" class="programador-header">
+    <img *ngIf="programador.foto" [src]="programador.foto" width="70" />
+    <div>
+        <h3>{{ programador.nombre }}</h3>
+        <p>{{ programador.especialidad }}</p>
+    </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="enviarSolicitud()">
+
+    <label>Tu nombre</label>
+    <input type="text" formControlName="nombreSolicitante" />
+
+    <label>Tu correo</label>
+    <input type="email" formControlName="emailSolicitante" />
+
+    <label>Fecha</label>
+    <input type="date" formControlName="fecha" />
+
+    <label>Hora</label>
+    <input type="time" formControlName="hora" />
+
+    <label>Comentario (motivo de la asesoría)</label>
+    <textarea formControlName="comentario"></textarea>
+
+    <button type="submit" [disabled]="cargando || form.invalid">
+        {{ cargando ? 'Enviando...' : 'Enviar solicitud' }}
+    </button>
+</form>

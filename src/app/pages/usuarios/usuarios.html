@@ -1,24 +1,43 @@
-<app-menu></app-menu>
+<h2>Explorar portafolios</h2>
 
-<div class="usuarios-container">
-  <h2>Listado de usuarios</h2>
+<div *ngIf="cargando">
+  Cargando programadores...
+</div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Correo</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (u of usuarios; track u) {
-        <tr>
-          <td>{{ u.id }}</td>
-          <td>{{ u.nombre }}</td>
-          <td>{{ u.correo }}</td>
-        </tr>
-      }
-    </tbody>
-  </table>
+<div *ngIf="!cargando && programadores.length === 0">
+  <p>No hay programadores registrados aún.</p>
+</div>
+
+<div class="grid" *ngIf="!cargando && programadores.length > 0">
+
+  <article class="card" *ngFor="let p of programadores">
+
+    <div class="foto">
+      <img *ngIf="p.foto" [src]="p.foto" alt="Foto de {{ p.nombre }}" />
+    </div>
+
+    <div class="info">
+      <h3>{{ p.nombre }}</h3>
+      <p class="especialidad">{{ p.especialidad }}</p>
+      <p class="descripcion">{{ p.descripcion }}</p>
+
+      <div class="links">
+        <a *ngIf="p.github" [href]="p.github" target="_blank">GitHub</a>
+        <a *ngIf="p.linkedin" [href]="p.linkedin" target="_blank">LinkedIn</a>
+      </div>
+
+      <div class="acciones">
+        <button [routerLink]="['/portafolio', p.id]">
+          Ver portafolio
+        </button>
+
+        <!-- Botón de asesoría (lo conectamos en el módulo de asesorías) -->
+        <button [routerLink]="['/asesoria', p.id]">
+          Agendar asesoría
+        </button>
+      </div>
+    </div>
+
+  </article>
+
 </div>

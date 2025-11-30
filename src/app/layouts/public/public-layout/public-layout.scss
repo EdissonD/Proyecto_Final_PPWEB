@@ -1,0 +1,29 @@
+.public-header {
+    background: #1e293b;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+
+    nav a {
+        color: #e2e8f0;
+        margin-left: 1rem;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+}
+
+.public-content {
+    padding: 2rem;
+    min-height: calc(100vh - 150px);
+    background: #f8fafc;
+}
+
+.public-footer {
+    background: #1e293b;
+    color: #fff;
+    text-align: center;
+    padding: .8rem;
+}

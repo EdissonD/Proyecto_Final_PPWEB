@@ -1,0 +1,28 @@
+.programador-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+
+    input,
+    textarea,
+    select,
+    button {
+        padding: .5rem;
+        font-size: .95rem;
+    }
+
+    textarea {
+        min-height: 80px;
+    }
+
+    button {
+        margin-top: 1rem;
+    }
+}

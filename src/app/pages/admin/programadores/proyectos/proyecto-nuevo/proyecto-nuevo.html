@@ -1,0 +1,36 @@
+<h2>Nuevo proyecto</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()">
+
+    <label>Nombre</label>
+    <input type="text" formControlName="nombre" />
+
+    <label>Descripción</label>
+    <textarea formControlName="descripcion"></textarea>
+
+    <label>Categoría</label>
+    <select formControlName="categoria">
+        <option value="academico">Académico</option>
+        <option value="laboral">Laboral</option>
+    </select>
+
+    <label>Participación</label>
+    <select formControlName="participacion">
+        <option value="frontend">Frontend</option>
+        <option value="backend">Backend</option>
+        <option value="bd">Base de datos</option>
+    </select>
+
+    <label>Tecnologías</label>
+    <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, ..." />
+
+    <label>Repositorio (GitHub)</label>
+    <input type="text" formControlName="repo" />
+
+    <label>Demo / despliegue</label>
+    <input type="text" formControlName="demo" />
+
+    <button type="submit" [disabled]="cargando">
+        {{ cargando ? 'Guardando...' : 'Guardar proyecto' }}
+    </button>
+</form>

@@ -1,0 +1,45 @@
+<h2>Editar programador</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardarCambios()">
+
+    <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" formControlName="nombre" />
+    </div>
+
+    <div class="form-group">
+        <label>Descripción</label>
+        <textarea formControlName="descripcion"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Especialidad</label>
+        <input type="text" formControlName="especialidad" />
+    </div>
+
+    <div class="form-group">
+        <label>Github</label>
+        <input type="text" formControlName="github" />
+    </div>
+
+    <div class="form-group">
+        <label>LinkedIn</label>
+        <input type="text" formControlName="linkedin" />
+    </div>
+
+    <div class="form-group">
+        <label>Portafolio</label>
+        <input type="text" formControlName="portafolio" />
+    </div>
+
+    <div class="form-group">
+        <label>Foto actual / nueva</label><br />
+        <img *ngIf="preview" [src]="preview" width="120" style="border-radius: 6px; margin-bottom: 8px;" />
+        <br />
+        <input type="file" (change)="onFileSelected($event)" />
+    </div>
+
+    <button type="submit" [disabled]="cargando">
+        {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
+    </button>
+</form>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ProgramadoresService, Programador } from '../../../services/programadores';
@@ -6,24 +6,43 @@ import { ProgramadoresService, Programador } from '../../../services/programador
 @Component({
   selector: 'app-programadores',
   standalone: true,
-  imports: [CommonModule, RouterModule],
   templateUrl: './programadores.html',
-  styleUrls: ['./programadores.scss']
+  styleUrls: ['./programadores.scss'],
+  imports: [CommonModule, RouterModule]
 })
 export class ProgramadoresComponent implements OnInit {
 
-  programadores: Programador[] = [];
+  lista: Programador[] = [];
 
-  constructor(private progService: ProgramadoresService) { }
+  constructor(
+    private programadoresService: ProgramadoresService,
+    private ngZone: NgZone
+  ) { }
 
   ngOnInit(): void {
-    this.progService.getProgramadores().subscribe((data: Programador[]) => {
-      this.programadores = data;
-    });
+    this.cargarProgramadores();
+  }
+  cargarProgramadores() {
+    this.programadoresService.getProgramadores()
+      .subscribe({
+        next: (programadores) => {
+          this.ngZone.run(() => {
+            console.log('🔥 Firebase devolvió:', programadores);
+            this.lista = programadores;
+          });
+        },
+        error: (err) => {
+          console.error('🚨 ERROR FIRESTORE getProgramadores:', err);
+        }
+      });
   }
 
-  borrar(id: string | undefined) {
-    if (!id) { return; }
-    this.progService.deleteProgramador(id);
+  async eliminar(id: string | undefined) {
+    if (!id) return;
+    if (!confirm('¿Seguro que quieres eliminar este programador?')) return;
+
+    await this.programadoresService.deleteProgramador(id);
+    alert('Programador eliminado');
+    this.cargarProgramadores();
   }
 }

@@ -1,0 +1,27 @@
+.programador-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: .5rem;
+        vertical-align: top;
+    }
+
+    th {
+        background: #f4f4f4;
+    }
+
+    button {
+        margin-right: .3rem;
+    }
+}

@@ -1,0 +1,32 @@
+.layout {
+    min-height: 100vh;
+
+    header {
+        background: #0f172a;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #fff;
+
+        nav {
+            display: flex;
+            gap: 1rem;
+
+            a {
+                color: #e2e8f0;
+                text-decoration: none;
+
+                &:hover {
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    main {
+        padding: 2rem;
+        background: #f8fafc;
+        min-height: calc(100vh - 80px);
+    }
+}

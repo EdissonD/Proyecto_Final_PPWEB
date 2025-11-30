@@ -1,0 +1,9 @@
+<h2>Editar proyecto</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()">
+    <!-- mismos campos que nuevo -->
+    ...
+    <button type="submit" [disabled]="cargando">
+        {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
+    </button>
+</form>

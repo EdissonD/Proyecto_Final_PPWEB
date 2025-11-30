@@ -1,0 +1,32 @@
+<h2>Proyectos del programador</h2>
+
+<a [routerLink]="['/admin/programadores', idProgramador, 'proyectos/nuevo']">
+    + Nuevo proyecto
+</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Participación</th>
+            <th>Tecnologías</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let p of proyectos">
+            <td>{{ p.nombre }}</td>
+            <td>{{ p.categoria }}</td>
+            <td>{{ p.participacion }}</td>
+            <td>{{ p.tecnologias }}</td>
+            <td>
+                <button [routerLink]="['/admin/programadores', idProgramador, 'proyectos/editar', p.id]">
+                    Editar
+                </button>
+                <button (click)="eliminarProyecto(p.id)">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

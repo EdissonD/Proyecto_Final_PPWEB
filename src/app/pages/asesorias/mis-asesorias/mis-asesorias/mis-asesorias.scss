@@ -1,0 +1,32 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+    margin-top: 1rem;
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: .5rem;
+        vertical-align: top;
+    }
+
+    th {
+        background: #f4f4f4;
+    }
+}
+
+.estado-pendiente {
+    color: #b8860b;
+    font-weight: 600;
+}
+
+.estado-aprobada {
+    color: #0a8f3b;
+    font-weight: 600;
+}
+
+.estado-rechazada {
+    color: #c62828;
+    font-weight: 600;
+}

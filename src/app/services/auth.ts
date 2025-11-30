@@ -1,87 +1,82 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   Auth,
   GoogleAuthProvider,
   signInWithPopup,
-  signOut,
-  user,
+  authState
 } from '@angular/fire/auth';
+
 import {
   Firestore,
   doc,
   getDoc,
-  setDoc,
+  setDoc
 } from '@angular/fire/firestore';
-import {
-  Observable,
-  of,
-  from,
-  switchMap,
-  map,
-} from 'rxjs';
 
-export interface UserWithRole {
+import { Observable, from, of, switchMap, map } from 'rxjs';
+
+export interface UsuarioApp {
   uid: string;
-  nombre: string | null;
-  email: string | null;
-  foto: string | null;
-  rol: string;
+  nombre: string;
+  email: string;
+  foto?: string;
+  rol: 'admin' | 'programador' | 'usuario';
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
-  private auth = inject(Auth);
-  private firestore = inject(Firestore);
 
-  // usuario firebase
-  user$ = user(this.auth);
+  // Observable con los datos del usuario + rol
+  usuario$: Observable<UsuarioApp | null>;
 
-  // usuario + rol desde firestore
-  userWithRole$: Observable<UserWithRole | null> = this.user$.pipe(
-    switchMap((u) => {
-      if (!u) return of(null);
+  constructor(
+    private auth: Auth,
+    private firestore: Firestore
+  ) {
 
-      const ref = doc(this.firestore, 'usuarios', u.uid);
+    this.usuario$ = authState(this.auth).pipe(
+      switchMap(user => {
+        if (!user) {
+          return of(null);
+        }
 
-      return from(getDoc(ref)).pipe(
-        map((snapshot) => {
-          const data = snapshot.data() || {};
+        const ref = doc(this.firestore, 'usuarios', user.uid);
 
-          return {
-            uid: u.uid,
-            nombre: u.displayName,
-            email: u.email,
-            foto: u.photoURL,
-            rol: (data['rol'] as string) ?? 'usuario',
-          };
-        })
-      );
-    })
-  );
+        // leemos el doc de Firestore
+        return from(getDoc(ref)).pipe(
+          switchMap(snap => {
+            if (!snap.exists()) {
+              // si no existe, lo creamos como usuario normal
+              const nuevo: UsuarioApp = {
+                uid: user.uid,
+                nombre: user.displayName || '',
+                email: user.email || '',
+                foto: user.photoURL || '',
+                rol: 'usuario'
+              };
 
-  async loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(this.auth, provider);
-
-    const u = result.user;
-    const ref = doc(this.firestore, 'usuarios', u.uid);
-    const snap = await getDoc(ref);
-
-    if (!snap.exists()) {
-      await setDoc(ref, {
-        nombre: u.displayName,
-        email: u.email,
-        foto: u.photoURL,
-        rol: 'usuario',
-      });
-    }
-
-    return result;
+              return from(setDoc(ref, nuevo)).pipe(
+                map(() => nuevo)
+              );
+            } else {
+              return of(snap.data() as UsuarioApp);
+            }
+          })
+        );
+      })
+    );
   }
 
-  logout() {
-    return signOut(this.auth);
+  // Login con Google
+  async loginConGoogle(): Promise<void> {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(this.auth, provider);
+  }
+
+  // Logout
+  logout(): Promise<void> {
+    return this.auth.signOut();
   }
 }

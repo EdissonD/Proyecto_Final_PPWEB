@@ -1,17 +1,48 @@
-.usuarios-container {
-    max-width: 800px;
-    margin: 20px auto;
+.grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 12px;
+.card {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .06);
 }
 
-th,
-td {
-    border: 1px solid #ccc;
-    padding: 6px 8px;
-    text-align: left;
+.foto img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.info h3 {
+    margin: 0;
+}
+
+.especialidad {
+    font-weight: 600;
+    color: #555;
+}
+
+.descripcion {
+    font-size: .9rem;
+    color: #666;
+}
+
+.links a {
+    margin-right: .7rem;
+    font-size: .85rem;
+}
+
+.acciones {
+    margin-top: .7rem;
+
+    button {
+        margin-right: .5rem;
+    }
 }

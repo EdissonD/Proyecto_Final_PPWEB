@@ -1,0 +1,152 @@
+// Variables para consistencia de colores
+$primary-color: #3498db; // Azul para focos
+$success-color: #27ae60; // Verde para guardar
+$text-dark: #2c3e50;
+$text-light: #7f8c8d;
+$border-color: #ced4da;
+$bg-color: #f8f9fa;
+
+:host {
+    display: block;
+    padding: 2rem 1rem;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: $bg-color;
+    min-height: 100vh;
+}
+
+h2 {
+    text-align: center;
+    color: $text-dark;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+form {
+    max-width: 550px;
+    margin: 0 auto;
+    background: white;
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+
+    // Estilos para las etiquetas
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: $text-dark;
+        font-size: 0.95rem;
+    }
+
+    // Estilos compartidos para inputs de texto y textareas
+    input[type="text"],
+    textarea {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid $border-color;
+        border-radius: 6px;
+        font-size: 1rem;
+        color: #495057;
+        background-color: #fff;
+        box-sizing: border-box; // Vital para que el padding no rompa el ancho
+        transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+        &::placeholder {
+            color: $text-light;
+        }
+
+        &:focus {
+            border-color: $primary-color;
+            outline: 0;
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+        }
+    }
+
+    // Ajustes específicos para el textarea
+    textarea {
+        min-height: 120px;
+        resize: vertical; // Permite redimensionar solo verticalmente
+        line-height: 1.5;
+    }
+
+    // Previsualización de la imagen
+    img {
+        display: block;
+        margin: 0.5rem 0 1.5rem 0;
+        border-radius: 8px;
+        border: 1px solid $border-color;
+        object-fit: cover;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        background-color: #eee; // Fondo por si la imagen es transparente
+    }
+
+    // Input de archivo
+    input[type="file"] {
+        display: block;
+        width: 100%;
+        margin-bottom: 2rem;
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        color: $text-light;
+        background: #f1f3f5;
+        border-radius: 6px;
+        cursor: pointer;
+
+        &::file-selector-button {
+            margin-right: 1rem;
+            border: none;
+            background: $primary-color;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            transition: background .2s ease-in-out;
+
+            &:hover {
+                background: darken($primary-color, 10%);
+            }
+        }
+    }
+
+    // Botón de guardar
+    button {
+        width: 100%;
+        padding: 1rem;
+        background-color: $success-color;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+        box-shadow: 0 4px 6px rgba($success-color, 0.2);
+
+        &:hover {
+            background-color: darken($success-color, 8%);
+        }
+
+        &:active {
+            transform: translateY(1px);
+        }
+
+        &:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+    }
+}
+
+// Media Query para pantallas pequeñas
+@media (max-width: 600px) {
+    :host {
+        padding: 1rem;
+    }
+
+    form {
+        padding: 1.5rem;
+    }
+}

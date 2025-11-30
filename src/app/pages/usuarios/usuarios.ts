@@ -1,18 +1,28 @@
-import { Component } from '@angular/core';
-import { MenuComponent } from '../../components/menu/menu';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
+import { ProgramadoresService, Programador } from '../../services/programadores';
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [MenuComponent],
   templateUrl: './usuarios.html',
-  styleUrl: './usuarios.scss',
+  styleUrls: ['./usuarios.scss'],
+  imports: [CommonModule, RouterModule]
 })
-export class UsuariosComponent {
-  usuarios = [
-    { id: 1, nombre: 'Juan Pérez', correo: 'juan@example.com' },
-    { id: 2, nombre: 'María López', correo: 'maria@example.com' },
-    { id: 3, nombre: 'Carlos Ruiz', correo: 'carlos@example.com' },
-  ];
+export class UsuariosComponent implements OnInit {
+
+  programadores: Programador[] = [];
+  cargando = true;
+
+  constructor(private programadoresService: ProgramadoresService) { }
+
+  ngOnInit(): void {
+    this.programadoresService.getProgramadores()
+      .subscribe(lista => {
+        this.programadores = lista;
+        this.cargando = false;
+      });
+  }
 }

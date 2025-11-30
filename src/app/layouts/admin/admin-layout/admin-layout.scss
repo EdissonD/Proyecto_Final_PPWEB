@@ -1,0 +1,39 @@
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 230px;
+    background: #1e293b;
+    padding: 1.5rem;
+    color: #fff;
+
+    h2 {
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        gap: .6rem;
+
+        a {
+            color: #e2e8f0;
+            text-decoration: none;
+            padding: .4rem;
+            border-radius: 4px;
+
+            &:hover {
+                background: #334155;
+            }
+        }
+    }
+}
+
+.content {
+    flex: 1;
+    padding: 2rem;
+    background: #f1f5f9;
+}

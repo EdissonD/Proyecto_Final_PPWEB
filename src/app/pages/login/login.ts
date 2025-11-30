@@ -1,53 +1,57 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
+
 import { AuthService } from '../../services/auth';
-import { NgIf } from '@angular/common';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NgIf],
   templateUrl: './login.html',
-  styleUrl: './login.scss',
+  styleUrls: ['./login.scss'],
+  imports: [CommonModule]
 })
 export class LoginComponent {
+
   cargando = false;
-  error: string | null = null;
 
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
-  async loginConGoogle() {
+  async loginGoogle() {
     this.cargando = true;
-    this.error = null;
 
     try {
       // 1. Login con Google
-      await this.authService.loginWithGoogle();
+      await this.authService.loginConGoogle();
 
-      // 2. Obtener el usuario con rol
-      const user: any = await firstValueFrom(this.authService.userWithRole$);
+      // 2. Obtenemos el usuario con rol UNA sola vez
+      this.authService.usuario$
+        .pipe(take(1))
+        .subscribe(usuario => {
+          if (!usuario) {
+            this.cargando = false;
+            return;
+          }
 
-      if (!user) {
-        this.error = 'No se pudo obtener información del usuario.';
-        return;
-      }
+          // 3. Redirigimos según rol
+          if (usuario.rol === 'admin') {
+            this.router.navigate(['/admin']);
+          } else if (usuario.rol === 'programador') {
+            this.router.navigate(['/programador']);
+          } else {
+            this.router.navigate(['/inicio']);
+          }
 
-      // 3. Redirección según rol
-      if (user.rol === 'admin') {
-        this.router.navigate(['/admin']);
-      } else if (user.rol === 'programador') {
-        this.router.navigate(['/programador']);
-      } else {
-        this.router.navigate(['/inicio']); // usuario normal
-      }
+          this.cargando = false;
+        });
+
     } catch (err) {
       console.error(err);
-      this.error = 'Error al iniciar sesión con Google.';
-    } finally {
+      alert('Error al iniciar sesión con Google');
       this.cargando = false;
     }
   }

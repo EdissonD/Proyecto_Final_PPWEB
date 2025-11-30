@@ -1,27 +1,29 @@
-<h2>Listado de Programadores</h2>
-<button routerLink="/admin/programadores/nuevo">Nuevo Programador</button>
+<h2>Lista de programadores</h2>
+
+<a [routerLink]="['/admin/programadores/nuevo']">+ Nuevo programador</a>
 
 <table>
     <thead>
         <tr>
+            <th>Foto</th>
             <th>Nombre</th>
             <th>Especialidad</th>
-            <th>GitHub</th>
-            <th>LinkedIn</th>
+            <th>Github</th>
             <th>Acciones</th>
         </tr>
     </thead>
 
     <tbody>
-        <tr *ngFor="let p of programadores">
+        <tr *ngFor="let p of lista">
+            <td><img *ngIf="p.foto" [src]="p.foto" width="70"></td>
             <td>{{ p.nombre }}</td>
             <td>{{ p.especialidad }}</td>
-            <td>{{ p.github }}</td>
-            <td>{{ p.linkedin }}</td>
+            <td><a *ngIf="p.github" [href]="p.github" target="_blank">Github</a></td>
             <td>
-                <!-- EDITAR más adelante -->
-                <button (click)="borrar(p.id)">Eliminar</button>
-
+                <button (click)="eliminar(p.id)" class="btn btn-danger">Eliminar</button>
+                <button [routerLink]="['/admin/programadores/editar', p.id]" class="btn btn-primary">Editar</button>
+                
+                <button [routerLink]="['/admin/programadores', p.id, 'proyectos']" class="btn btn-info"> Proyectos</button>
             </td>
         </tr>
     </tbody>
