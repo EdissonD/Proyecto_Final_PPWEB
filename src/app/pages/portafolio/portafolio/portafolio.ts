@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
+// Asegúrate de que tus interfaces estén bien importadas
 import { ProgramadoresService, Programador } from '../../../services/programadores';
 import { ProyectosService, Proyecto } from '../../../services/proyectos';
 
@@ -29,6 +30,7 @@ export class PortafolioComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // Obtenemos el ID de la URL
     this.idProgramador = this.route.snapshot.paramMap.get('id')!;
 
     // 1. Cargar datos del programador
@@ -37,11 +39,18 @@ export class PortafolioComponent implements OnInit {
         this.programador = p;
       });
 
-    // 2. Cargar proyectos de este programador
+    // 2. Cargar proyectos
     this.proyectosService.getProyectos(this.idProgramador)
       .subscribe((proys) => {
-        this.proyectosAcademicos = proys.filter(p => p.categoria === 'academico');
-        this.proyectosLaborales = proys.filter(p => p.categoria === 'laboral');
+        // CORRECCIÓN IMPORTANTE:
+        // En el componente de editar usamos 'tipoProyecto', no 'categoria'.
+        // Si no hacemos este cambio, las listas saldrán vacías.
+
+        if (proys) {
+          this.proyectosAcademicos = proys.filter(p => p.tipoProyecto === 'academico');
+          this.proyectosLaborales = proys.filter(p => p.tipoProyecto === 'laboral');
+        }
+
         this.cargando = false;
       });
   }

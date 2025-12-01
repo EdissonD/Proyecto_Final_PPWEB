@@ -18,11 +18,15 @@ export interface Programador {
   nombre: string;
   descripcion: string;
   especialidad: string;
+  fotoUrl?: string;
+  emailContacto?: string;
+  whatsapp?: string;
   github?: string;
   linkedin?: string;
   portafolio?: string;
   foto?: string;
   rol?: string;
+  horasDisponibles?: string[];
 }
 
 @Injectable({

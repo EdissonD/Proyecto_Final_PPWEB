@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
-import { ProgramadoresService, Programador } from '../../../../services/programadores';
+import { AuthService, UsuarioApp } from '../../../../services/auth';
 
 @Component({
   selector: 'app-programador-asesorias',
@@ -14,64 +14,116 @@ import { ProgramadoresService, Programador } from '../../../../services/programa
 })
 export class ProgramadorAsesoriasComponent implements OnInit {
 
-  idProgramador!: string;
-  programador: Programador | null = null;
-
   asesorias: Asesoria[] = [];
   cargando = true;
+  usuarioActual: UsuarioApp | null = null;
 
   constructor(
-    private route: ActivatedRoute,
     private asesoriasService: AsesoriasService,
-    private programadoresService: ProgramadoresService
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.idProgramador = this.route.snapshot.paramMap.get('idProgramador')!;
+    this.authService.usuario$.subscribe({
+      next: usuario => {
+        console.log('USUARIO PROGRAMADOR:', usuario);
+        this.usuarioActual = usuario;
 
-    // cargar datos del programador
-    this.programadoresService.getProgramador(this.idProgramador)
-      .subscribe(p => this.programador = p);
+        if (!usuario) {
+          this.asesorias = [];
+          this.cargando = false;
+          return;
+        }
 
-    // cargar asesorías de este programador
-    this.cargarAsesorias();
-  }
+        const idProgramador = usuario.idProgramador || usuario.uid;
+        console.log('idProgramador usado para buscar asesorías:', idProgramador);
 
-  cargarAsesorias() {
-    this.asesoriasService.getAsesoriasPorProgramador(this.idProgramador)
-      .subscribe(lista => {
-        this.asesorias = lista;
+        this.asesoriasService.getAsesoriasPorProgramador(idProgramador)
+          .subscribe({
+            next: lista => {
+              console.log('Asesorías encontradas para programador:', lista);
+              this.asesorias = lista.sort((a, b) =>
+                (b.creadoEn || '').localeCompare(a.creadoEn || '')
+              );
+            },
+            error: err => {
+              console.error('Error al cargar asesorías del programador:', err);
+            },
+            complete: () => {
+              this.cargando = false;
+            }
+          });
+      },
+      error: err => {
+        console.error('Error en usuario$ en ProgramadorAsesorias:', err);
         this.cargando = false;
-      });
+      }
+    });
   }
 
-  async aprobar(asesoria: Asesoria) {
-    const mensaje = prompt(
-      'Mensaje para el solicitante (opcional):',
-      'Tu asesoría ha sido aprobada. Nos vemos en la fecha y hora acordadas.'
-    ) || 'Tu asesoría ha sido aprobada.';
-
-    await this.asesoriasService.updateAsesoria(asesoria.id!, {
-      estado: 'aprobada',
-      respuestaProgramador: mensaje
-    });
-
-    alert('Asesoría aprobada');
-    this.cargarAsesorias();
+  get pendientesCount(): number {
+    return this.asesorias.filter(a => a.estado === 'pendiente').length;
   }
 
-  async rechazar(asesoria: Asesoria) {
+  async cambiarEstado(a: Asesoria, nuevoEstado: 'aprobada' | 'rechazada') {
+    if (!a.id) return;
+
+    const textoAccion = nuevoEstado === 'aprobada' ? 'aprobar' : 'rechazar';
+    const confirmar = confirm(`¿Seguro que deseas ${textoAccion} esta asesoría?`);
+    if (!confirmar) return;
+
     const mensaje = prompt(
-      'Motivo del rechazo (opcional):',
-      'En este momento no puedo atender la asesoría. Por favor vuelve a agendar en otro horario.'
-    ) || 'La asesoría ha sido rechazada.';
+      'Mensaje para el solicitante (puede quedar vacío):',
+      a.respuestaProgramador || ''
+    );
 
-    await this.asesoriasService.updateAsesoria(asesoria.id!, {
-      estado: 'rechazada',
-      respuestaProgramador: mensaje
-    });
+    const cambios: Partial<Asesoria> = {
+      estado: nuevoEstado
+    };
 
-    alert('Asesoría rechazada');
-    this.cargarAsesorias();
+    if (mensaje !== null) {
+      cambios.respuestaProgramador = mensaje;
+    }
+
+    try {
+      await this.asesoriasService.updateAsesoria(a.id, cambios);
+
+      a.estado = nuevoEstado;
+      if (mensaje !== null) {
+        a.respuestaProgramador = mensaje;
+      }
+
+      this.simularEnvioExterno(a);
+
+      alert(`Asesoría ${nuevoEstado === 'aprobada' ? 'aprobada' : 'rechazada'} correctamente.`);
+    } catch (err) {
+      console.error(err);
+      alert('Ocurrió un error al actualizar la asesoría');
+    }
+  }
+
+  etiquetaEstado(estado: Asesoria['estado']): string {
+    if (estado === 'pendiente') return 'Pendiente';
+    if (estado === 'aprobada') return 'Aprobada';
+    if (estado === 'rechazada') return 'Rechazada';
+    return estado;
+  }
+
+  simularEnvioExterno(a: Asesoria) {
+    const asunto = `Respuesta a tu solicitud de asesoría (${this.etiquetaEstado(a.estado)})`;
+    const cuerpo =
+      `Para: ${a.emailSolicitante}
+Asunto: ${asunto}
+
+Hola ${a.nombreSolicitante},
+
+Tu solicitud de asesoría para el día ${a.fecha} a las ${a.hora} ha sido ${this.etiquetaEstado(a.estado).toLowerCase()}.
+
+Mensaje del programador:
+${a.respuestaProgramador || '(sin mensaje adicional)'}
+
+*Este es un envío simulado (no se envió realmente ningún correo).*`;
+
+    alert(cuerpo);
   }
 }

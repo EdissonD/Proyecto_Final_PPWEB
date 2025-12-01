@@ -1,28 +1,238 @@
-.programador-header {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin-bottom: 1.5rem;
+// ==========================================
+// 1. Variables y Sistema de Diseño
+// ==========================================
+$primary-color: #2563eb; // Azul vibrante para confianza y acción
+$primary-dark: #1e40af; // Tono más oscuro para hover
+$text-main: #1f2937; // Gris muy oscuro para lectura (no negro puro)
+$text-secondary: #6b7280; // Gris medio para etiquetas y ayudas
+$bg-input: #f9fafb; // Fondo sutil para inputs
+$border-color: #e5e7eb;
+$border-focus: rgba(37, 99, 235, 0.4);
+$radius-card: 16px;
+$radius-input: 8px;
+$shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+
+// ==========================================
+// 2. Contenedor Principal (Tarjeta)
+// ==========================================
+:host {
+    display: block;
+    max-width: 500px; // Ancho óptimo de lectura (Ley de Miller)
+    margin: 3rem auto;
+    padding: 2.5rem;
+    background-color: white;
+    border-radius: $radius-card;
+    box-shadow: $shadow-card;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+
+    // Animación de entrada suave
+    animation: slideUp 0.5s ease-out forwards;
 }
 
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $text-main;
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: -0.025em;
+}
+
+// ==========================================
+// 3. Header del Programador (Contexto)
+// ==========================================
+.programador-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    background-color: #f0f9ff; // Fondo azul muy pálido para destacar el contexto
+    border-radius: $radius-input;
+    border: 1px solid #bae6fd;
+
+    img {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    div {
+        display: flex;
+        flex-direction: column;
+
+        h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: $text-main;
+        }
+
+        p {
+            margin: 0.25rem 0 0;
+            font-size: 0.9rem;
+            color: $primary-color;
+            font-weight: 500;
+        }
+    }
+}
+
+// ==========================================
+// 4. Formulario
+// ==========================================
 form {
     display: flex;
     flex-direction: column;
-    gap: .8rem;
+    gap: 1.5rem; // Espaciado generoso para evitar errores de clic (Ley de Fitts)
 
+    // Estilo para los Labels
+    label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-main;
+        margin-bottom: 0.5rem;
+    }
+
+    // Estilo unificado para Inputs, Selects y Textarea
     input,
-    textarea,
     select,
-    button {
-        padding: .5rem;
-        font-size: .95rem;
-    }
-
     textarea {
-        min-height: 80px;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        color: $text-main;
+        background-color: $bg-input;
+        border: 1px solid $border-color;
+        border-radius: $radius-input;
+        box-sizing: border-box; // Previene desbordamientos
+        transition: all 0.2s ease-in-out;
+        font-family: inherit;
+
+        // Heurística: Feedback claro de "estoy escribiendo aquí"
+        &:focus {
+            outline: none;
+            background-color: white;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 4px $border-focus;
+        }
+
+        // Placeholder más suave
+        &::placeholder {
+            color: lighten($text-secondary, 20%);
+        }
     }
 
+    // Ajustes específicos
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+        line-height: 1.5;
+    }
+
+    // Estilo del Select para que se vea moderno
+    select {
+        appearance: none; // Quita la flecha por defecto del navegador
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1.25rem;
+        padding-right: 2.5rem; // Espacio para la flecha
+        cursor: pointer;
+    }
+
+    // Contenedor del campo de Hora (agrupa input + ayuda)
+    div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // Texto de ayuda (.ayuda)
+    .ayuda {
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        color: $text-secondary;
+        font-style: italic;
+
+        // Icono visual sutil (pseudo-elemento)
+        &::before {
+            content: 'ℹ ';
+            margin-right: 4px;
+        }
+    }
+
+    // ==========================================
+    // 5. Botón de Acción (Call to Action)
+    // ==========================================
     button {
         margin-top: 1rem;
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        background-color: $primary-color;
+        border: none;
+        border-radius: $radius-input;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 6px -1px rgba($primary-color, 0.4);
+
+        &:hover:not(:disabled) {
+            background-color: $primary-dark;
+            transform: translateY(-1px);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        // Estado deshabilitado (Heurística: Visibilidad del estado del sistema)
+        &:disabled {
+            background-color: #cbd5e1;
+            color: #64748b;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+    }
+}
+
+// ==========================================
+// 6. Responsividad
+// ==========================================
+@media (max-width: 600px) {
+    :host {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    .programador-header {
+        flex-direction: column;
+        text-align: center;
+
+        img {
+            width: 80px;
+            height: 80px;
+        }
     }
 }

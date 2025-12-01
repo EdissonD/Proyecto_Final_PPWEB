@@ -10,7 +10,7 @@ import {
   query,
   where
 } from '@angular/fire/firestore';
-import { Observable, from, map } from 'rxjs';
+import { Observable, from, map, of } from 'rxjs';
 
 export interface Asesoria {
   id?: string;
@@ -32,6 +32,8 @@ export interface Asesoria {
 export class AsesoriasService {
 
   constructor(private firestore: Firestore) { }
+
+  // Asesorías solicitadas por un usuario (mis-asesorias)
   getAsesoriasPorSolicitante(idSolicitante: string): Observable<Asesoria[]> {
     const ref = collection(this.firestore, 'asesorias');
     const q = query(ref, where('idSolicitante', '==', idSolicitante));
@@ -45,10 +47,10 @@ export class AsesoriasService {
       )
     );
   }
+
   crearAsesoria(data: Asesoria) {
     const ref = collection(this.firestore, 'asesorias');
 
-    // limpiar undefined
     const limpio: any = { ...data };
     Object.keys(limpio).forEach(key => {
       if (limpio[key] === undefined) {
@@ -59,10 +61,12 @@ export class AsesoriasService {
     return addDoc(ref, limpio);
   }
 
+  // 👉 Asesorías de un programador concreto
+  getAsesoriasPorProgramador(idProgramador?: string): Observable<Asesoria[]> {
+    if (!idProgramador) {
+      return of([]);
+    }
 
-
-  // Obtener todas las asesorías de un programador
-  getAsesoriasPorProgramador(idProgramador: string): Observable<Asesoria[]> {
     const ref = collection(this.firestore, 'asesorias');
     const q = query(ref, where('idProgramador', '==', idProgramador));
 
@@ -76,7 +80,6 @@ export class AsesoriasService {
     );
   }
 
-  // Obtener una asesoría específica
   getAsesoria(id: string): Observable<Asesoria> {
     const refDoc = doc(this.firestore, 'asesorias', id);
 
@@ -88,7 +91,6 @@ export class AsesoriasService {
     );
   }
 
-  // Actualizar estado / respuesta
   updateAsesoria(id: string, cambios: Partial<Asesoria>) {
     const refDoc = doc(this.firestore, 'asesorias', id);
     return updateDoc(refDoc, cambios);

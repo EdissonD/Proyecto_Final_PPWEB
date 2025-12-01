@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MisAsesoriasComponent } from './mis-asesorias';
 
-import { MisAsesorias } from './mis-asesorias';
-
-describe('MisAsesorias', () => {
-  let component: MisAsesorias;
-  let fixture: ComponentFixture<MisAsesorias>;
+describe('MisAsesoriasComponent', () => {
+  let component: MisAsesoriasComponent;
+  let fixture: ComponentFixture<MisAsesoriasComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MisAsesorias]
-    })
-    .compileComponents();
+      // Como es standalone, va en imports:
+      imports: [MisAsesoriasComponent]
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(MisAsesorias);
+    fixture = TestBed.createComponent(MisAsesoriasComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

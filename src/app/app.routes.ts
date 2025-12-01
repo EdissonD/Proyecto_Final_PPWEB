@@ -34,7 +34,6 @@ export const routes: Routes = [
   {
     path: 'usuarios',
     component: UsuariosComponent
-    // sin guard: cualquier usuario puede explorar portafolios
   },
 
   // portafolio público de un programador
@@ -101,19 +100,21 @@ export const routes: Routes = [
     data: { rol: 'programador' }
   },
   {
-    path: 'programador/asesorias/:idProgramador',
+    path: 'programador/asesorias',
     component: ProgramadorAsesoriasComponent,
     canActivate: [rolGuard],
     data: { rol: 'programador' }
   },
 
-  // Mis asesorías → cualquier usuario logueado (sin rol específico)
+
+  // PANEL USUARIO → cualquier usuario logueado
   {
     path: 'mis-asesorias',
     component: MisAsesoriasComponent,
-    canActivate: [rolGuard]
+    canActivate: [rolGuard]   // solo exige estar logueado
+    // SIN data: { rol: ... }  → importante
   },
 
-  // wildcard opcional por si alguien se va a ruta rara
+  // wildcard al final
   { path: '**', redirectTo: 'inicio' }
 ];

@@ -1,53 +1,51 @@
-<h2>Mis asesorías</h2>
-
-<div *ngIf="programador" class="programador-header">
-    <img *ngIf="programador.foto" [src]="programador.foto" width="60" />
-    <div>
-        <h3>{{ programador.nombre }}</h3>
-        <p>{{ programador.especialidad }}</p>
-    </div>
-</div>
+<h2>Asesorías recibidas</h2>
 
 <div *ngIf="cargando">
-    Cargando asesorías...
+    Cargando solicitudes...
 </div>
 
 <div *ngIf="!cargando && asesorias.length === 0">
     <p>No tienes solicitudes de asesoría por el momento.</p>
 </div>
 
-<table *ngIf="!cargando && asesorias.length > 0">
-    <thead>
-        <tr>
-            <th>Solicitante</th>
-            <th>Correo</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Comentario</th>
-            <th>Estado</th>
-            <th>Respuesta</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
+<div *ngIf="!cargando && asesorias.length > 0">
 
-    <tbody>
-        <tr *ngFor="let a of asesorias">
-            <td>{{ a.nombreSolicitante }}</td>
-            <td>{{ a.emailSolicitante }}</td>
-            <td>{{ a.fecha }}</td>
-            <td>{{ a.hora }}</td>
-            <td>{{ a.comentario }}</td>
-            <td>{{ a.estado }}</td>
-            <td>{{ a.respuestaProgramador }}</td>
-            <td>
-                <ng-container *ngIf="a.estado === 'pendiente'; else noAcciones">
-                    <button (click)="aprobar(a)">Aprobar</button>
-                    <button (click)="rechazar(a)">Rechazar</button>
-                </ng-container>
-                <ng-template #noAcciones>
-                    <small>Sin acciones</small>
-                </ng-template>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <p>
+        Tienes <strong>{{ pendientesCount }}</strong> solicitudes pendientes.
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Solicitante</th>
+                <th>Email</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Comentario</th>
+                <th>Estado</th>
+                <th>Respuesta</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let a of asesorias">
+                <td>{{ a.nombreSolicitante }}</td>
+                <td>{{ a.emailSolicitante }}</td>
+                <td>{{ a.fecha }}</td>
+                <td>{{ a.hora }}</td>
+                <td>{{ a.comentario || '-' }}</td>
+                <td>{{ etiquetaEstado(a.estado) }}</td>
+                <td>{{ a.respuestaProgramador || '-' }}</td>
+                <td>
+                    <button *ngIf="a.estado === 'pendiente'" (click)="cambiarEstado(a, 'aprobada')">
+                        Aprobar
+                    </button>
+                    <button *ngIf="a.estado === 'pendiente'" (click)="cambiarEstado(a, 'rechazada')">
+                        Rechazar
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

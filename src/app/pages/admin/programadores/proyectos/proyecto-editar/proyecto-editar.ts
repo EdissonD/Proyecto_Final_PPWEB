@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms'; // Agregado FormGroup
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProyectosService, Proyecto } from '../../../../../services/proyectos';
 
@@ -13,58 +13,79 @@ import { ProyectosService, Proyecto } from '../../../../../services/proyectos';
 })
 export class ProyectoEditarComponent implements OnInit {
 
+  // 1. Declaramos la variable primero
   form!: FormGroup;
+
   idProgramador!: string;
   idProyecto!: string;
-  cargando = false;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private proyectosService: ProyectosService
-  ) { }
+  ) {
+    // 2. Inicializamos el formulario AQUÍ, dentro del constructor
+    this.form = this.fb.group({
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      tipoProyecto: ['', Validators.required],
+      participacion: ['', Validators.required],
+      tecnologiasTexto: [''],
+      repoUrl: [''],
+      demoUrl: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.idProgramador = this.route.snapshot.paramMap.get('id')!;
     this.idProyecto = this.route.snapshot.paramMap.get('idProyecto')!;
+    this.cargar();
+  }
 
-    this.form = this.fb.group({
-      nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      categoria: ['academico', Validators.required],
-      participacion: ['frontend', Validators.required],
-      tecnologias: ['', Validators.required],
-      repo: [''],
-      demo: ['']
-    });
+  cargar() {
+    this.proyectosService.getProyecto(
+      this.idProgramador,
+      this.idProyecto
+    ).subscribe((p: Proyecto | null) => {
+      if (!p) return;
 
-    this.proyectosService
-      .getProyecto(this.idProgramador, this.idProyecto)
-      .subscribe((p: Proyecto) => {
-        this.form.patchValue(p);
+      this.form.patchValue({
+        nombre: p.nombre,
+        descripcion: p.descripcion,
+        tipoProyecto: p.tipoProyecto,
+        participacion: p.participacion,
+        repoUrl: p.repoUrl || '',
+        demoUrl: p.demoUrl || '',
+        tecnologiasTexto: p.tecnologias.join(', ')
       });
+    });
   }
 
   async guardar() {
-    if (this.form.invalid) return;
+    const v = this.form.value;
 
-    this.cargando = true;
+    const tecnologias = v.tecnologiasTexto
+      ?.split(',')
+      ?.map((t: string) => t.trim())
+      ?.filter((t: string) => t !== '') || [];
 
-    try {
-      await this.proyectosService.updateProyecto(
-        this.idProgramador,
-        this.idProyecto,
-        this.form.value
-      );
+    const data = {
+      nombre: v.nombre!,
+      descripcion: v.descripcion!,
+      tipoProyecto: v.tipoProyecto as any,
+      participacion: v.participacion as any,
+      repoUrl: v.repoUrl || '',
+      demoUrl: v.demoUrl || '',
+      tecnologias
+    };
 
-      alert('Proyecto actualizado');
-      this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
-    } catch (err) {
-      console.error(err);
-      alert('Error al actualizar proyecto');
-    } finally {
-      this.cargando = false;
-    }
+    await this.proyectosService.updateProyecto(
+      this.idProgramador,
+      this.idProyecto,
+      data
+    );
+    alert('Proyecto actualizado');
+    this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
   }
 }

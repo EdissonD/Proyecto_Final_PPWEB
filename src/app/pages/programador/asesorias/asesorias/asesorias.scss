@@ -1,27 +1,218 @@
-.programador-header {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin-bottom: 1.5rem;
+// --- Variables de Diseño ---
+$primary-color: #2c3e50;
+$accent-color: #3498db;
+$bg-light: #f8f9fa;
+$border-color: #e9ecef;
+$text-color: #333;
+$text-muted: #6c757d;
+
+// Colores de Estado
+$status-pending-bg: #fff3cd;
+$status-pending-text: #856404;
+$status-approved-bg: #d4edda;
+$status-approved-text: #155724;
+$status-rejected-bg: #f8d7da;
+$status-rejected-text: #721c24;
+
+// Colores de Botones
+$btn-approve: #28a745;
+$btn-reject: #dc3545;
+$btn-info: #17a2b8;
+
+// --- Estilos Generales ---
+:host {
+    display: block;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: $text-color;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-table {
+h2 {
+    color: $primary-color;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    border-bottom: 2px solid $border-color;
+    padding-bottom: 10px;
+}
+
+// --- Mensajes de Carga y Resumen ---
+div[ngIf="cargando"] {
+    text-align: center;
+    font-style: italic;
+    color: $text-muted;
+    padding: 40px;
+}
+
+.resumen-pendientes {
+    background-color: #e2e6ea;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid $accent-color;
+    margin-bottom: 20px;
+    font-size: 1rem;
+
+    strong {
+        color: $primary-color;
+        font-size: 1.1em;
+    }
+}
+
+// --- Contenedor de la Tabla (para scroll en móviles) ---
+.table-container {
+    width: 100%;
+    overflow-x: auto; // Permite scroll horizontal en pantallas pequeñas
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+}
+
+// --- Estilos de la Tabla ---
+.tabla-asesorias {
     width: 100%;
     border-collapse: collapse;
-    font-size: .9rem;
+    background-color: white;
+    min-width: 900px; // Asegura que no se rompa en pantallas muy pequeñas
 
-    th,
-    td {
-        border: 1px solid #ddd;
-        padding: .5rem;
-        vertical-align: top;
+    thead {
+        background-color: $primary-color;
+        color: white;
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
     }
 
-    th {
-        background: #f4f4f4;
+    tbody {
+        tr {
+            border-bottom: 1px solid $border-color;
+            transition: background-color 0.2s ease;
+
+            &:hover {
+                background-color: $bg-light;
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        td {
+            padding: 12px 15px;
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
     }
+}
+
+// --- Etiquetas de Estado (Badges) ---
+span[class*='estado-'] {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    min-width: 80px;
+
+    &.estado-pendiente {
+        background-color: $status-pending-bg;
+        color: $status-pending-text;
+        border: 1px solid rgba($status-pending-text, 0.2);
+    }
+
+    &.estado-aprobada {
+        background-color: $status-approved-bg;
+        color: $status-approved-text;
+        border: 1px solid rgba($status-approved-text, 0.2);
+    }
+
+    &.estado-rechazada {
+        background-color: $status-rejected-bg;
+        color: $status-rejected-text;
+        border: 1px solid rgba($status-rejected-text, 0.2);
+    }
+}
+
+// --- Columna de Acciones y Botones ---
+.acciones {
+    white-space: nowrap; // Evita que los botones se apilen feo
+    display: flex;
+    gap: 8px; // Espacio entre botones
+    align-items: center;
 
     button {
-        margin-right: .3rem;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        &:disabled {
+            background-color: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        // Botón Aprobar
+        &:first-of-type {
+            background-color: $btn-approve;
+
+            &:hover:not(:disabled) {
+                background-color: darken($btn-approve, 10%);
+                transform: translateY(-1px);
+            }
+        }
+
+        // Botón Rechazar
+        &:nth-of-type(2) {
+            background-color: $btn-reject;
+
+            &:hover:not(:disabled) {
+                background-color: darken($btn-reject, 10%);
+                transform: translateY(-1px);
+            }
+        }
+
+        // Botón Simular (Ver mensaje)
+        &:last-of-type {
+            background-color: $btn-info;
+
+            &:hover {
+                background-color: darken($btn-info, 10%);
+                transform: translateY(-1px);
+            }
+        }
+    }
+}
+
+// --- Responsive (Media Query) ---
+@media (max-width: 768px) {
+    :host {
+        padding: 10px;
+    }
+
+    // Opcional: Si quieres que la tabla tenga scroll horizontal en móvil, 
+    // asegúrate de envolver la tabla en un div con clase .table-container en el HTML
+    // O la tabla se comportará según el estilo base definido arriba (scroll).
+
+    .acciones {
+        flex-direction: column; // Apila los botones en pantallas muy estrechas
+        align-items: stretch;
+
+        button {
+            margin-bottom: 4px;
+        }
     }
 }

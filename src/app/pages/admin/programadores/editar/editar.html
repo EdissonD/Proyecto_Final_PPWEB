@@ -2,44 +2,67 @@
 
 <form [formGroup]="form" (ngSubmit)="guardarCambios()">
 
-    <div class="form-group">
+    <div>
         <label>Nombre</label>
-        <input type="text" formControlName="nombre" />
+        <input type="text" formControlName="nombre">
     </div>
 
-    <div class="form-group">
-        <label>Descripción</label>
-        <textarea formControlName="descripcion"></textarea>
-    </div>
-
-    <div class="form-group">
+    <div>
         <label>Especialidad</label>
-        <input type="text" formControlName="especialidad" />
+        <input type="text" formControlName="especialidad">
     </div>
 
-    <div class="form-group">
-        <label>Github</label>
-        <input type="text" formControlName="github" />
+    <div>
+        <label>Descripción</label>
+        <textarea formControlName="descripcion" rows="3"></textarea>
     </div>
 
-    <div class="form-group">
+    <div>
+        <label>Foto (URL)</label>
+        <input type="text" formControlName="fotoUrl">
+    </div>
+
+    <hr>
+
+    <h3>Contacto</h3>
+
+    <div>
+        <label>Email de contacto</label>
+        <input type="email" formControlName="emailContacto">
+    </div>
+
+    <div>
+        <label>WhatsApp</label>
+        <input type="text" formControlName="whatsapp">
+    </div>
+
+    <hr>
+
+    <h3>Redes</h3>
+
+    <div>
+        <label>GitHub</label>
+        <input type="text" formControlName="github">
+    </div>
+
+    <div>
         <label>LinkedIn</label>
-        <input type="text" formControlName="linkedin" />
+        <input type="text" formControlName="linkedin">
     </div>
 
-    <div class="form-group">
-        <label>Portafolio</label>
-        <input type="text" formControlName="portafolio" />
+    <hr>
+
+    <h3>Horarios de disponibilidad</h3>
+    <p class="ayuda">
+        Horas separadas por coma (HH:mm). Ej: <strong>09:00, 10:30, 16:00</strong>
+    </p>
+
+    <div>
+        <label>Horas disponibles</label>
+        <input type="text" formControlName="horasDisponiblesTexto">
     </div>
 
-    <div class="form-group">
-        <label>Foto actual / nueva</label><br />
-        <img *ngIf="preview" [src]="preview" width="120" style="border-radius: 6px; margin-bottom: 8px;" />
-        <br />
-        <input type="file" (change)="onFileSelected($event)" />
-    </div>
-
-    <button type="submit" [disabled]="cargando">
+    <button type="submit" [disabled]="form.invalid || cargando">
         {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
     </button>
 </form>

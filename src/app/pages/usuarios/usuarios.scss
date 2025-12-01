@@ -1,48 +1,220 @@
+// ==========================================
+// 1. Variables y Tokens (Sistema de Diseño)
+// ==========================================
+$color-primary: #0f172a; // Oscuro profesional (Slate 900)
+$color-accent: #3b82f6; // Azul vibrante para llamadas a la acción (Blue 500)
+$color-bg-page: #f8fafc; // Fondo gris muy claro para contraste (Slate 50)
+$color-bg-card: #ffffff; // Blanco puro
+$text-main: #1e293b;
+$text-secondary: #64748b;
+$border-radius: 16px; // Bordes modernos y amigables
+$shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+$shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// ==========================================
+// 2. Estructura General
+// ==========================================
+:host {
+    display: block;
+    padding: 2rem;
+    background-color: $color-bg-page;
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, sans-serif; // Tipografía limpia
+}
+
+h2 {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: $text-main;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    letter-spacing: -0.025em;
+}
+
+// Mensajes de estado (Carga / Vacío)
+// Seleccionamos los divs directos que no sean el grid
+div:not(.grid):not(.foto):not(.info):not(.links):not(.acciones) {
+    text-align: center;
+    padding: 3rem;
+    color: $text-secondary;
+    font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: $border-radius;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+// ==========================================
+// 3. Grid Inteligente
+// ==========================================
 .grid {
     display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    // Heurística: Flexibilidad. Se adapta a móviles y pantallas 4k automáticamente
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
+// ==========================================
+// 4. Componente Card (Tarjeta)
+// ==========================================
 .card {
+    background-color: $color-bg-card;
+    border-radius: $border-radius;
+    box-shadow: $shadow-soft;
+    overflow: hidden; // Para que la imagen respete el borde redondeado
     display: flex;
-    gap: 1rem;
-    padding: 1rem 1.2rem;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .06);
+    flex-direction: column;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+
+    // Heurística: Feedback Visual. Elevación al pasar el mouse
+    &:hover {
+        transform: translateY(-8px);
+        box-shadow: $shadow-hover;
+
+        .foto img {
+            transform: scale(1.08); // Zoom sutil
+        }
+    }
+
+    // 4.1 Área de Imagen
+    .foto {
+        height: 220px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background-color: #cbd5e1; // Placeholder mientras carga
+
+        img {
+            width: 55%;
+            height: 100%;
+            position: center;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+    }
+
+    // 4.2 Contenido
+    .info {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex: 1; // Hace que esta sección ocupe todo el alto disponible
+
+        h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: $text-main;
+        }
+
+        .especialidad {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: $color-accent;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .descripcion {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: $text-secondary;
+            margin-bottom: 1.5rem;
+
+            // Heurística: Consistencia visual. Corta el texto si es muy largo
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        // 4.3 Redes Sociales (Iconos textuales)
+        .links {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+
+            a {
+                text-decoration: none;
+                font-size: 0.9rem;
+                font-weight: 500;
+                color: $text-main;
+                padding: 0.25rem 0;
+                border-bottom: 2px solid transparent;
+                transition: border-color 0.2s;
+
+                &:hover {
+                    color: $color-accent;
+                    border-color: $color-accent;
+                }
+            }
+        }
+
+        // 4.4 Botones de Acción
+        .acciones {
+            margin-top: auto; // Empuja los botones al fondo de la tarjeta (siempre alineados)
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+
+            button {
+                width: 100%;
+                padding: 0.875rem;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: background-color 0.2s, transform 0.1s;
+                border: none;
+
+                // Ley de Fitts: Botones grandes y fáciles de clicar
+
+                // Botón Principal (Ver Portfolio)
+                &:first-child {
+                    background-color: $color-primary;
+                    color: white;
+
+                    &:hover {
+                        background-color: lighten($color-primary, 10%);
+                    }
+
+                    &:active {
+                        transform: scale(0.98);
+                    }
+                }
+
+                // Botón Secundario (Agendar)
+                &:last-child {
+                    background-color: transparent;
+                    color: $text-main;
+                    border: 2px solid #e2e8f0;
+
+                    &:hover {
+                        border-color: $color-accent;
+                        color: $color-accent;
+                        background-color: rgba($color-accent, 0.05);
+                    }
+                }
+            }
+        }
+    }
 }
 
-.foto img {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    object-fit: cover;
-}
+// Media query para móviles muy pequeños (ajustes finos)
+@media (max-width: 480px) {
+    :host {
+        padding: 1rem;
+    }
 
-.info h3 {
-    margin: 0;
-}
+    .grid {
+        grid-template-columns: 1fr;
+    }
 
-.especialidad {
-    font-weight: 600;
-    color: #555;
-}
-
-.descripcion {
-    font-size: .9rem;
-    color: #666;
-}
-
-.links a {
-    margin-right: .7rem;
-    font-size: .85rem;
-}
-
-.acciones {
-    margin-top: .7rem;
-
-    button {
-        margin-right: .5rem;
+    .card .foto {
+        height: 180px;
     }
 }

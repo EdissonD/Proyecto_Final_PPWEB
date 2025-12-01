@@ -5,8 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
 import { ProgramadoresService, Programador } from '../../../../services/programadores';
-import { AuthService } from '../../../../services/auth';
-import { firstValueFrom } from 'rxjs';
+import { AuthService, UsuarioApp } from '../../../../services/auth';
 
 @Component({
   selector: 'app-agendar-asesoria',
@@ -20,8 +19,13 @@ export class AgendarAsesoriaComponent implements OnInit {
   form!: FormGroup;
   idProgramador!: string;
   programador: Programador | null = null;
-
   cargando = false;
+
+  // 👉 Propiedad para guardar las horas traídas del programador
+  horasDisponibles: string[] = [];
+
+  // guardamos aquí el usuario logueado
+  usuarioActual: UsuarioApp | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -33,9 +37,10 @@ export class AgendarAsesoriaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // id del programador desde la URL
     this.idProgramador = this.route.snapshot.paramMap.get('idProgramador')!;
 
-    // Formulario para el usuario normal
+    // Formulario para solicitar la asesoría
     this.form = this.fb.group({
       nombreSolicitante: ['', Validators.required],
       emailSolicitante: ['', [Validators.required, Validators.email]],
@@ -44,12 +49,19 @@ export class AgendarAsesoriaComponent implements OnInit {
       comentario: ['']
     });
 
-    // Cargar datos del programador (solo para mostrar su nombre/foto)
+    // Cargar datos del programador y sus horas disponibles
     this.programadoresService.getProgramador(this.idProgramador)
-      .subscribe(p => this.programador = p);
+      .subscribe((p: Programador | undefined) => { // Ajuste de tipo por seguridad
+        this.programador = p || null;
+        // Lógica agregada:
+        this.horasDisponibles = p?.horasDisponibles || [];
+      });
 
-    // Si el usuario está logueado, rellenamos su nombre/email
+    // Nos suscribimos una vez y guardamos el usuario
     this.authService.usuario$.subscribe(usuario => {
+      console.log('USUARIO EN SUBSCRIBE:', usuario);
+      this.usuarioActual = usuario;
+
       if (usuario) {
         this.form.patchValue({
           nombreSolicitante: usuario.nombre,
@@ -60,13 +72,15 @@ export class AgendarAsesoriaComponent implements OnInit {
   }
 
   async enviarSolicitud() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.cargando = true;
 
     const formValue = this.form.value;
-
-    const usuario = await firstValueFrom(this.authService.usuario$);
+    console.log('USUARIO AL ENVIAR:', this.usuarioActual);
 
     const data: Asesoria = {
       idProgramador: this.idProgramador,
@@ -79,9 +93,9 @@ export class AgendarAsesoriaComponent implements OnInit {
       creadoEn: new Date().toISOString()
     };
 
-    // solo si hay usuario logueado agregamos idSolicitante
-    if (usuario) {
-      data.idSolicitante = usuario.uid;
+    // Si hay usuario logueado, guardamos su ID
+    if (this.usuarioActual) {
+      data.idSolicitante = this.usuarioActual.uid;
     }
 
     try {

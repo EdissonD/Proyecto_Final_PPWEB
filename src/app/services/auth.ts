@@ -21,6 +21,7 @@ export interface UsuarioApp {
   email: string;
   foto?: string;
   rol: 'admin' | 'programador' | 'usuario';
+  idProgramador?: string;
 }
 
 @Injectable({
@@ -44,7 +45,6 @@ export class AuthService {
 
         const ref = doc(this.firestore, 'usuarios', user.uid);
 
-        // leemos el doc de Firestore
         return from(getDoc(ref)).pipe(
           switchMap(snap => {
             if (!snap.exists()) {
@@ -55,13 +55,34 @@ export class AuthService {
                 email: user.email || '',
                 foto: user.photoURL || '',
                 rol: 'usuario'
+                //  NO mandamos idProgramador aquí
               };
 
               return from(setDoc(ref, nuevo)).pipe(
                 map(() => nuevo)
               );
             } else {
-              return of(snap.data() as UsuarioApp);
+              const data = snap.data() as any || {};
+
+              // Construimos el usuario
+              const usuario: UsuarioApp = {
+                uid: user.uid,
+                nombre: data.nombre ?? user.displayName ?? '',
+                email: data.email ?? user.email ?? '',
+                foto: data.foto ?? user.photoURL ?? '',
+                rol: (data.rol as any) ?? 'usuario'
+                // idProgramador lo añadimos solo si existe abajo
+              };
+
+              //  agregamos idProgramador si realmente tiene valor
+              if (data.idProgramador) {
+                usuario.idProgramador = data.idProgramador;
+              }
+
+              // Firestore NO acepta campos undefined, pero aquí ya no hay ninguno
+              return from(setDoc(ref, usuario, { merge: true })).pipe(
+                map(() => usuario)
+              );
             }
           })
         );

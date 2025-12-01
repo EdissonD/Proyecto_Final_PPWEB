@@ -8,39 +8,62 @@
     </div>
 
     <div>
-        <label>Descripción</label>
-        <textarea formControlName="descripcion"></textarea>
-    </div>
-
-    <div>
         <label>Especialidad</label>
         <input type="text" formControlName="especialidad">
     </div>
 
     <div>
+        <label>Descripción</label>
+        <textarea formControlName="descripcion" rows="3"></textarea>
+    </div>
+
+    <div>
+        <label>Foto (URL)</label>
+        <input type="text" formControlName="fotoUrl">
+    </div>
+
+    <hr>
+
+    <h3>Contacto</h3>
+
+    <div>
+        <label>Email de contacto</label>
+        <input type="email" formControlName="emailContacto">
+    </div>
+
+    <div>
+        <label>WhatsApp</label>
+        <input type="text" formControlName="whatsapp" placeholder="+593 ...">
+    </div>
+
+    <hr>
+
+    <h3>Redes</h3>
+
+    <div>
         <label>GitHub</label>
-        <input type="text" formControlName="github">
+        <input type="text" formControlName="github" placeholder="https://github.com/...">
     </div>
 
     <div>
         <label>LinkedIn</label>
-        <input type="text" formControlName="linkedin">
+        <input type="text" formControlName="linkedin" placeholder="https://www.linkedin.com/in/...">
     </div>
+
+    <hr>
+
+    <h3>Horarios de disponibilidad</h3>
+    <p class="ayuda">
+        Ingresa horas separadas por coma, formato HH:mm.
+        Ejemplo: <strong>09:00, 10:30, 16:00</strong>
+    </p>
 
     <div>
-        <label>Portafolio</label>
-        <input type="text" formControlName="portafolio">
+        <label>Horas disponibles</label>
+        <input type="text" formControlName="horasDisponiblesTexto">
     </div>
 
-    <div>
-        <label>Foto</label>
-        <input type="file" (change)="onFotoSeleccionada($event)" accept="image/*">
-    </div>
-
-    <button type="submit" [disabled]="cargando">
-        {{ cargando ? 'Guardando...' : 'Agregar programador' }}
+    <button type="submit" [disabled]="form.invalid || cargando">
+        {{ cargando ? 'Guardando...' : 'Guardar programador' }}
     </button>
 </form>
-
-<p *ngIf="mensaje" style="color: green">{{ mensaje }}</p>
-<p *ngIf="error" style="color: red">{{ error }}</p>

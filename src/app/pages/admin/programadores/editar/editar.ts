@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 
 import { ProgramadoresService, Programador } from '../../../../services/programadores';
@@ -17,9 +17,9 @@ export class EditarComponent implements OnInit {
   form!: FormGroup;
   id!: string;
 
-  // para la foto
-  preview: string = '';          // foto actual o nueva (para mostrar)
-  archivoFotoNuevo: File | null = null;  // archivo nuevo si el usuario cambia la foto
+  // Variables para manejo de foto (del primer código)
+  preview: string = '';
+  archivoFotoNuevo: File | null = null; 
 
   cargando: boolean = false;
 
@@ -31,50 +31,61 @@ export class EditarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 1. Tomamos el id de la URL
     this.id = this.route.snapshot.paramMap.get('id')!;
 
-    // 2. Creamos el formulario con los campos de tu interfaz
+    // Fusión de campos: Estándar + Nuevos del segundo código
     this.form = this.fb.group({
-      nombre: [''],
-      descripcion: [''],
-      especialidad: [''],
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      especialidad: ['', Validators.required],
       github: [''],
       linkedin: [''],
-      portafolio: ['']
-      // foto no se pone aquí porque la manejamos con preview + archivo
+      portafolio: [''], // Mantenemos portafolio del código 1
+      
+      // Nuevos campos del código 2
+      emailContacto: [''],
+      whatsapp: [''],
+      horasDisponiblesTexto: [''] // Campo auxiliar para el array de horas
     });
 
-    // 3. Cargamos los datos del programador desde Firestore
-    this.programadoresService.getProgramador(this.id)
-      .subscribe((data: Programador) => {
-        if (!data) { return; }
+    this.cargarDatos();
+  }
 
-        // rellenar formulario
+  cargarDatos() {
+    this.programadoresService.getProgramador(this.id)
+      .subscribe((data: Programador | undefined) => { // Ajuste de tipo por si es undefined
+        if (!data) return;
+
+        // Rellenar formulario (Fusión de lógica)
         this.form.patchValue({
           nombre: data.nombre,
           descripcion: data.descripcion,
           especialidad: data.especialidad,
           github: data.github || '',
           linkedin: data.linkedin || '',
-          portafolio: data.portafolio || ''
+          portafolio: data.portafolio || '',
+          
+          // Nuevos campos
+          emailContacto: data.emailContacto || '',
+          whatsapp: data.whatsapp || '',
+          // Convertir array a string para el input
+          horasDisponiblesTexto: data.horasDisponibles?.join(', ') || ''
         });
 
-        // mostrar foto actual
-        if (data.foto) {
+        // Mostrar foto actual (Lógica del código 1)
+        if (data.foto) { // o data.fotoUrl, según como se llame en tu BD
           this.preview = data.foto;
         }
       });
   }
 
-  //  cuando el usuario selecciona una nueva foto
+  // Lógica de selección de archivo (del código 1)
   onFileSelected(event: any) {
     const file: File | undefined = event.target.files?.[0];
     if (!file) return;
 
     this.archivoFotoNuevo = file;
 
-    // previsualizar imagen
     const reader = new FileReader();
     reader.onload = () => {
       this.preview = reader.result as string;
@@ -83,17 +94,45 @@ export class EditarComponent implements OnInit {
   }
 
   async guardarCambios() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.cargando = true;
 
-    const datos: Partial<Programador> = this.form.value;
+    // 1. Obtener valores del form
+    const value = this.form.value;
+
+    // 2. Lógica del código 2: Convertir texto a array de horas
+    let horasDisponibles: string[] = [];
+    if (value.horasDisponiblesTexto) {
+      horasDisponibles = value.horasDisponiblesTexto
+        .split(',')
+        .map((h: string) => h.trim())
+        .filter((h: string) => h !== '');
+    }
+
+    // 3. Preparar objeto de datos
+    // Usamos Partial<Programador> y fusionamos todo
+    const datos: Partial<Programador> = {
+      nombre: value.nombre,
+      descripcion: value.descripcion,
+      especialidad: value.especialidad,
+      github: value.github,
+      linkedin: value.linkedin,
+      portafolio: value.portafolio,
+      emailContacto: value.emailContacto,
+      whatsapp: value.whatsapp,
+      horasDisponibles: horasDisponibles 
+    };
 
     try {
+      // 4. Llamar al servicio manteniendo la firma del código 1 (ID, datos, Archivo)
       await this.programadoresService.updateProgramador(
         this.id,
         datos,
-        this.archivoFotoNuevo   // puede ser null si no cambió foto
+        this.archivoFotoNuevo 
       );
 
       alert('Programador actualizado correctamente');

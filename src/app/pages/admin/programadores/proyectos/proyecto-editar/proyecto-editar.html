@@ -1,9 +1,51 @@
-<h2>Editar proyecto</h2>
+<h2>Editar Proyecto</h2>
 
 <form [formGroup]="form" (ngSubmit)="guardar()">
-    <!-- mismos campos que nuevo -->
-    ...
-    <button type="submit" [disabled]="cargando">
-        {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
+
+    <div>
+        <label>Nombre</label>
+        <input type="text" formControlName="nombre">
+    </div>
+
+    <div>
+        <label>Descripción</label>
+        <textarea formControlName="descripcion" rows="3"></textarea>
+    </div>
+
+    <div>
+        <label>Tipo de Proyecto</label>
+        <select formControlName="tipoProyecto">
+            <option value="academico">Académico</option>
+            <option value="laboral">Laboral</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Participación</label>
+        <select formControlName="participacion">
+            <option value="frontend">Frontend</option>
+            <option value="backend">Backend</option>
+            <option value="bd">Base de Datos</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Tecnologías (coma)</label>
+        <input type="text" formControlName="tecnologiasTexto">
+    </div>
+
+    <div>
+        <label>Repositorio</label>
+        <input type="text" formControlName="repoUrl">
+    </div>
+
+    <div>
+        <label>Demo</label>
+        <input type="text" formControlName="demoUrl">
+    </div>
+
+    <button type="submit">
+        Guardar Cambios
     </button>
+
 </form>

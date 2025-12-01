@@ -16,7 +16,8 @@
             <th>Hora</th>
             <th>Comentario</th>
             <th>Estado</th>
-            <th>Respuesta del programador</th>
+            <th>Mensaje del programador</th>
+            <th>Notificación simulada</th>
         </tr>
     </thead>
 
@@ -26,14 +27,17 @@
             <td>{{ a.fecha }}</td>
             <td>{{ a.hora }}</td>
             <td>{{ a.comentario || '-' }}</td>
+
             <td>
                 <span [ngClass]="{
             'estado-pendiente': a.estado === 'pendiente',
             'estado-aprobada': a.estado === 'aprobada',
-            'estado-rechazada': a.estado === 'rechazada'}">
+            'estado-rechazada': a.estado === 'rechazada'
+          }">
                     {{ a.estado | titlecase }}
                 </span>
             </td>
+
             <td>
                 <ng-container *ngIf="a.respuestaProgramador; else sinRespuesta">
                     {{ a.respuestaProgramador }}
@@ -45,6 +49,21 @@
                     <span *ngIf="a.estado !== 'pendiente'">
                         (Sin mensaje)
                     </span>
+                </ng-template>
+            </td>
+
+            <td>
+                <ng-container *ngIf="a.estado !== 'pendiente'; else pendienteNotif">
+                    <p class="nota-notificacion">
+                        Esta es la información que habrías recibido por correo o WhatsApp:
+                    </p>
+                    <small>
+                        Estado: {{ a.estado | titlecase }}<br>
+                        Mensaje: {{ a.respuestaProgramador || '(Sin mensaje adicional)' }}
+                    </small>
+                </ng-container>
+                <ng-template #pendienteNotif>
+                    <small>Aún no hay notificación: tu solicitud sigue pendiente.</small>
                 </ng-template>
             </td>
         </tr>

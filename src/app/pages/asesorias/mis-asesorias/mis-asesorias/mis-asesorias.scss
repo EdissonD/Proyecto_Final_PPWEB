@@ -1,32 +1,179 @@
+// --- Variables de Diseño (Coherentes con el sistema) ---
+$primary-color: #2c3e50;
+$accent-color: #3498db;
+$bg-light: #f8f9fa;
+$border-color: #e9ecef;
+$text-color: #333;
+$text-muted: #6c757d;
+
+// Estados
+$status-pending-bg: #fff3cd;
+$status-pending-text: #856404;
+$status-approved-bg: #d4edda;
+$status-approved-text: #155724;
+$status-rejected-bg: #f8d7da;
+$status-rejected-text: #721c24;
+
+:host {
+    display: block;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: $text-color;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+// --- Encabezados y Estados de Carga ---
+h2 {
+    color: $primary-color;
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    border-bottom: 2px solid $border-color;
+    padding-bottom: 10px;
+}
+
+div[ngIf="cargando"],
+div[ngIf*="asesorias.length === 0"] {
+    text-align: center;
+    padding: 40px;
+    background-color: $bg-light;
+    border-radius: 8px;
+    color: $text-muted;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+// --- Contenedor Responsive (Recomendado) ---
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+// --- Tabla ---
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: .9rem;
-    margin-top: 1rem;
+    background-color: white;
+    min-width: 800px; // Evita que se aplaste en móviles
 
-    th,
-    td {
-        border: 1px solid #ddd;
-        padding: .5rem;
-        vertical-align: top;
+    thead {
+        background-color: $primary-color;
+        color: white;
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
     }
 
-    th {
-        background: #f4f4f4;
+    tbody {
+        tr {
+            border-bottom: 1px solid $border-color;
+            transition: background-color 0.2s;
+
+            &:hover {
+                background-color: lighten($bg-light, 1%);
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        td {
+            padding: 15px;
+            vertical-align: top; // Alineación superior para mejor lectura de mensajes largos
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
     }
 }
 
-.estado-pendiente {
-    color: #b8860b;
-    font-weight: 600;
+// --- Estilos de Columnas Específicas ---
+
+// 1. Badges de Estado
+span[class*='estado-'] {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+
+    &.estado-pendiente {
+        background-color: $status-pending-bg;
+        color: $status-pending-text;
+        border: 1px solid rgba($status-pending-text, 0.2);
+    }
+
+    &.estado-aprobada {
+        background-color: $status-approved-bg;
+        color: $status-approved-text;
+        border: 1px solid rgba($status-approved-text, 0.2);
+    }
+
+    &.estado-rechazada {
+        background-color: $status-rejected-bg;
+        color: $status-rejected-text;
+        border: 1px solid rgba($status-rejected-text, 0.2);
+    }
 }
 
-.estado-aprobada {
-    color: #0a8f3b;
-    font-weight: 600;
+// 2. Columna de Notificación Simulada
+td:last-child {
+    min-width: 250px; // Darle espacio suficiente al texto simulado
+    background-color: #fafafa; // Diferenciar sutilmente esta columna
 }
 
-.estado-rechazada {
-    color: #c62828;
+.nota-notificacion {
+    color: $accent-color;
+    font-size: 0.85rem;
     font-weight: 600;
+    margin: 0 0 5px 0;
+    display: flex;
+    align-items: center;
+
+    &::before {
+        content: 'ℹ'; // Icono visual simple con CSS
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 16px;
+        height: 16px;
+        background: $accent-color;
+        color: white;
+        border-radius: 50%;
+        font-size: 10px;
+        margin-right: 6px;
+    }
+}
+
+small {
+    display: block;
+    background-color: white;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    border-radius: 6px;
+    color: #555;
+    font-family: 'Courier New', Courier, monospace; // Estilo "raw data" o email
+    font-size: 0.8rem;
+}
+
+// --- Responsive ---
+@media (max-width: 768px) {
+    :host {
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
 }

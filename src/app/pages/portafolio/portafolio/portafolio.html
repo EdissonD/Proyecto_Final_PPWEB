@@ -1,77 +1,32 @@
-<div *ngIf="cargando">
-    Cargando portafolio...
+<h2>{{ programador?.nombre }}</h2>
+<p>{{ programador?.descripcion }}</p>
+
+<hr>
+
+<h3>Proyectos Académicos</h3>
+<div *ngIf="proyectosAcademicos.length === 0">No hay proyectos académicos</div>
+
+<div *ngFor="let p of proyectosAcademicos" class="proyecto">
+    <h4>{{ p.nombre }}</h4>
+    <p>{{ p.descripcion }}</p>
+    <p><strong>Participación:</strong> {{ p.participacion }}</p>
+    <p><strong>Tecnologías:</strong> {{ p.tecnologias.join(', ') }}</p>
+
+    <a *ngIf="p.repoUrl" href="{{ p.repoUrl }}" target="_blank">Repositorio</a>
+    <a *ngIf="p.demoUrl" href="{{ p.demoUrl }}" target="_blank">Demo</a>
 </div>
 
-<div *ngIf="!cargando && programador">
+<hr>
 
-    <!-- HEADER DEL PROGRAMADOR -->
-    <section class="perfil">
-        <div class="foto">
-            <img *ngIf="programador.foto" [src]="programador.foto" alt="Foto" />
-        </div>
+<h3>Proyectos Laborales</h3>
+<div *ngIf="proyectosLaborales.length === 0">No hay proyectos laborales</div>
 
-        <div class="info">
-            <h1>{{ programador.nombre }}</h1>
-            <h3>{{ programador.especialidad }}</h3>
-            <p>{{ programador.descripcion }}</p>
+<div *ngFor="let p of proyectosLaborales" class="proyecto">
+    <h4>{{ p.nombre }}</h4>
+    <p>{{ p.descripcion }}</p>
+    <p><strong>Participación:</strong> {{ p.participacion }}</p>
+    <p><strong>Tecnologías:</strong> {{ p.tecnologias.join(', ') }}</p>
 
-            <div class="links">
-                <a *ngIf="programador.github" [href]="programador.github" target="_blank">GitHub</a>
-                <a *ngIf="programador.linkedin" [href]="programador.linkedin" target="_blank">LinkedIn</a>
-                <a *ngIf="programador.portafolio" [href]="programador.portafolio" target="_blank">Portafolio
-                    personal</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- PROYECTOS ACADÉMICOS -->
-    <section class="proyectos">
-        <h2>Proyectos académicos</h2>
-
-        <div *ngIf="proyectosAcademicos.length === 0">
-            <p>Este programador aún no tiene proyectos académicos registrados.</p>
-        </div>
-
-        <div class="grid">
-            <article class="card" *ngFor="let p of proyectosAcademicos">
-                <h3>{{ p.nombre }}</h3>
-                <p class="categoria">Participación: {{ p.participacion }}</p>
-                <p>{{ p.descripcion }}</p>
-                <p class="tec"><strong>Tecnologías:</strong> {{ p.tecnologias }}</p>
-
-                <div class="links">
-                    <a *ngIf="p.repo" [href]="p.repo" target="_blank">Repositorio</a>
-                    <a *ngIf="p.demo" [href]="p.demo" target="_blank">Demo</a>
-                </div>
-            </article>
-        </div>
-    </section>
-
-    <!-- PROYECTOS LABORALES -->
-    <section class="proyectos">
-        <h2>Proyectos laborales</h2>
-
-        <div *ngIf="proyectosLaborales.length === 0">
-            <p>Este programador aún no tiene proyectos laborales registrados.</p>
-        </div>
-
-        <div class="grid">
-            <article class="card" *ngFor="let p of proyectosLaborales">
-                <h3>{{ p.nombre }}</h3>
-                <p class="categoria">Participación: {{ p.participacion }}</p>
-                <p>{{ p.descripcion }}</p>
-                <p class="tec"><strong>Tecnologías:</strong> {{ p.tecnologias }}</p>
-
-                <div class="links">
-                    <a *ngIf="p.repo" [href]="p.repo" target="_blank">Repositorio</a>
-                    <a *ngIf="p.demo" [href]="p.demo" target="_blank">Demo</a>
-                </div>
-            </article>
-        </div>
-    </section>
-
-</div>
-
-<div *ngIf="!cargando && !programador">
-    <p>El portafolio solicitado no existe.</p>
+    <a *ngIf="p.repoUrl" href="{{ p.repoUrl }}" target="_blank">Repositorio</a>
+    <a *ngIf="p.demoUrl" href="{{ p.demoUrl }}" target="_blank">Demo</a>
 </div>

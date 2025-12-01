@@ -1,106 +1,111 @@
-// Variables (Mismas que en editar.scss para consistencia)
-$primary-color: #3498db; // Azul
-$success-color: #27ae60; // Verde
-$danger-color: #e74c3c; // Rojo
-$text-dark: #2c3e50;
-$text-light: #7f8c8d;
-$border-color: #dee2e6;
-$bg-color: #f8f9fa;
-$table-header-bg: #34495e; // Un azul oscuro para la cabecera
+// Variables de diseño (Paleta de colores moderna)
+$primary-color: #2563eb; // Azul real
+$danger-color: #ef4444; // Rojo suave
+$info-color: #0d9488; // Verde azulado (Teal) para distinguir de 'Editar'
+$bg-color: #f8fafc; // Fondo muy claro
+$text-main: #1e293b; // Gris oscuro para texto
+$text-muted: #64748b; // Gris medio
+$border-color: #e2e8f0; // Bordes sutiles
+$radius: 8px;
+$shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 
 :host {
     display: block;
     padding: 2rem;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background-color: $bg-color;
     min-height: 100vh;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-// Título
+// 1. Título y Botón "Nuevo" (Header de la sección)
 h2 {
-    color: $text-dark;
+    color: $text-main;
     font-weight: 700;
     margin-bottom: 1.5rem;
+    display: inline-block;
+    margin-right: 1.5rem;
+    vertical-align: middle;
 }
 
-// Botón de "+ Nuevo programador"
-// Seleccionamos el enlace que está justo antes de la tabla
-a[routerLink] {
-    display: inline-block;
-    background-color: $success-color;
+// Transformamos el enlace de "Nuevo" en un Botón Call-to-Action (CTA)
+a[routerLink*='nuevo'] {
+    display: inline-flex;
+    align-items: center;
+    background-color: $primary-color;
     color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: $radius;
     text-decoration: none;
-    padding: 0.75rem 1.25rem;
-    border-radius: 6px;
     font-weight: 600;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.2s, transform 0.1s;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
 
     &:hover {
-        background-color: darken($success-color, 8%);
-    }
-
-    &:active {
-        transform: translateY(1px);
+        background-color: darken($primary-color, 5%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
     }
 }
 
-// Contenedor de la tabla para scroll en móviles
+// 2. Contenedor de la Tabla (para scroll en móviles y sombra)
 .table-container {
-    overflow-x: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     background: white;
+    border-radius: $radius;
+    box-shadow: $shadow;
+    overflow: hidden; // Para que los bordes redondeados no se corten
+    overflow-x: auto; // Scroll horizontal en pantallas pequeñas
+    margin-top: 1rem;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
     text-align: left;
+    min-width: 600px; // Evita que se aplaste demasiado
+}
 
-    thead {
-        background-color: $table-header-bg;
-        color: white;
+thead {
+    background-color: #f1f5f9;
 
-        th {
-            padding: 1rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
+    th {
+        padding: 1rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: $text-muted;
+        font-weight: 600;
+        border-bottom: 1px solid $border-color;
     }
+}
 
-    tbody {
-        tr {
-            border-bottom: 1px solid $border-color;
-            transition: background-color 0.2s;
+tbody {
+    tr {
+        border-bottom: 1px solid $border-color;
+        transition: background-color 0.15s ease;
 
-            &:last-child {
-                border-bottom: none;
-            }
+        &:last-child {
+            border-bottom: none;
+        }
 
-            &:hover {
-                background-color: rgba($primary-color, 0.05);
-            }
+        &:hover {
+            background-color: #f8fafc; // Feedback visual al pasar el mouse
         }
 
         td {
             padding: 1rem;
-            vertical-align: middle;
-            color: $text-dark;
+            vertical-align: middle; // Centra verticalmente el contenido
+            color: $text-main;
             font-size: 0.95rem;
 
-            // Estilo para la imagen del avatar
+            // Estilo para la imagen (Avatar)
             img {
-                width: 50px;
+                border-radius: 50%; // Círculo perfecto
+                object-fit: cover;
+                border: 2px solid white;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                width: 50px; // Sobrescribe el width inline para consistencia
                 height: 50px;
-                border-radius: 50%; // Hace la imagen redonda
-                object-fit: cover; // Evita que se deforme
-                border: 2px solid $border-color;
-                display: block;
             }
 
             // Enlace de Github
@@ -117,48 +122,52 @@ table {
     }
 }
 
-// Estilos de los botones de acción (Editar / Eliminar)
-button {
+// 3. Botones de Acción
+.btn {
     border: none;
     padding: 0.5rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
     font-weight: 600;
-    margin-right: 0.5rem;
-    transition: background 0.2s;
-    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 0.5rem; // Espacio entre botones
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-    // Botón Eliminar (Primer botón en tu HTML)
-    &:first-child {
-        background-color: $danger-color;
-
-        &:hover {
-            background-color: darken($danger-color, 10%);
-        }
-    }
-
-    // Botón Editar (Segundo botón en tu HTML)
     &:last-child {
-        background-color: $primary-color;
-        margin-right: 0; // Quitar margen al último
+        margin-right: 0;
+    }
+
+    // Estilos específicos
+    &-danger {
+        background-color: rgba($danger-color, 0.1);
+        color: $danger-color;
 
         &:hover {
-            background-color: darken($primary-color, 10%);
+            background-color: $danger-color;
+            color: white;
         }
     }
-}
 
-// Responsive
-@media (max-width: 768px) {
-    :host {
-        padding: 1rem;
+    &-primary {
+        background-color: rgba($primary-color, 0.1);
+        color: $primary-color;
+
+        &:hover {
+            background-color: $primary-color;
+            color: white;
+        }
     }
 
-    // Hacemos que la tabla tenga scroll horizontal en pantallas muy pequeñas
-    table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
+    &-info {
+        background-color: rgba($info-color, 0.1);
+        color: $info-color;
+
+        &:hover {
+            background-color: $info-color;
+            color: white;
+        }
     }
 }

@@ -1,7 +1,7 @@
-<h2>Agendar asesoría</h2>
+<h2>Agendar asesoría con {{ programador?.nombre }}</h2>
 
 <div *ngIf="programador" class="programador-header">
-    <img *ngIf="programador.foto" [src]="programador.foto" width="70" />
+    <img *ngIf="programador.foto" [src]="programador.foto" width="70" alt="Foto perfil" />
     <div>
         <h3>{{ programador.nombre }}</h3>
         <p>{{ programador.especialidad }}</p>
@@ -19,8 +19,28 @@
     <label>Fecha</label>
     <input type="date" formControlName="fecha" />
 
-    <label>Hora</label>
-    <input type="time" formControlName="hora" />
+    <div>
+        <label>Hora</label>
+
+        <ng-container *ngIf="horasDisponibles.length > 0; else campoLibre">
+            <select formControlName="hora">
+                <option value="">Seleccione una hora</option>
+                <option *ngFor="let h of horasDisponibles" [value]="h">
+                    {{ h }}
+                </option>
+            </select>
+            <p class="ayuda">
+                Horarios disponibles configurados por el administrador.
+            </p>
+        </ng-container>
+
+        <ng-template #campoLibre>
+            <input type="time" formControlName="hora">
+            <p class="ayuda">
+                Este programador no tiene horarios configurados; puedes elegir cualquier hora.
+            </p>
+        </ng-template>
+    </div>
 
     <label>Comentario (motivo de la asesoría)</label>
     <textarea formControlName="comentario"></textarea>

@@ -15,13 +15,16 @@ export interface Proyecto {
   id?: string;
   nombre: string;
   descripcion: string;
-  categoria: 'academico' | 'laboral';
-  participacion: 'frontend' | 'backend' | 'bd';
-  tecnologias: string;       // ej: "Angular, Firebase, Node"
-  repo?: string;             // enlace GitHub
-  demo?: string;             // despliegue (Firebase, Vercel, etc.)
-}
 
+  tipoProyecto: 'academico' | 'laboral';
+  participacion: 'frontend' | 'backend' | 'bd';
+
+  tecnologias: string[];
+  repoUrl?: string;
+  demoUrl?: string;
+
+  idProgramador: string;  // quien es dueño del proyecto
+}
 @Injectable({
   providedIn: 'root'
 })
