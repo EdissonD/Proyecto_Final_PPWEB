@@ -7,6 +7,10 @@
     <h1>{{ programador?.nombre }}</h1>
     <p>{{ programador?.descripcion }}</p>
 
+    <p *ngIf="programador?.disponibilidad">
+        <strong>Disponibilidad:</strong> {{ programador?.disponibilidad }}
+    </p>
+
     <hr>
 
     <h2>Proyectos académicos</h2>

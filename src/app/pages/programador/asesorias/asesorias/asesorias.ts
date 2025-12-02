@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-
 import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
 import { AuthService, UsuarioApp } from '../../../../services/auth';
 
@@ -10,13 +8,14 @@ import { AuthService, UsuarioApp } from '../../../../services/auth';
   standalone: true,
   templateUrl: './asesorias.html',
   styleUrls: ['./asesorias.scss'],
-  imports: [CommonModule, RouterModule]
+  imports: [CommonModule]
+  // Nota: Se eliminó RouterModule. Si tu HTML tiene botones con [routerLink], agrégalo de nuevo aquí.
 })
 export class ProgramadorAsesoriasComponent implements OnInit {
 
-  asesorias: Asesoria[] = [];
   cargando = true;
-  usuarioActual: UsuarioApp | null = null;
+  asesorias: Asesoria[] = [];
+  usuario: UsuarioApp | null = null;
 
   constructor(
     private asesoriasService: AsesoriasService,
@@ -24,106 +23,77 @@ export class ProgramadorAsesoriasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.authService.usuario$.subscribe({
-      next: usuario => {
-        console.log('USUARIO PROGRAMADOR:', usuario);
-        this.usuarioActual = usuario;
+    this.authService.usuario$.subscribe(usuario => {
+      this.usuario = usuario;
 
-        if (!usuario) {
-          this.asesorias = [];
-          this.cargando = false;
-          return;
-        }
-
-        const idProgramador = usuario.idProgramador || usuario.uid;
-        console.log('idProgramador usado para buscar asesorías:', idProgramador);
-
-        this.asesoriasService.getAsesoriasPorProgramador(idProgramador)
-          .subscribe({
-            next: lista => {
-              console.log('Asesorías encontradas para programador:', lista);
-              this.asesorias = lista.sort((a, b) =>
-                (b.creadoEn || '').localeCompare(a.creadoEn || '')
-              );
-            },
-            error: err => {
-              console.error('Error al cargar asesorías del programador:', err);
-            },
-            complete: () => {
-              this.cargando = false;
-            }
-          });
-      },
-      error: err => {
-        console.error('Error en usuario$ en ProgramadorAsesorias:', err);
+      // Si no hay usuario o no tiene idProgramador explícito, no cargamos datos
+      if (!usuario || !usuario.idProgramador) {
         this.cargando = false;
+        this.asesorias = [];
+        return;
       }
+
+      // Traemos las asesorías donde idProgramador coincide
+      this.asesoriasService.getAsesoriasPorProgramador(usuario.idProgramador)
+        .subscribe(lista => {
+          // Ordenar por fecha de creación (más recientes primero)
+          // Se usa (|| '') para evitar errores si algún registro antiguo no tiene fecha
+          this.asesorias = lista.sort((a, b) =>
+            (b.creadoEn || '').localeCompare(a.creadoEn || '')
+          );
+          this.cargando = false;
+        });
     });
   }
 
-  get pendientesCount(): number {
-    return this.asesorias.filter(a => a.estado === 'pendiente').length;
-  }
+  // --------- ACCIONES DEL PROGRAMADOR ---------
 
-  async cambiarEstado(a: Asesoria, nuevoEstado: 'aprobada' | 'rechazada') {
-    if (!a.id) return;
-
-    const textoAccion = nuevoEstado === 'aprobada' ? 'aprobar' : 'rechazar';
-    const confirmar = confirm(`¿Seguro que deseas ${textoAccion} esta asesoría?`);
-    if (!confirmar) return;
-
+  aprobar(a: Asesoria) {
     const mensaje = prompt(
-      'Mensaje para el solicitante (puede quedar vacío):',
-      a.respuestaProgramador || ''
+      'Mensaje para el estudiante (se mostrará en su panel):',
+      'Tu asesoría ha sido aprobada. Nos vemos en la fecha y hora acordada.'
     );
 
-    const cambios: Partial<Asesoria> = {
-      estado: nuevoEstado
-    };
+    // Si el usuario cancela el prompt, mensaje es null
+    if (mensaje === null) return;
 
-    if (mensaje !== null) {
-      cambios.respuestaProgramador = mensaje;
-    }
+    this.cambiarEstado(a, 'aprobada', mensaje);
+  }
+
+  rechazar(a: Asesoria) {
+    const mensaje = prompt(
+      'Motivo del rechazo (se mostrará en su panel):',
+      'Por favor vuelve a proponer otra fecha u horario.'
+    );
+
+    if (mensaje === null) return;
+
+    this.cambiarEstado(a, 'rechazada', mensaje);
+  }
+
+  private async cambiarEstado(a: Asesoria, estado: 'aprobada' | 'rechazada', mensaje: string) {
+    if (!a.id) return;
 
     try {
-      await this.asesoriasService.updateAsesoria(a.id, cambios);
+      await this.asesoriasService.updateAsesoria(a.id, {
+        estado,
+        respuestaProgramador: mensaje
+      });
 
-      a.estado = nuevoEstado;
-      if (mensaje !== null) {
-        a.respuestaProgramador = mensaje;
-      }
+      // Actualizar en memoria para que el cambio se refleje en la UI al instante
+      a.estado = estado;
+      a.respuestaProgramador = mensaje;
 
-      this.simularEnvioExterno(a);
-
-      alert(`Asesoría ${nuevoEstado === 'aprobada' ? 'aprobada' : 'rechazada'} correctamente.`);
+      // 🔔 Simulación de notificación externa (correo / whatsapp)
+      alert(
+        `SIMULACIÓN DE NOTIFICACIÓN\n\n` +
+        `Se enviaría un correo a: ${a.emailSolicitante}\n\n` +
+        `Asunto: Respuesta a tu solicitud de asesoría\n` +
+        `Mensaje: ${mensaje}`
+      );
     } catch (err) {
       console.error(err);
-      alert('Ocurrió un error al actualizar la asesoría');
+      alert('Error al actualizar la asesoría');
     }
-  }
-
-  etiquetaEstado(estado: Asesoria['estado']): string {
-    if (estado === 'pendiente') return 'Pendiente';
-    if (estado === 'aprobada') return 'Aprobada';
-    if (estado === 'rechazada') return 'Rechazada';
-    return estado;
-  }
-
-  simularEnvioExterno(a: Asesoria) {
-    const asunto = `Respuesta a tu solicitud de asesoría (${this.etiquetaEstado(a.estado)})`;
-    const cuerpo =
-      `Para: ${a.emailSolicitante}
-Asunto: ${asunto}
-
-Hola ${a.nombreSolicitante},
-
-Tu solicitud de asesoría para el día ${a.fecha} a las ${a.hora} ha sido ${this.etiquetaEstado(a.estado).toLowerCase()}.
-
-Mensaje del programador:
-${a.respuestaProgramador || '(sin mensaje adicional)'}
-
-*Este es un envío simulado (no se envió realmente ningún correo).*`;
-
-    alert(cuerpo);
   }
 }

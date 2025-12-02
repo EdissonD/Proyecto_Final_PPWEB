@@ -1,4 +1,5 @@
 <h2>Asesorías recibidas</h2>
+<hr>
 
 <div *ngIf="cargando">
     Cargando solicitudes...
@@ -8,44 +9,66 @@
     <p>No tienes solicitudes de asesoría por el momento.</p>
 </div>
 
-<div *ngIf="!cargando && asesorias.length > 0">
+<table *ngIf="!cargando && asesorias.length > 0">
+    <thead>
+        <tr>
+            <th>Estudiante</th>
+            <th>Correo</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Comentario</th>
+            <th>Estado</th>
+            <th>Respuesta</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
 
-    <p>
-        Tienes <strong>{{ pendientesCount }}</strong> solicitudes pendientes.
-    </p>
+    <tbody>
+        <tr *ngFor="let a of asesorias">
+            <td>{{ a.nombreSolicitante }}</td>
+            <td>{{ a.emailSolicitante }}</td>
+            <td>{{ a.fecha }}</td>
+            <td>{{ a.hora }}</td>
+            <td>{{ a.comentario || '-' }}</td>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Solicitante</th>
-                <th>Email</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Comentario</th>
-                <th>Estado</th>
-                <th>Respuesta</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+            <td>
+                <span [ngClass]="{
+          'estado-pendiente': a.estado === 'pendiente',
+          'estado-aprobada': a.estado === 'aprobada',
+          'estado-rechazada': a.estado === 'rechazada'
+        }">
+                    {{ a.estado | titlecase }}
+                </span>
+            </td>
 
-        <tbody>
-            <tr *ngFor="let a of asesorias">
-                <td>{{ a.nombreSolicitante }}</td>
-                <td>{{ a.emailSolicitante }}</td>
-                <td>{{ a.fecha }}</td>
-                <td>{{ a.hora }}</td>
-                <td>{{ a.comentario || '-' }}</td>
-                <td>{{ etiquetaEstado(a.estado) }}</td>
-                <td>{{ a.respuestaProgramador || '-' }}</td>
-                <td>
-                    <button *ngIf="a.estado === 'pendiente'" (click)="cambiarEstado(a, 'aprobada')">
+            <td>
+                <ng-container *ngIf="a.respuestaProgramador; else sinRespuesta">
+                    {{ a.respuestaProgramador }}
+                </ng-container>
+                <ng-template #sinRespuesta>
+                    <span class="texto-gris" *ngIf="a.estado === 'pendiente'">
+                        Aún no has respondido.
+                    </span>
+                    <span class="texto-gris" *ngIf="a.estado !== 'pendiente'">
+                        (Sin mensaje)
+                    </span>
+                </ng-template>
+            </td>
+
+            <td>
+                <div *ngIf="a.estado === 'pendiente'; else yaProcesada">
+                    <button class="btn-aprobar" (click)="aprobar(a)">
                         Aprobar
                     </button>
-                    <button *ngIf="a.estado === 'pendiente'" (click)="cambiarEstado(a, 'rechazada')">
+                    <button class="btn-rechazar" (click)="rechazar(a)">
                         Rechazar
                     </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                </div>
+
+                <ng-template #yaProcesada>
+                    <span>(Solicitud {{ a.estado }})</span>
+                </ng-template>
+            </td>
+        </tr>
+    </tbody>
+</table>

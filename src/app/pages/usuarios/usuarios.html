@@ -21,6 +21,10 @@
       <p class="especialidad">{{ p.especialidad }}</p>
       <p class="descripcion">{{ p.descripcion }}</p>
 
+      <p *ngIf="p.disponibilidad" class="disponibilidad">
+        <strong>Disponibilidad:</strong> {{ p.disponibilidad }}
+      </p>
+
       <div class="links">
         <a *ngIf="p.github" [href]="p.github" target="_blank">GitHub</a>
         <a *ngIf="p.linkedin" [href]="p.linkedin" target="_blank">LinkedIn</a>
@@ -31,7 +35,6 @@
           Ver portafolio
         </button>
 
-        <!-- Botón de asesoría (lo conectamos en el módulo de asesorías) -->
         <button [routerLink]="['/asesoria', p.id]">
           Agendar asesoría
         </button>
