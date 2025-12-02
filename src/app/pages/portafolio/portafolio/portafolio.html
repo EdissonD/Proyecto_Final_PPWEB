@@ -1,64 +1,178 @@
-<div *ngIf="cargando">
-    <p>Cargando portafolio...</p>
+<!-- Loading State -->
+<div *ngIf="cargando" class="loading-container">
+    <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+    </div>
+    <p class="loading-text">Cargando portafolio...</p>
 </div>
 
-<div *ngIf="!cargando">
+<!-- Main Content -->
+<div *ngIf="!cargando" class="portfolio-container">
+    
+    <!-- Header del Programador -->
+    <header class="portfolio-header">
+        <div class="programmer-badge">
+            <i class="fas fa-code"></i>
+            <span>Desarrollador</span>
+        </div>
+        <h1 class="programmer-name">{{ programador?.nombre }}</h1>
+        <p class="programmer-description">{{ programador?.descripcion }}</p>
+        
+        <div class="availability-status" *ngIf="programador?.disponibilidad">
+            <i class="fas fa-circle" [ngClass]="{
+                'available': programador?.disponibilidad === 'Disponible',
+                'busy': programador?.disponibilidad === 'Ocupado',
+                'away': programador?.disponibilidad === 'En proyecto'
+            }"></i>
+            <span><strong>Disponibilidad:</strong> {{ programador?.disponibilidad }}</span>
+        </div>
+    </header>
 
-    <h1>{{ programador?.nombre }}</h1>
-    <p>{{ programador?.descripcion }}</p>
-
-    <p *ngIf="programador?.disponibilidad">
-        <strong>Disponibilidad:</strong> {{ programador?.disponibilidad }}
-    </p>
-
-    <hr>
-
-    <h2>Proyectos académicos</h2>
-
-    <div *ngIf="proyectosAcademicos.length === 0">
-        <p>Este programador aún no tiene proyectos académicos registrados.</p>
-    </div>
-
-    <div *ngFor="let p of proyectosAcademicos" class="proyecto-card">
-        <h3>{{ p.nombre }}</h3>
-        <p>{{ p.descripcion }}</p>
-        <p><strong>Rol:</strong> {{ p.tipoParticipacion | titlecase }}</p>
-        <p><strong>Tecnologías:</strong> {{ p.tecnologias }}</p>
-
-        <p *ngIf="p.repoUrl">
-            <strong>Repositorio:</strong>
-            <a [href]="p.repoUrl" target="_blank">Ver código</a>
-        </p>
-
-        <p *ngIf="p.demoUrl">
-            <strong>Demo:</strong>
-            <a [href]="p.demoUrl" target="_blank">Ver proyecto</a>
-        </p>
-    </div>
-
-    <hr>
-
-    <h2>Proyectos laborales</h2>
-
-    <div *ngIf="proyectosLaborales.length === 0">
-        <p>Este programador aún no tiene proyectos laborales registrados.</p>
-    </div>
-
-    <div *ngFor="let p of proyectosLaborales" class="proyecto-card">
-        <h3>{{ p.nombre }}</h3>
-        <p>{{ p.descripcion }}</p>
-        <p><strong>Rol:</strong> {{ p.tipoParticipacion | titlecase }}</p>
-        <p><strong>Tecnologías:</strong> {{ p.tecnologias }}</p>
-
-        <p *ngIf="p.repoUrl">
-            <strong>Repositorio:</strong>
-            <a [href]="p.repoUrl" target="_blank">Ver código</a>
-        </p>
-
-        <p *ngIf="p.demoUrl">
-            <strong>Demo:</strong>
-            <a [href]="p.demoUrl" target="_blank">Ver proyecto</a>
-        </p>
-    </div>
-
+    <!-- Sección de Proyectos -->
+    <main class="projects-container">
+        
+        <!-- Proyectos Académicos -->
+        <section class="project-section academic">
+            <div class="section-header">
+                <div class="icon-wrapper">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2>Proyectos Académicos</h2>
+                <span class="project-count">{{ proyectosAcademicos.length }} proyectos</span>
+            </div>
+            
+            <div *ngIf="proyectosAcademicos.length === 0" class="empty-state">
+                <i class="fas fa-book-open"></i>
+                <p>Este programador aún no tiene proyectos académicos registrados.</p>
+            </div>
+            
+            <div class="projects-grid">
+                <div *ngFor="let p of proyectosAcademicos; let i = index" 
+                     class="project-card"
+                     [@cardAnimation]="i">
+                    <div class="project-header">
+                        <h3>
+                            <i class="fas fa-project-diagram"></i>
+                            {{ p.nombre }}
+                        </h3>
+                        <span class="project-badge academic">Académico</span>
+                    </div>
+                    
+                    <p class="project-description">{{ p.descripcion }}</p>
+                    
+                    <div class="project-details">
+                        <div class="detail-item">
+                            <i class="fas fa-user-tie"></i>
+                            <div>
+                                <strong>Rol:</strong>
+                                <span>{{ p.tipoParticipacion | titlecase }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <i class="fas fa-code"></i>
+                            <div>
+                                <strong>Tecnologías:</strong>
+                                <div class="tech-tags">
+                                    <span *ngFor="let tech of p.tecnologias.split(',')" 
+                                          class="tech-tag">
+                                        {{ tech.trim() }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-links" *ngIf="p.repoUrl || p.demoUrl">
+                        <a *ngIf="p.repoUrl" 
+                           [href]="p.repoUrl" 
+                           target="_blank" 
+                           class="project-link repo-link">
+                            <i class="fab fa-github"></i>
+                            Ver código
+                        </a>
+                        <a *ngIf="p.demoUrl" 
+                           [href]="p.demoUrl" 
+                           target="_blank" 
+                           class="project-link demo-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            Ver demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Proyectos Laborales -->
+        <section class="project-section professional">
+            <div class="section-header">
+                <div class="icon-wrapper">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h2>Proyectos Laborales</h2>
+                <span class="project-count">{{ proyectosLaborales.length }} proyectos</span>
+            </div>
+            
+            <div *ngIf="proyectosLaborales.length === 0" class="empty-state">
+                <i class="fas fa-briefcase"></i>
+                <p>Este programador aún no tiene proyectos laborales registrados.</p>
+            </div>
+            
+            <div class="projects-grid">
+                <div *ngFor="let p of proyectosLaborales; let i = index" 
+                     class="project-card"
+                     [@cardAnimation]="i">
+                    <div class="project-header">
+                        <h3>
+                            <i class="fas fa-briefcase"></i>
+                            {{ p.nombre }}
+                        </h3>
+                        <span class="project-badge professional">Profesional</span>
+                    </div>
+                    
+                    <p class="project-description">{{ p.descripcion }}</p>
+                    
+                    <div class="project-details">
+                        <div class="detail-item">
+                            <i class="fas fa-user-tie"></i>
+                            <div>
+                                <strong>Rol:</strong>
+                                <span>{{ p.tipoParticipacion | titlecase }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <i class="fas fa-code"></i>
+                            <div>
+                                <strong>Tecnologías:</strong>
+                                <div class="tech-tags">
+                                    <span *ngFor="let tech of p.tecnologias.split(',')" 
+                                          class="tech-tag">
+                                        {{ tech.trim() }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-links" *ngIf="p.repoUrl || p.demoUrl">
+                        <a *ngIf="p.repoUrl" 
+                           [href]="p.repoUrl" 
+                           target="_blank" 
+                           class="project-link repo-link">
+                            <i class="fab fa-github"></i>
+                            Ver código
+                        </a>
+                        <a *ngIf="p.demoUrl" 
+                           [href]="p.demoUrl" 
+                           target="_blank" 
+                           class="project-link demo-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            Ver demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 </div>
