@@ -1,58 +1,216 @@
-.perfil {
-    display: flex;
-    gap: 2rem;
+// ======================================
+// VARIABLES
+// ======================================
+$primary: #1a73e8;
+$primary-dark: #0b57d0;
+$accent: #34a853;
+$bg: #f5f7fb;
+$surface: #ffffff;
+$text: #202124;
+$text-light: #5f6368;
+$shadow: 0 6px 20px rgba(0,0,0,.08);
+
+// ======================================
+// CONTENEDOR GENERAL
+// ======================================
+.content-wrapper {
+    padding: 2rem 3rem;
+    background: $bg;
+    min-height: 100vh;
+    animation: fadeIn .4s ease-out;
+}
+
+// ======================================
+// HEADER PROGRAMADOR
+// ======================================
+.programador-box {
+    background: linear-gradient(120deg, #e3edff, #ffffff);
+    padding: 2rem;
+    border-radius: 16px;
+    border-left: 6px solid $primary;
     margin-bottom: 3rem;
-    align-items: center;
+    box-shadow: $shadow;
 
-    .foto img {
-        width: 140px;
-        height: 140px;
-        border-radius: 50%;
-        object-fit: cover;
+    h1 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 2.4rem;
+        color: $primary-dark;
+
+        i { font-size: 2.5rem; color: $primary; }
     }
 
-    .info h1 {
-        margin: 0;
-    }
-
-    .info h3 {
-        margin-top: .3rem;
-        color: #555;
-    }
-
-    .links a {
-        margin-right: 1rem;
+    p {
+        font-size: 1.15rem;
+        margin-top: .5rem;
+        color: $text-light;
     }
 }
 
-.proyectos {
-    margin-bottom: 3rem;
+// ======================================
+// TITULOS DE SECCIÓN
+// ======================================
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 3rem 0 2rem;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: $primary-dark;
 
-    .grid {
-        display: grid;
-        gap: 1.5rem;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
+    i { font-size: 1.8rem; }
+}
 
-    .card {
-        background: #fff;
-        border-radius: 8px;
-        padding: 1rem 1.2rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .06);
-    }
+// ======================================
+// MENSAJES VACÍOS
+// ======================================
+.empty {
+    background: #e9eef7;
+    padding: 1rem;
+    border-left: 6px solid $primary;
+    border-radius: 12px;
+    font-style: italic;
+    color: $text-light;
+}
 
-    .categoria {
-        font-size: .9rem;
-        color: #777;
-    }
 
-    .tec {
-        font-size: .9rem;
-        margin-top: .5rem;
-    }
+// ======================================
+// TIMELINE CENTRADO
+// ======================================
+.timeline {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 0;
 
-    .links a {
-        margin-right: 1rem;
-        font-size: .9rem;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 100%;
+        background: linear-gradient($primary, $accent);
+        border-radius: 10px;
     }
+}
+
+.timeline-item {
+    position: relative;
+    width: 50%;
+    padding: 2rem 0;
+    animation: fadeSlide .6s ease both;
+
+    &.left { left: 0; text-align: right; }
+    &.right { left: 50%; }
+}
+
+.timeline-content {
+    background: $surface;
+    padding: 1.6rem 1.8rem;
+    border-radius: 14px;
+    box-shadow: $shadow;
+    border: 1px solid #e2e5ea;
+    position: relative;
+    width: 90%;
+    display: inline-block;
+
+    // conector (punta redonda)
+    &::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        width: 14px;
+        height: 14px;
+        background: $primary-dark;
+        border-radius: 50%;
+    }
+}
+
+.left .timeline-content::before { right: -7px; }
+.right .timeline-content::before { left: -7px; }
+
+// ======================================
+// TITULO CARD
+// ======================================
+.timeline-content h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    color: $primary-dark;
+    font-weight: 800;
+
+    i { color: $primary; }
+}
+
+.timeline-content p {
+    color: $text-light;
+    margin: .4rem 0;
+}
+
+strong { color: $text; }
+
+// ======================================
+// TECNOLOGÍAS
+// ======================================
+.tec-list {
+    margin-top: .6rem;
+}
+
+.tec-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #e3eaff;
+    color: $primary-dark;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: .85rem;
+    font-weight: 600;
+    margin-right: 6px;
+    margin-top: 6px;
+}
+
+// ======================================
+// ENLACES
+// ======================================
+.links {
+    margin-top: 1rem;
+
+    a {
+        text-decoration: none;
+        color: $primary-dark;
+        font-weight: 700;
+        margin-right: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        &:hover { text-decoration: underline; }
+    }
+}
+
+
+// ======================================
+// ANIMACIONES
+// ======================================
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

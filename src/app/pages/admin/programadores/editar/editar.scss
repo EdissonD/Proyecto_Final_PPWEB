@@ -1,201 +1,282 @@
-// Variables
-$primary-color: #3498db;
-$success-color: #27ae60;
+// ==========================================================
+// PALETA Y VARIABLES
+// ==========================================================
+$primary: #1e88e5;
+$primary-dark: darken($primary, 10%);
+$success: #2ecc71;
+$danger: #e74c3c;
+$warning: #f1c40f;
+
 $text-dark: #2c3e50;
-$text-light: #7f8c8d;
-$border-color: #dcdfe1;
-$bg-color: #f5f6f8;
-$section-bg: #fafbfd;
+$text-light: #95a5a6;
+$border: #dce1e3;
 
-// Íconos en labels
-$icon-user: "\f007";       // font-awesome: user
-$icon-star: "\f005";       // star
-$icon-file: "\f15c";       // file
-$icon-mail: "\f0e0";       // envelope
-$icon-whatsapp: "\f232";   // WhatsApp
-$icon-github: "\f09b";     // GitHub
-$icon-linkedin: "\f08c";   // LinkedIn
-$icon-clock: "\f017";      // reloj
+$bg-page: linear-gradient(135deg, #eef2f7, #dfe6ee);
+$bg-card: rgba(255, 255, 255, 0.9);
 
+// ICONOS (Font Awesome)
+$icon-user: "\f007";
+$icon-star: "\f005";
+$icon-file: "\f15c";
+$icon-mail: "\f0e0";
+$icon-whatsapp: "\f232";
+$icon-github: "\f09b";
+$icon-linkedin: "\f08c";
+$icon-clock: "\f017";
+$icon-image: "\f03e";
+
+// ==========================================================
+// CONTENEDOR PRINCIPAL
+// ==========================================================
 :host {
     display: block;
-    padding: 2rem 1rem;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: $bg-color;
+    padding: 2.5rem 1rem;
+    background: $bg-page;
     min-height: 100vh;
+    animation: fadeIn 0.6s ease;
+    backdrop-filter: blur(4px);
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
+// ==========================================================
+// TITULOS
+// ==========================================================
 h2 {
     text-align: center;
-    color: $text-dark;
+    color: $primary-dark;
+    font-size: 2.3rem;
+    font-weight: 800;
     margin-bottom: 2rem;
-    font-size: 1.9rem;
-    font-weight: 700;
+    position: relative;
+
+    &::after {
+        content: "";
+        width: 65px;
+        height: 4px;
+        background: $primary;
+        display: block;
+        margin: 10px auto 0;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba($primary, .4);
+    }
 }
 
 h3 {
-    margin: 2rem 0 1rem;
-    font-size: 1.2rem;
-    color: $text-dark;
-    font-weight: 600;
-    padding-left: 5px;
-    border-left: 4px solid $primary-color;
+    margin: 2.5rem 0 1rem;
+    color: $primary-dark;
+    font-weight: 700;
+    font-size: 1.4rem;
+    padding-left: 25px;
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: $primary;
+        border-radius: 50%;
+        left: 0;
+        top: 6px;
+        box-shadow: 0 0 10px rgba($primary, 0.5);
+    }
 }
 
+// ==========================================================
+// FORMULARIO (Glass + sombras suaves)
+// ==========================================================
 form {
-    max-width: 600px;
+    max-width: 720px;
     margin: 0 auto;
-    background: white;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e8e8e8;
+    padding: 3rem 2.5rem;
+    background: $bg-card;
+    border-radius: 20px;
+    box-shadow: 0 14px 40px rgba(0,0,0,.15);
+    border: 1px solid rgba(255,255,255,0.6);
+    backdrop-filter: blur(8px);
+    animation: slideUp 0.6s ease;
 
     .form-group {
-        margin-bottom: 1.4rem;
+        margin-bottom: 1.5rem;
     }
 
+    // ==========================================================
+    // LABELS + ICONOS
+    // ==========================================================
     label {
-        display: flex;
-        align-items: center;
-        gap: 6px;
         font-weight: 600;
         color: $text-dark;
-        font-size: 0.95rem;
-        margin-bottom: 0.5rem;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 6px;
+        font-size: 1.05rem;
 
-        // Icono en cada label
         &::before {
             font-family: "FontAwesome";
-            font-size: 0.9rem;
-            color: $primary-color;
+            color: $primary;
+            font-size: 1.15rem;
+            transition: .25s ease;
+        }
+
+        &:hover::before {
+            transform: scale(1.25);
         }
     }
 
-    // Íconos por campo
     label:contains("Nombre")::before { content: $icon-user; }
     label:contains("Especialidad")::before { content: $icon-star; }
     label:contains("Descripción")::before { content: $icon-file; }
-    label:contains("Foto de perfil")::before { content: "\f03e"; }
+    label:contains("Foto")::before { content: $icon-image; }
     label:contains("Email")::before { content: $icon-mail; }
     label:contains("WhatsApp")::before { content: $icon-whatsapp; }
     label:contains("GitHub")::before { content: $icon-github; }
     label:contains("LinkedIn")::before { content: $icon-linkedin; }
-    label:contains("Horas disponibles")::before { content: $icon-clock; }
     label:contains("Disponibilidad")::before { content: $icon-clock; }
+    label:contains("Horas disponibles")::before { content: $icon-clock; }
 
-    // Inputs y textarea
-    input[type="text"],
-    input[type="email"],
+    // ==========================================================
+    // CAMPOS DE TEXTO
+    // ==========================================================
+    input,
     textarea {
         width: 100%;
-        padding: 0.85rem 1rem;
-        border: 1px solid $border-color;
-        border-radius: 8px;
-        color: #495057;
-        background-color: white;
-        font-size: 1rem;
-        box-sizing: border-box;
-        transition: all 0.2s ease;
-
-        &::placeholder {
-            color: $text-light;
-        }
+        padding: 0.95rem 1.1rem;
+        border-radius: 12px;
+        border: 1px solid $border;
+        font-size: 1.05rem;
+        background: rgba(255,255,255,.8);
+        transition: 0.25s ease;
+        outline: none;
 
         &:focus {
-            border-color: $primary-color;
-            box-shadow: 0 0 0 3px rgba($primary-color, 0.18);
-            outline: none;
+            border-color: $primary;
+            box-shadow: 0 0 10px rgba($primary, .35);
+            background: white;
         }
+    }
+
+    // Validación
+    input.ng-invalid.ng-touched,
+    textarea.ng-invalid.ng-touched {
+        border-color: $danger;
+        box-shadow: 0 0 10px rgba($danger, .3);
+    }
+
+    input.ng-valid.ng-touched,
+    textarea.ng-valid.ng-touched {
+        border-color: $success;
+        box-shadow: 0 0 10px rgba($success, .3);
     }
 
     textarea {
-        min-height: 110px;
         resize: vertical;
+        min-height: 120px;
     }
 
-    // Preview imagen
-    .preview-box {
-        margin-top: 10px;
-
-        img {
-            width: 160px;
-            border-radius: 10px;
-            border: 1px solid $border-color;
-            object-fit: cover;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-        }
-    }
-
-    // Input file
+    // ==========================================================
+    // FILE INPUT
+    // ==========================================================
     input[type="file"] {
-        display: block;
-        background: #eef1f3;
-        border-radius: 8px;
-        padding: 0.7rem;
+        background: #f1f5fb;
+        border: 2px dashed $primary;
+        padding: 1rem;
         cursor: pointer;
-        border: 1px solid $border-color;
+        border-radius: 12px;
+
+        &:hover {
+            background: #e8effb;
+        }
 
         &::file-selector-button {
-            background: $primary-color;
+            background: $primary;
+            padding: 0.55rem 1rem;
             border: none;
-            padding: 0.5rem 1.1rem;
-            color: #fff;
-            border-radius: 5px;
+            border-radius: 8px;
+            color: white;
             cursor: pointer;
-            transition: 0.2s;
+            transition: .3s;
 
             &:hover {
-                background: darken($primary-color, 12%);
+                background: $primary-dark;
             }
         }
     }
 
-    .ayuda {
-        color: $text-light;
-        font-size: 0.85rem;
-        margin-bottom: 0.4rem;
+    // ==========================================================
+    // PREVIEW
+    // ==========================================================
+    .preview-box img {
+        width: 170px;
+        border-radius: 14px;
+        border: 3px solid $border;
+        box-shadow: 0 8px 18px rgba(0,0,0,.12);
+        transition: .25s;
+        margin-top: 10px;
+
+        &:hover {
+            transform: scale(1.05);
+        }
     }
 
-    // Botón guardar
+    // ==========================================================
+    // BOTÓN FINAL
+    // ==========================================================
     button {
         width: 100%;
         padding: 1rem;
+        margin-top: 1.5rem;
         border: none;
-        background-color: $success-color;
-        color: #fff;
-        font-size: 1.15rem;
-        font-weight: 600;
-        border-radius: 8px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, $success, darken($success, 10%));
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 700;
+        box-shadow: 0 6px 16px rgba($success, .4);
         cursor: pointer;
-        margin-top: 1rem;
-        box-shadow: 0 4px 12px rgba($success-color, 0.25);
-        transition: all 0.2s ease;
+        transition: 0.25s ease;
+        animation: pulse 2s infinite;
 
         &:hover {
-            background-color: darken($success-color, 8%);
             transform: translateY(-2px);
         }
 
         &:active {
-            transform: translateY(1px);
+            transform: scale(0.98);
         }
 
         &:disabled {
-            background-color: #9aa1a6;
+            background: #9aa1a6;
             cursor: not-allowed;
-            box-shadow: none;
+            animation: none;
         }
     }
 }
 
-// Responsive
+// ==========================================================
+// ANIMACIONES
+// ==========================================================
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 rgba($success, 0.4); }
+    50% { box-shadow: 0 0 16px rgba($success, 0.6); }
+    100% { box-shadow: 0 0 0 rgba($success, 0.4); }
+}
+
+// ==========================================================
+// RESPONSIVE
+// ==========================================================
 @media (max-width: 600px) {
     form {
-        padding: 1.5rem;
-    }
-
-    h2 {
-        font-size: 1.6rem;
+        padding: 2rem 1.3rem;
     }
 }
