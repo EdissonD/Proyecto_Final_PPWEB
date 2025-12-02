@@ -26,11 +26,12 @@ $spacing-md: 1.5rem;
 $spacing-lg: 2rem;
 $spacing-xl: 3rem;
 
-// Variables de bordes
+// Variables de bordes RECTANGULARES (corregido)
 $border-radius-sm: 0.375rem;
 $border-radius: 0.5rem;
 $border-radius-lg: 0.75rem;
 $border-radius-xl: 1rem;
+$border-radius-rectangle: 0.5rem; // Esquinas suaves pero rectangulares
 
 // ======================================
 // MIXINS REUTILIZABLES
@@ -490,5 +491,281 @@ body {
         .project-link {
             justify-content: center;
         }
+    }
+}
+
+/* ======================================
+   SISTEMA DE IMÁGENES RECTANGULARES RESPONSIVE
+   (SIN MODIFICAR HTML - USANDO SELECTORES GLOBALES)
+   ====================================== */
+
+// 1. IMÁGENES DIRECTAS EN EL CONTENIDO
+img {
+    // Establecer forma rectangular con esquinas suaves
+    border-radius: $border-radius-rectangle !important; // Fuerza forma rectangular
+    border: 2px solid $border;
+    object-fit: cover;
+    display: block;
+    background: linear-gradient(45deg, $bg, lighten($bg, 2%));
+    transition: all 0.3s ease;
+    
+    // Asegurar que todas las imágenes tengan altura fija para mantener proporción rectangular
+    height: 250px;
+    width: 100%;
+    max-width: 100%;
+    
+    // Hover effects
+    &:hover {
+        transform: scale(1.02);
+        box-shadow: $shadow-md;
+        border-color: $primary;
+    }
+    
+    // Estilos específicos para diferentes contextos
+    
+    // Imágenes dentro de portfolio-header
+    .portfolio-header & {
+        height: 300px;
+        margin: 0 auto $spacing-md auto;
+        max-width: 500px;
+        
+        @include responsive(mobile) {
+            height: 200px;
+            max-width: 100%;
+        }
+        
+        @include responsive(tablet) {
+            height: 250px;
+            max-width: 400px;
+        }
+    }
+    
+    // Imágenes dentro de project-card
+    .project-card & {
+        height: 200px;
+        margin-bottom: $spacing-md;
+        
+        @include responsive(mobile) {
+            height: 180px;
+        }
+    }
+    
+    // Imágenes en proyectos académicos
+    .academic & {
+        border-color: rgba(139, 92, 246, 0.3);
+        
+        &:hover {
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+    }
+    
+    // Imágenes en proyectos profesionales
+    .professional & {
+        border-color: rgba(16, 185, 129, 0.3);
+        
+        &:hover {
+            border-color: rgba(16, 185, 129, 0.6);
+        }
+    }
+}
+
+// 2. CONTENEDORES DE IMAGENES (si existen)
+[class*="image"],
+[class*="img"],
+[class*="photo"],
+[class*="avatar"] {
+    position: relative;
+    
+    img {
+        border-radius: $border-radius-rectangle !important;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+    
+    // Placeholder para imágenes faltantes
+    &:empty::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba($primary, 0.1), rgba($accent, 0.1));
+        border-radius: $border-radius-rectangle;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        color: rgba($primary, 0.3);
+        font-size: 2rem;
+    }
+}
+
+// 3. MANTENER RESPONSIVIDAD
+@include responsive(mobile) {
+    img {
+        // Ajustes para móviles - mantener forma rectangular
+        height: 200px;
+        
+        .portfolio-header & {
+            height: 180px;
+        }
+        
+        .project-card & {
+            height: 160px;
+        }
+    }
+}
+
+@include responsive(tablet) {
+    img {
+        // Ajustes para tablets - mantener forma rectangular
+        height: 220px;
+        
+        .portfolio-header & {
+            height: 220px;
+        }
+        
+        .project-card & {
+            height: 180px;
+        }
+    }
+}
+
+// 4. CORRECCIÓN PARA IMÁGENES CIRCULARES (por si acaso)
+// Esto asegura que ninguna imagen sea circular
+img[style*="border-radius: 50%"],
+img[style*="border-radius:50%"],
+img[style*="circle"],
+img[class*="circle"],
+img[class*="rounded"] {
+    border-radius: $border-radius-rectangle !important;
+    // Fuerza forma rectangular aunque tenga clases circulares
+}
+
+// 5. SELECTORES ESPECÍFICOS PARA POSIBLES CLASES DE TU HTML
+// Si tus imágenes tienen clases específicas, aquí las forzamos a ser rectangulares
+
+// Clases comunes de Angular/Framework
+.img-fluid,
+.img-responsive,
+.thumbnail,
+.media,
+.preview,
+.display,
+.featured-image,
+.card-image {
+    img {
+        border-radius: $border-radius-rectangle !important;
+    }
+    
+    &::after {
+        border-radius: $border-radius-rectangle !important;
+    }
+}
+
+// 6. MANTENER ACCESIBILIDAD
+img {
+    // Asegurar texto alternativo
+    &[alt]:not([alt=""]) {
+        position: relative;
+        
+        // Tooltip visual para imágenes con alt
+        &:hover::after {
+            content: attr(alt);
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: $spacing-xs $spacing-sm;
+            font-size: 0.75rem;
+            border-radius: 0 0 $border-radius-rectangle $border-radius-rectangle;
+            text-align: center;
+            z-index: 10;
+        }
+    }
+}
+
+// 7. EFECTO DE CARGA PARA IMÁGENES
+img:not([src]),
+img[src=""],
+img.loading {
+    background: linear-gradient(90deg, $border 25%, lighten($border, 5%) 50%, $border 75%);
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+    
+    &::before {
+        content: '📷';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2rem;
+        opacity: 0.5;
+    }
+}
+
+@keyframes loading-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+// 8. DARK MODE SUPPORT
+@media (prefers-color-scheme: dark) {
+    img {
+        border-color: darken($border, 20%);
+        background: linear-gradient(45deg, darken($bg, 10%), darken($bg, 8%));
+        
+        &:hover {
+            border-color: lighten($primary, 10%);
+        }
+    }
+    
+    img:not([src]),
+    img[src=""],
+    img.loading {
+        background: linear-gradient(90deg, darken($border, 20%) 25%, darken($border, 15%) 50%, darken($border, 20%) 75%);
+    }
+}
+
+// 9. OVERRIDE PARA CUALQUIER ESTILO INLINE CIRCULAR
+// Esto asegura que incluso los estilos inline no hagan las imágenes circulares
+img {
+    &[style*="border-radius"] {
+        border-radius: $border-radius-rectangle !important;
+    }
+}
+
+// 10. SELECTOR DE NUKEO PARA GARANTIZAR FORMA RECTANGULAR
+*:not(.keep-circle):not(.avatar):not(.profile-pic) > img,
+img:not(.keep-circle):not(.avatar):not(.profile-pic) {
+    border-radius: $border-radius-rectangle !important;
+}
+
+// 11. MANTENER PROPORCIÓN RECTANGULAR EN TODOS LOS DISPOSITIVOS
+@media (max-width: 480px) {
+    img {
+        // Forma rectangular incluso en pantallas muy pequeñas
+        height: 180px !important;
+        border-radius: $border-radius-sm !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    img {
+        // Forma rectangular en pantallas grandes
+        height: 280px !important;
+    }
+    
+    .portfolio-header img {
+        height: 350px !important;
     }
 }
