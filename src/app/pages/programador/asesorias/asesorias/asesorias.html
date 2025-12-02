@@ -8,6 +8,9 @@
     <p>No tienes asesorías solicitadas por el momento.</p>
 </div>
 
+<!-- DEBUG: para ver qué llega desde Firestore -->
+<pre *ngIf="!cargando">{{ asesorias | json }}</pre>
+
 <table *ngIf="!cargando && asesorias.length > 0">
     <thead>
         <tr>
