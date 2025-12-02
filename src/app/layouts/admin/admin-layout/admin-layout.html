@@ -1,18 +1,33 @@
 <div class="admin-container">
 
-    <aside class="sidebar">
-        <h2>Admin</h2>
-        <nav>
-            <a routerLink="/admin">Dashboard</a>
-            <a routerLink="/admin/programadores">Programadores</a>
-            <a routerLink="/admin/usuarios">Usuarios</a>
-            <a routerLink="/usuarios">Explorar portafolios</a>
-            <a routerLink="/login">Cerrar sesión</a>
-        </nav>
-    </aside>
+  <aside class="sidebar">
+      <h2><i class="bi bi-speedometer2"></i> Admin</h2>
 
-    <main class="content">
-        <router-outlet></router-outlet>
-    </main>
+      <nav>
+          <a routerLink="/admin" routerLinkActive="activo">
+              <i class="bi bi-grid-fill"></i> Dashboard
+          </a>
+
+          <a routerLink="/admin/programadores" routerLinkActive="activo">
+              <i class="bi bi-code-slash"></i> Programadores
+          </a>
+
+          <a routerLink="/admin/usuarios" routerLinkActive="activo">
+              <i class="bi bi-people-fill"></i> Usuarios
+          </a>
+
+          <a routerLink="/usuarios" routerLinkActive="activo">
+              <i class="bi bi-folder2-open"></i> Explorar portafolios
+          </a>
+
+          <a routerLink="/login" class="cerrar">
+              <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+          </a>
+      </nav>
+  </aside>
+
+  <main class="content">
+      <router-outlet></router-outlet>
+  </main>
 
 </div>

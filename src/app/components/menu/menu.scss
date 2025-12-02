@@ -1,15 +1,52 @@
 .menu {
-    display: flex;
-    gap: 16px;
-    padding: 10px 20px;
-    background-color: #6a4545;
+  display: flex;
+  gap: 20px;
+  padding: 12px 24px;
+  background: #ffffff;
+  border-bottom: 2px solid #e6e6e6;
+  align-items: center;
 }
 
 .menu a {
-    text-decoration: none;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.3s, color 0.3s, transform 0.1s;
+  font-size: 15px;
 }
 
+/* Estado hover */
+.menu a:hover {
+  background: #e9f2ff;
+  color: #0d6efd;
+  transform: translateY(-2px);
+}
+
+/* Estado activo del router */
 .menu a.activo {
-    font-weight: bold;
-    text-decoration: underline;
+  background: #0d6efd;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Botón de cierre de sesión */
+.menu a.cerrar {
+  color: #b40000;
+  font-weight: 600;
+}
+
+.menu a.cerrar:hover {
+  background: #ffe6e6;
+  color: #dc0000;
+}
+
+/* Iconos */
+.menu i {
+  font-size: 18px;
 }
