@@ -1,89 +1,64 @@
-<div *ngIf="cargando" class="loading-box">
-    <i class="fas fa-spinner fa-spin"></i>
+<div *ngIf="cargando">
     <p>Cargando portafolio...</p>
 </div>
 
-<div *ngIf="!cargando" class="content-wrapper">
+<div *ngIf="!cargando">
 
-    <!-- HEADER DEL PROGRAMADOR -->
-    <div class="programador-box">
-        <h1><i class="fas fa-user-circle"></i> {{ programador?.nombre }}</h1>
-        <p>{{ programador?.descripcion }}</p>
+    <h1>{{ programador?.nombre }}</h1>
+    <p>{{ programador?.descripcion }}</p>
+
+    <p *ngIf="programador?.disponibilidad">
+        <strong>Disponibilidad:</strong> {{ programador?.disponibilidad }}
+    </p>
+
+    <hr>
+
+    <h2>Proyectos académicos</h2>
+
+    <div *ngIf="proyectosAcademicos.length === 0">
+        <p>Este programador aún no tiene proyectos académicos registrados.</p>
     </div>
 
-    <!-- PROYECTOS ACADÉMICOS -->
-    <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Proyectos Académicos</h2>
+    <div *ngFor="let p of proyectosAcademicos" class="proyecto-card">
+        <h3>{{ p.nombre }}</h3>
+        <p>{{ p.descripcion }}</p>
+        <p><strong>Rol:</strong> {{ p.tipoParticipacion | titlecase }}</p>
+        <p><strong>Tecnologías:</strong> {{ p.tecnologias }}</p>
 
-    <p *ngIf="proyectosAcademicos.length === 0" class="empty">No existen proyectos académicos registrados.</p>
+        <p *ngIf="p.repoUrl">
+            <strong>Repositorio:</strong>
+            <a [href]="p.repoUrl" target="_blank">Ver código</a>
+        </p>
 
-    <div class="timeline">
-
-        <div *ngFor="let p of proyectosAcademicos; let i = index"
-             class="timeline-item"
-             [ngClass]="{ 'left': i % 2 === 0, 'right': i % 2 !== 0 }">
-
-            <div class="timeline-content">
-                <h3><i class="fas fa-code"></i> {{ p.nombre }}</h3>
-                <p>{{ p.descripcion }}</p>
-
-                <p><strong>Rol:</strong> {{ p.tipoParticipacion | titlecase }}</p>
-
-                <div class="tec-list">
-                    <span class="tec-badge" *ngFor="let t of p.tecnologias.split(',')">
-                        <i class="fas fa-microchip"></i> {{ t.trim() }}
-                    </span>
-                </div>
-
-                <div class="links">
-                    <a *ngIf="p.repoUrl" [href]="p.repoUrl" target="_blank">
-                        <i class="fas fa-code-branch"></i> Código
-                    </a>
-
-                    <a *ngIf="p.demoUrl" [href]="p.demoUrl" target="_blank">
-                        <i class="fas fa-play-circle"></i> Demo
-                    </a>
-                </div>
-            </div>
-        </div>
-
+        <p *ngIf="p.demoUrl">
+            <strong>Demo:</strong>
+            <a [href]="p.demoUrl" target="_blank">Ver proyecto</a>
+        </p>
     </div>
 
+    <hr>
 
-    <!-- PROYECTOS LABORALES -->
-    <h2 class="section-title"><i class="fas fa-briefcase"></i> Proyectos Laborales</h2>
+    <h2>Proyectos laborales</h2>
 
-    <p *ngIf="proyectosLaborales.length === 0" class="empty">No existen proyectos laborales registrados.</p>
+    <div *ngIf="proyectosLaborales.length === 0">
+        <p>Este programador aún no tiene proyectos laborales registrados.</p>
+    </div>
 
-    <div class="timeline">
+    <div *ngFor="let p of proyectosLaborales" class="proyecto-card">
+        <h3>{{ p.nombre }}</h3>
+        <p>{{ p.descripcion }}</p>
+        <p><strong>Rol:</strong> {{ p.tipoParticipacion | titlecase }}</p>
+        <p><strong>Tecnologías:</strong> {{ p.tecnologias }}</p>
 
-        <div *ngFor="let p of proyectosLaborales; let i = index"
-             class="timeline-item"
-             [ngClass]="{ 'left': i % 2 === 0, 'right': i % 2 !== 0 }">
+        <p *ngIf="p.repoUrl">
+            <strong>Repositorio:</strong>
+            <a [href]="p.repoUrl" target="_blank">Ver código</a>
+        </p>
 
-            <div class="timeline-content">
-                <h3><i class="fas fa-toolbox"></i> {{ p.nombre }}</h3>
-                <p>{{ p.descripcion }}</p>
-
-                <p><strong>Rol:</strong> {{ p.tipoParticipacion | titlecase }}</p>
-
-                <div class="tec-list">
-                    <span class="tec-badge" *ngFor="let t of p.tecnologias.split(',')">
-                        <i class="fas fa-microchip"></i> {{ t.trim() }}
-                    </span>
-                </div>
-
-                <div class="links">
-                    <a *ngIf="p.repoUrl" [href]="p.repoUrl" target="_blank">
-                        <i class="fas fa-code-branch"></i> Código
-                    </a>
-
-                    <a *ngIf="p.demoUrl" [href]="p.demoUrl" target="_blank">
-                        <i class="fas fa-play-circle"></i> Demo
-                    </a>
-                </div>
-            </div>
-        </div>
-
+        <p *ngIf="p.demoUrl">
+            <strong>Demo:</strong>
+            <a [href]="p.demoUrl" target="_blank">Ver proyecto</a>
+        </p>
     </div>
 
 </div>

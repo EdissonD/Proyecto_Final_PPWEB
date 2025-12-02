@@ -1,6 +1,6 @@
 <h2>
-  <i class="bi bi-calendar-check"></i>
-  Agendar asesoría con {{ programador?.nombre }}
+    <i class="bi bi-calendar-check"></i>
+    Agendar asesoría con {{ programador?.nombre }}
 </h2>
 
 <div *ngIf="programador" class="programador-header">
@@ -15,6 +15,11 @@
         <p>
             <i class="bi bi-code-slash"></i>
             {{ programador.especialidad }}
+        </p>
+
+        <p *ngIf="programador.disponibilidad">
+            <i class="bi bi-clock-history"></i>
+            <strong>Horarios disponibles:</strong> {{ programador.disponibilidad }}
         </p>
     </div>
 </div>
