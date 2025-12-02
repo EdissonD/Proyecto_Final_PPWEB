@@ -7,7 +7,7 @@ import { ProgramadoresService } from '../../../services/programadores';
 @Component({
     selector: 'app-programador-nuevo',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, RouterModule], // Agregado RouterModule
+    imports: [CommonModule, ReactiveFormsModule, RouterModule],
     templateUrl: './programador-nuevo.html',
     styleUrls: ['./programador-nuevo.scss']
 })
@@ -22,20 +22,25 @@ export class ProgramadorNuevoComponent {
     constructor(
         private fb: FormBuilder,
         private programadoresService: ProgramadoresService,
-        private router: Router // Inyectado Router
+        private router: Router
     ) {
         this.form = this.fb.group({
             nombre: ['', Validators.required],
-            descripcion: ['', Validators.required], // Ajustado a required como el ejemplo 2
+            descripcion: ['', Validators.required],
             especialidad: ['', Validators.required],
             github: [''],
             linkedin: [''],
             portafolio: [''],
-
-            // Campos nuevos adaptados del ejemplo 2
+            
+            // --- Nuevos campos integrados ---
             emailContacto: [''],
             whatsapp: [''],
-            horasDisponiblesTexto: [''] // Campo auxiliar para texto
+            
+            // 🔹 NUEVO CAMPO SOLICITADO
+            disponibilidad: [''], 
+
+            // Campo auxiliar para lógica de horas
+            horasDisponiblesTexto: [''] 
         });
     }
 
@@ -55,10 +60,10 @@ export class ProgramadorNuevoComponent {
         this.mensaje = '';
         this.error = '';
 
-        // Lógica adaptada: Convertir texto a array de horas
         const value = this.form.value;
-        let horasDisponibles: string[] = [];
 
+        // 1. Lógica existente: Convertir texto a array de horas
+        let horasDisponibles: string[] = [];
         if (value.horasDisponiblesTexto) {
             horasDisponibles = value.horasDisponiblesTexto
                 .split(',')
@@ -66,24 +71,25 @@ export class ProgramadorNuevoComponent {
                 .filter((h: string) => h !== '');
         }
 
-        // Preparar objeto data fusionando form + array calculado
+        // 2. Preparar objeto data
+        // Fusionamos todo el formulario (...value) e insertamos las lógicas específicas
         const data = {
             ...value,
+            // Aseguramos que disponibilidad sea un string (como en tu snippet)
+            disponibilidad: value.disponibilidad || '', 
             horasDisponibles
         };
-        // Eliminamos el campo auxiliar del objeto final si es necesario
+
+        // Eliminamos el campo auxiliar del objeto final porque el backend no lo espera
         delete data.horasDisponiblesTexto;
 
         try {
-            // Se mantiene tu servicio que acepta (data, file)
             await this.programadoresService.crearProgramador(
                 data,
                 this.archivoFoto
             );
 
             this.mensaje = 'Programador agregado correctamente';
-
-            // Navegación adaptada del ejemplo 2
             this.router.navigate(['/admin/programadores']);
 
         } catch (e) {

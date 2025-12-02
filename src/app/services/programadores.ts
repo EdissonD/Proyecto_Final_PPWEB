@@ -12,7 +12,7 @@ import {
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { Observable, from, map } from 'rxjs';
 
-//  interface que pedía tu componente Programadores
+// INTERFAZ ACTUALIZADA
 export interface Programador {
   id?: string;
   nombre: string;
@@ -26,7 +26,10 @@ export interface Programador {
   portafolio?: string;
   foto?: string;
   rol?: string;
-  horasDisponibles?: string[];
+  horasDisponibles?: string[]; // Mantengo el que tenías por si acaso
+
+  // 🔹 NUEVO CAMPO SOLICITADO
+  disponibilidad?: string;   // ejemplo: "Lunes a Viernes, 14:00 - 18:00"
 }
 
 @Injectable({
@@ -37,7 +40,7 @@ export class ProgramadoresService {
   constructor(
     private firestore: Firestore,
     private storage: Storage
-  ) {}
+  ) { }
 
   //  LISTAR PROGRAMADORES
   getProgramadores(): Observable<Programador[]> {
@@ -68,6 +71,7 @@ export class ProgramadoresService {
 
     const programadoresRef = collection(this.firestore, 'programadores');
 
+    // Firestore guardará 'disponibilidad' automáticamente si viene en 'data'
     return addDoc(programadoresRef, {
       ...data,
       foto: urlFoto,
