@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
+// Se importan los tipos necesarios para los arrays
 import { ProyectosService, Proyecto, TipoProyecto, TipoParticipacion } from '../../../../../services/proyectos';
 
 @Component({
@@ -17,7 +18,10 @@ export class ProyectoEditarComponent implements OnInit {
   form!: FormGroup;
   idProgramador!: string;
   idProyecto!: string;
+  // Iniciamos cargando en true porque al entrar se hace una petición de datos
+  cargando = true;
 
+  // --- SE AGREGAN ESTOS ARRAYS PARA QUE FUNCIONEN LOS SELECTS EN EL HTML ---
   tiposProyecto: { valor: TipoProyecto; label: string }[] = [
     { valor: 'academico', label: 'Académico' },
     { valor: 'laboral', label: 'Laboral' }
@@ -29,6 +33,7 @@ export class ProyectoEditarComponent implements OnInit {
     { valor: 'bd', label: 'Base de datos' },
     { valor: 'fullstack', label: 'Fullstack' }
   ];
+  // ------------------------------------------------------------------------
 
   constructor(
     private fb: FormBuilder,
@@ -38,6 +43,7 @@ export class ProyectoEditarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // URL: /admin/programadores/:id/proyectos/editar/:idProyecto
     this.idProgramador = this.route.snapshot.paramMap.get('id')!;
     this.idProyecto = this.route.snapshot.paramMap.get('idProyecto')!;
 
@@ -51,43 +57,48 @@ export class ProyectoEditarComponent implements OnInit {
       demoUrl: ['']
     });
 
+    // Lógica optimizada del segundo código
     this.proyectosService.getProyecto(this.idProyecto)
-      .subscribe(p => {
-        if (!p) return;
-        this.form.patchValue({
-          nombre: p.nombre,
-          descripcion: p.descripcion,
-          tipoProyecto: p.tipoProyecto,
-          tipoParticipacion: p.tipoParticipacion,
-          tecnologias: p.tecnologias,
-          repoUrl: p.repoUrl || '',
-          demoUrl: p.demoUrl || ''
-        });
+      .subscribe((p: Proyecto | null) => {
+        if (p) {
+          // patchValue rellena el formulario automáticamente con los datos recibidos
+          this.form.patchValue(p);
+        }
+        // Quitamos el spinner de carga una vez recibida la respuesta
+        this.cargando = false;
       });
   }
 
   async guardar() {
     if (this.form.invalid) return;
 
-    const v = this.form.value;
+    this.cargando = true;
+    const valores = this.form.value;
 
     const cambios: Partial<Proyecto> = {
-      nombre: v.nombre,
-      descripcion: v.descripcion,
-      tipoProyecto: v.tipoProyecto,
-      tipoParticipacion: v.tipoParticipacion,
-      tecnologias: v.tecnologias,
-      repoUrl: v.repoUrl || undefined,
-      demoUrl: v.demoUrl || undefined
+      nombre: valores.nombre,
+      descripcion: valores.descripcion,
+      tipoProyecto: valores.tipoProyecto,
+      tipoParticipacion: valores.tipoParticipacion,
+      tecnologias: valores.tecnologias,
+      repoUrl: valores.repoUrl || '',
+      demoUrl: valores.demoUrl || ''
     };
 
     try {
       await this.proyectosService.actualizarProyecto(this.idProyecto, cambios);
-      alert('Proyecto actualizado correctamente');
+      alert('Proyecto actualizado correctamente.');
       this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
     } catch (err) {
       console.error(err);
-      alert('Ocurrió un error al actualizar el proyecto');
+      alert('Error al actualizar el proyecto');
+    } finally {
+      // finally se ejecuta haya error o éxito
+      this.cargando = false;
     }
+  }
+
+  cancelar() {
+    this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
   }
 }

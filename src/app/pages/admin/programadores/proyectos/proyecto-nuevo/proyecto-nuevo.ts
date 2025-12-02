@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
+// Se agregan TipoProyecto y TipoParticipacion a los imports
 import { ProyectosService, Proyecto, TipoProyecto, TipoParticipacion } from '../../../../../services/proyectos';
 
 @Component({
@@ -16,7 +17,9 @@ export class ProyectoNuevoComponent implements OnInit {
 
   form!: FormGroup;
   idProgramador!: string;
+  cargando = false;
 
+  // --- SE AGREGARON ESTOS ARRAYS DEL PRIMER CÓDIGO ---
   tiposProyecto: { valor: TipoProyecto; label: string }[] = [
     { valor: 'academico', label: 'Académico' },
     { valor: 'laboral', label: 'Laboral' }
@@ -28,6 +31,7 @@ export class ProyectoNuevoComponent implements OnInit {
     { valor: 'bd', label: 'Base de datos' },
     { valor: 'fullstack', label: 'Fullstack' }
   ];
+  // ---------------------------------------------------
 
   constructor(
     private fb: FormBuilder,
@@ -37,6 +41,7 @@ export class ProyectoNuevoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // /admin/programadores/:id/proyectos/nuevo
     this.idProgramador = this.route.snapshot.paramMap.get('id')!;
 
     this.form = this.fb.group({
@@ -53,27 +58,37 @@ export class ProyectoNuevoComponent implements OnInit {
   async guardar() {
     if (this.form.invalid) return;
 
-    const v = this.form.value;
+    this.cargando = true;
 
-    const data: Proyecto = {
+    const valores = this.form.value;
+
+    const proyecto: Proyecto = {
       idProgramador: this.idProgramador,
-      nombre: v.nombre,
-      descripcion: v.descripcion,
-      tipoProyecto: v.tipoProyecto,
-      tipoParticipacion: v.tipoParticipacion,
-      tecnologias: v.tecnologias,
-      repoUrl: v.repoUrl || undefined,
-      demoUrl: v.demoUrl || undefined,
+      nombre: valores.nombre,
+      descripcion: valores.descripcion,
+      tipoProyecto: valores.tipoProyecto,
+      tipoParticipacion: valores.tipoParticipacion,
+      tecnologias: valores.tecnologias,
+      repoUrl: valores.repoUrl || '',
+      demoUrl: valores.demoUrl || '',
+      // Se agrega la fecha de creación que estaba en el primer código
       creadoEn: new Date().toISOString()
     };
 
     try {
-      await this.proyectosService.crearProyecto(data);
-      alert('Proyecto creado correctamente');
+      await this.proyectosService.crearProyecto(proyecto);
+      alert('Proyecto creado correctamente.');
       this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
     } catch (err) {
       console.error(err);
-      alert('Ocurrió un error al crear el proyecto');
+      alert('Error al crear el proyecto');
+    } finally {
+      // El bloque finally asegura que el spinner se apague pase lo que pase
+      this.cargando = false;
     }
+  }
+
+  cancelar() {
+    this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
   }
 }
