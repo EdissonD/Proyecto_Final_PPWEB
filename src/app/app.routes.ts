@@ -34,15 +34,17 @@ export const routes: Routes = [
   {
     path: 'usuarios',
     component: UsuariosComponent
+    // pública: cualquiera puede ver portafolios
   },
 
   // portafolio público de un programador
   {
     path: 'portafolio/:id',
     component: PortafolioComponent
+    // pública
   },
 
-  // agendar asesoría con un programador específico
+  // agendar asesoría con un programador específico (permitimos sin login)
   {
     path: 'asesoria/:idProgramador',
     component: AgendarAsesoriaComponent
@@ -106,13 +108,12 @@ export const routes: Routes = [
     data: { rol: 'programador' }
   },
 
-
-  // PANEL USUARIO → cualquier usuario logueado
+  // PANEL USUARIO → cualquier usuario logueado (sin rol específico)
   {
     path: 'mis-asesorias',
     component: MisAsesoriasComponent,
-    canActivate: [rolGuard]   // solo exige estar logueado
-    // SIN data: { rol: ... }  → importante
+    canActivate: [rolGuard]
+    // sin data.rol → basta estar logueado
   },
 
   // wildcard al final

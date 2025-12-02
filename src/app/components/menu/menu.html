@@ -1,17 +1,47 @@
-<nav class="menu">
-  <a routerLink="/inicio" routerLinkActive="activo">
-    <i class="bi bi-house-fill"></i> Inicio
-  </a>
+<nav class="main-menu" *ngIf="usuario$ | async as usuario; else menuPublico">
+  <div class="logo">
+    <a routerLink="/inicio">Portafolios</a>
+  </div>
 
-  <a routerLink="/usuarios" routerLinkActive="activo">
-    <i class="bi bi-people-fill"></i> Usuarios
-  </a>
+  <ul class="links">
 
-  <a routerLink="/login" routerLinkActive="activo" class="cerrar">
-    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-  </a>
-  <a routerLink="/programador/asesorias">Mis asesorías</a>
-  
+    <!-- Links comunes para cualquier usuario logueado -->
+    <li><a routerLink="/inicio">Inicio</a></li>
+    <li><a routerLink="/usuarios">Explorar programadores</a></li>
+    <li><a routerLink="/mis-asesorias">Mis asesorías</a></li>
+
+    <!-- Panel ADMIN -->
+    <ng-container *ngIf="usuario.rol === 'admin'">
+      <li><a routerLink="/admin">Panel administrador</a></li>
+      <li><a routerLink="/admin/programadores">Gestionar programadores</a></li>
+    </ng-container>
+
+    <!-- Panel PROGRAMADOR -->
+    <ng-container *ngIf="usuario.rol === 'programador'">
+      <li><a routerLink="/programador">Panel programador</a></li>
+      <li><a routerLink="/programador/asesorias">Asesorías recibidas</a></li>
+      <!-- Si luego haces un panel para sus proyectos, podrías agregar:
+      <li><a routerLink="/programador/proyectos">Mis proyectos</a></li>
+      -->
+    </ng-container>
+
+  </ul>
+
+  <div class="user-info">
+    <span class="user-name">{{ usuario.nombre }} ({{ usuario.rol }})</span>
+    <button (click)="logout()">Salir</button>
+  </div>
 </nav>
 
-<hr />
+<ng-template #menuPublico>
+  <nav class="main-menu">
+    <div class="logo">
+      <a routerLink="/inicio">Portafolios</a>
+    </div>
+
+    <ul class="links">
+      <li><a routerLink="/usuarios">Explorar programadores</a></li>
+      <li><a routerLink="/login">Iniciar sesión</a></li>
+    </ul>
+  </nav>
+</ng-template>

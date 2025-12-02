@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { take } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
 
-import { AuthService } from '../../services/auth';
+import { AuthService, UsuarioApp } from '../../services/auth';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -22,32 +22,33 @@ export class LoginComponent {
   ) { }
 
   async loginGoogle() {
-    this.cargando = true;
-
     try {
-      // 1. Login con Google
+      this.cargando = true;
       await this.authService.loginConGoogle();
 
-      // 2. Obtenemos el usuario con rol UNA sola vez
-      this.authService.usuario$
-        .pipe(take(1))
-        .subscribe(usuario => {
-          if (!usuario) {
-            this.cargando = false;
-            return;
-          }
-
-          // 3. Redirigimos según rol
-          if (usuario.rol === 'admin') {
-            this.router.navigate(['/admin']);
-          } else if (usuario.rol === 'programador') {
-            this.router.navigate(['/programador']);
-          } else {
-            this.router.navigate(['/inicio']);
-          }
-
+      // Tomamos el usuario con su rol UNA sola vez
+      this.authService.usuario$.pipe(take(1)).subscribe((usuario: UsuarioApp | null) => {
+        if (!usuario) {
           this.cargando = false;
-        });
+          return;
+        }
+
+        switch (usuario.rol) {
+          case 'admin':
+            this.router.navigate(['/admin']);
+            break;
+
+          case 'programador':
+            this.router.navigate(['/programador']);
+            break;
+
+          default: // 'usuario'
+            this.router.navigate(['/inicio']);
+            break;
+        }
+
+        this.cargando = false;
+      });
 
     } catch (err) {
       console.error(err);
