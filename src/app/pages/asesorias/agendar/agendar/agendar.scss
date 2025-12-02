@@ -1,238 +1,203 @@
 // ==========================================
-// 1. Variables y Sistema de Diseño
+// PALETA PREMIUM
 // ==========================================
-$primary-color: #2563eb; // Azul vibrante para confianza y acción
-$primary-dark: #1e40af; // Tono más oscuro para hover
-$text-main: #1f2937; // Gris muy oscuro para lectura (no negro puro)
-$text-secondary: #6b7280; // Gris medio para etiquetas y ayudas
-$bg-input: #f9fafb; // Fondo sutil para inputs
-$border-color: #e5e7eb;
-$border-focus: rgba(37, 99, 235, 0.4);
-$radius-card: 16px;
-$radius-input: 8px;
-$shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+$primary: #4f46e5;        // Indigo premium
+$primary-light: #6366f1;
+$primary-dark: #4338ca;
+$bg-body: #f4f6fa;        // Gris crema elegante
+$text-main: #0f172a;      // Azul oscuro profundo
+$text-muted: #6b7280;
+$card-bg: rgba(255, 255, 255, 0.85); // Glass card
+$radius: 20px;
+$radius-input: 12px;
+$shadow-soft: 0 20px 40px rgba(0, 0, 0, 0.1);
 
 // ==========================================
-// 2. Contenedor Principal (Tarjeta)
+// CONTENEDOR PRINCIPAL (GLASS CARD)
 // ==========================================
 :host {
     display: block;
-    max-width: 500px; // Ancho óptimo de lectura (Ley de Miller)
-    margin: 3rem auto;
-    padding: 2.5rem;
-    background-color: white;
-    border-radius: $radius-card;
-    box-shadow: $shadow-card;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    max-width: 520px;
+    margin: 4rem auto;
+    padding: 3rem;
+    background: $card-bg;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: $radius;
+    box-shadow: $shadow-soft;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    animation: fadeIn 0.6s ease;
 
-    // Animación de entrada suave
-    animation: slideUp 0.5s ease-out forwards;
+    font-family: 'Inter', system-ui, sans-serif;
 }
 
-@keyframes slideUp {
+@keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(25px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
+// ==========================================
+// TITULO
+// ==========================================
 h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: $text-main;
+    font-size: 1.8rem;
+    font-weight: 800;
     text-align: center;
-    margin-bottom: 2rem;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
+    color: $primary-dark;
+    margin-bottom: 2.5rem;
 }
 
 // ==========================================
-// 3. Header del Programador (Contexto)
+// HEADER DEL PROGRAMADOR
 // ==========================================
 .programador-header {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    background-color: #f0f9ff; // Fondo azul muy pálido para destacar el contexto
+    gap: 1.5rem;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
     border-radius: $radius-input;
-    border: 1px solid #bae6fd;
+    border: 1px solid #c7d2fe;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.08);
 
     img {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
+        width: 72px;
+        height: 72px;
+        border-radius: 18px;
         object-fit: cover;
-        border: 2px solid white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
     }
 
-    div {
-        display: flex;
-        flex-direction: column;
+    h3 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: $text-main;
+    }
 
-        h3 {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: $text-main;
-        }
-
-        p {
-            margin: 0.25rem 0 0;
-            font-size: 0.9rem;
-            color: $primary-color;
-            font-weight: 500;
-        }
+    p {
+        margin: 0.2rem 0 0;
+        color: $primary;
+        font-weight: 500;
     }
 }
 
 // ==========================================
-// 4. Formulario
+// FORMULARIO
 // ==========================================
 form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; // Espaciado generoso para evitar errores de clic (Ley de Fitts)
+    gap: 1.7rem;
 
-    // Estilo para los Labels
     label {
-        display: block;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         font-weight: 600;
         color: $text-main;
         margin-bottom: 0.5rem;
     }
 
-    // Estilo unificado para Inputs, Selects y Textarea
     input,
     select,
     textarea {
         width: 100%;
-        padding: 0.75rem 1rem;
+        padding: 1rem 1.2rem;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: $radius-input;
+        border: 1px solid #d1d5db;
         font-size: 1rem;
         color: $text-main;
-        background-color: $bg-input;
-        border: 1px solid $border-color;
-        border-radius: $radius-input;
-        box-sizing: border-box; // Previene desbordamientos
-        transition: all 0.2s ease-in-out;
-        font-family: inherit;
+        transition: all 0.25s ease;
+        backdrop-filter: blur(5px);
 
-        // Heurística: Feedback claro de "estoy escribiendo aquí"
         &:focus {
-            outline: none;
-            background-color: white;
-            border-color: $primary-color;
-            box-shadow: 0 0 0 4px $border-focus;
+            border-color: $primary;
+            box-shadow: 0 0 0 4px rgba($primary, 0.25);
+            background: white;
         }
 
-        // Placeholder más suave
         &::placeholder {
-            color: lighten($text-secondary, 20%);
+            color: lighten($text-muted, 20%);
         }
     }
 
-    // Ajustes específicos
     textarea {
-        min-height: 120px;
+        min-height: 130px;
         resize: vertical;
-        line-height: 1.5;
     }
 
-    // Estilo del Select para que se vea moderno
+    // Select premium
     select {
-        appearance: none; // Quita la flecha por defecto del navegador
+        appearance: none;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-position: right 1rem center;
-        background-size: 1.25rem;
-        padding-right: 2.5rem; // Espacio para la flecha
+        background-size: 1.3rem;
+        padding-right: 2.8rem;
         cursor: pointer;
     }
 
-    // Contenedor del campo de Hora (agrupa input + ayuda)
-    div {
-        display: flex;
-        flex-direction: column;
-    }
-
-    // Texto de ayuda (.ayuda)
     .ayuda {
         margin-top: 0.5rem;
-        font-size: 0.85rem;
-        color: $text-secondary;
+        font-size: 0.87rem;
+        color: $text-muted;
         font-style: italic;
 
-        // Icono visual sutil (pseudo-elemento)
         &::before {
-            content: 'ℹ ';
-            margin-right: 4px;
+            content: "💡 ";
         }
     }
 
-    // ==========================================
-    // 5. Botón de Acción (Call to Action)
-    // ==========================================
+    // BOTÓN PREMIUM
     button {
         margin-top: 1rem;
-        width: 100%;
-        padding: 1rem;
-        font-size: 1rem;
-        font-weight: 600;
-        color: white;
-        background-color: $primary-color;
-        border: none;
+        padding: 1.1rem;
+        font-size: 1.1rem;
+        font-weight: 700;
         border-radius: $radius-input;
+        color: white;
+        background: linear-gradient(135deg, $primary, $primary-dark);
+        border: none;
         cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 4px 6px -1px rgba($primary-color, 0.4);
+        transition: 0.25s;
+        box-shadow: 0 12px 25px rgba($primary, 0.3);
 
         &:hover:not(:disabled) {
-            background-color: $primary-dark;
-            transform: translateY(-1px);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 30px rgba($primary, 0.35);
         }
 
-        &:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        // Estado deshabilitado (Heurística: Visibilidad del estado del sistema)
         &:disabled {
-            background-color: #cbd5e1;
-            color: #64748b;
-            cursor: not-allowed;
+            background: #cbd5e1;
             box-shadow: none;
-            transform: none;
+            cursor: not-allowed;
         }
     }
 }
 
 // ==========================================
-// 6. Responsividad
+// RESPONSIVE
 // ==========================================
 @media (max-width: 600px) {
     :host {
-        margin: 1rem;
-        padding: 1.5rem;
+        padding: 2rem;
+        margin: 1.5rem;
     }
 
     h2 {
-        font-size: 1.25rem;
+        font-size: 1.4rem;
     }
 
     .programador-header {
         flex-direction: column;
         text-align: center;
-
-        img {
-            width: 80px;
-            height: 80px;
-        }
     }
 }

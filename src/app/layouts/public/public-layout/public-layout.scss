@@ -1,29 +1,98 @@
+// Paleta moderna
+$primary-bg: #1e293b;       // Azul gris oscuro
+$primary-light: #e2e8f0;    // Gris claro
+$hover-light: #ffffff;
+$accent: #38bdf8;           // Celeste acento
+$body-bg: #f8fafc;
+
+$radius: 8px;
+$transition: 0.25s ease;
+
+// ===========================
+// HEADER
+// ===========================
 .public-header {
-    background: #1e293b;
+    background: linear-gradient(90deg, #1e293b, #0f172a);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
-    color: #fff;
+    align-items: center;
+    color: $hover-light;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
 
-    nav a {
-        color: #e2e8f0;
-        margin-left: 1rem;
+    h1 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
 
-        &:hover {
-            color: #fff;
+        i {
+            color: $accent;
+        }
+    }
+
+    nav {
+        display: flex;
+        gap: 1.5rem;
+
+        a {
+            color: $primary-light;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: .5rem .8rem;
+            transition: $transition;
+            border-radius: $radius;
+
+            i {
+                font-size: 1.1rem;
+            }
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: $hover-light;
+            }
+
+            &.activo {
+                background: rgba(56, 189, 248, 0.2);
+                color: $hover-light;
+                border-left: 3px solid $accent;
+
+                i {
+                    color: $accent;
+                }
+            }
         }
     }
 }
 
+// ===========================
+// CONTENIDO
+// ===========================
 .public-content {
     padding: 2rem;
     min-height: calc(100vh - 150px);
-    background: #f8fafc;
+    background: $body-bg;
+    animation: fadeIn .3s ease;
 }
 
+// ===========================
+// FOOTER
+// ===========================
 .public-footer {
-    background: #1e293b;
-    color: #fff;
+    background: #0f172a;
+    color: $primary-light;
     text-align: center;
-    padding: .8rem;
+    padding: 1rem;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+// Animación suave
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to   { opacity: 1; transform: translateY(0); }
 }

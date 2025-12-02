@@ -1,32 +1,104 @@
+// PALETA DASHBOARD PROFESIONAL
+$header-bg: #0f172a;        // Navy oscuro (fondo principal)
+$text-light: #e2e8f0;
+$text-white: #ffffff;
+$hover-color: #38bdf8;      // Celeste profesional
+$active-color: #3b82f6;     // Azul de selección
+$bg-body: #f8fafc;
+
+// SOMBRAS Y ESTILO
+$radius: 8px;
+$transition: 0.25s ease;
+
+// ==========================
+// LAYOUT PRINCIPAL
+// ==========================
 .layout {
     min-height: 100vh;
+    background: $bg-body;
 
     header {
-        background: #0f172a;
+        background: $header-bg;
         padding: 1rem 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        color: #fff;
+        color: $text-white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
 
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            i {
+                font-size: 1.4rem;
+                color: $hover-color;
+            }
+        }
+
+        // ==========================
+        // NAV
+        // ==========================
         nav {
             display: flex;
-            gap: 1rem;
+            gap: 1.3rem;
 
             a {
-                color: #e2e8f0;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                color: $text-light;
+                font-size: 0.95rem;
+                font-weight: 500;
                 text-decoration: none;
+                padding: .5rem .8rem;
+                border-radius: $radius;
+                transition: $transition;
+
+                i {
+                    font-size: 1.1rem;
+                    opacity: .85;
+                }
 
                 &:hover {
-                    color: #fff;
+                    background: rgba(255, 255, 255, 0.08);
+                    color: $text-white;
+
+                    i {
+                        color: $hover-color;
+                    }
+                }
+
+                &.activo {
+                    background: rgba($active-color, 0.25);
+                    color: $text-white;
+                    border-left: 3px solid $active-color;
+                    padding-left: .6rem;
+
+                    i {
+                        color: $active-color;
+                    }
                 }
             }
         }
     }
 
+    // ==========================
+    // CONTENIDO
+    // ==========================
     main {
         padding: 2rem;
-        background: #f8fafc;
         min-height: calc(100vh - 80px);
+        animation: fadeIn .3s ease;
     }
+}
+
+// ANIMACIÓN SUAVE DE ENTRADA
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to   { opacity: 1; transform: translateY(0); }
 }

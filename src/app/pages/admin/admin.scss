@@ -1,4 +1,70 @@
+/* CONTENEDOR GENERAL */
 .admin-container {
-    max-width: 900px;
-    margin: 20px auto;
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* HEADER */
+.admin-header {
+  margin-bottom: 30px;
+  text-align: center;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #0f172a;
+
+    i {
+      font-size: 2rem;
+      color: #2563eb;
+    }
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #475569;
+  }
+}
+
+/* TARJETAS */
+.admin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 22px;
+  margin-top: 20px;
+
+  .card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    i {
+      font-size: 2.3rem;
+      color: #2563eb;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      color: #0f172a;
+    }
+
+    p {
+      font-size: 0.95rem;
+      color: #64748b;
+    }
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+  }
 }

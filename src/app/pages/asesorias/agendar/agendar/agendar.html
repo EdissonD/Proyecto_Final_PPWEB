@@ -1,26 +1,45 @@
-<h2>Agendar asesoría con {{ programador?.nombre }}</h2>
+<h2>
+  <i class="bi bi-calendar-check"></i>
+  Agendar asesoría con {{ programador?.nombre }}
+</h2>
 
 <div *ngIf="programador" class="programador-header">
-    <img *ngIf="programador.foto" [src]="programador.foto" width="70" alt="Foto perfil" />
+    <img *ngIf="programador.foto" [src]="programador.foto" alt="Foto perfil" />
+
     <div>
-        <h3>{{ programador.nombre }}</h3>
-        <p>{{ programador.especialidad }}</p>
+        <h3>
+            <i class="bi bi-person-badge"></i>
+            {{ programador.nombre }}
+        </h3>
+
+        <p>
+            <i class="bi bi-code-slash"></i>
+            {{ programador.especialidad }}
+        </p>
     </div>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviarSolicitud()">
 
-    <label>Tu nombre</label>
-    <input type="text" formControlName="nombreSolicitante" />
+    <label>
+        <i class="bi bi-person"></i> Tu nombre
+    </label>
+    <input type="text" formControlName="nombreSolicitante" placeholder="Ingresa tu nombre" />
 
-    <label>Tu correo</label>
-    <input type="email" formControlName="emailSolicitante" />
+    <label>
+        <i class="bi bi-envelope"></i> Tu correo
+    </label>
+    <input type="email" formControlName="emailSolicitante" placeholder="correo@example.com" />
 
-    <label>Fecha</label>
+    <label>
+        <i class="bi bi-calendar-date"></i> Fecha
+    </label>
     <input type="date" formControlName="fecha" />
 
     <div>
-        <label>Hora</label>
+        <label>
+            <i class="bi bi-clock"></i> Hora
+        </label>
 
         <ng-container *ngIf="horasDisponibles.length > 0; else campoLibre">
             <select formControlName="hora">
@@ -29,23 +48,27 @@
                     {{ h }}
                 </option>
             </select>
+
             <p class="ayuda">
                 Horarios disponibles configurados por el administrador.
             </p>
         </ng-container>
 
         <ng-template #campoLibre>
-            <input type="time" formControlName="hora">
+            <input type="time" formControlName="hora" />
             <p class="ayuda">
                 Este programador no tiene horarios configurados; puedes elegir cualquier hora.
             </p>
         </ng-template>
     </div>
 
-    <label>Comentario (motivo de la asesoría)</label>
-    <textarea formControlName="comentario"></textarea>
+    <label>
+        <i class="bi bi-chat-dots"></i> Comentario (motivo de la asesoría)
+    </label>
+    <textarea formControlName="comentario" placeholder="Describe brevemente tu motivo"></textarea>
 
     <button type="submit" [disabled]="cargando || form.invalid">
+        <i *ngIf="!cargando" class="bi bi-send"></i>
         {{ cargando ? 'Enviando...' : 'Enviar solicitud' }}
     </button>
 </form>
