@@ -1,220 +1,254 @@
 // ==========================================
-// 1. Variables y Tokens (Sistema de Diseño)
+// 1. Variables del Sistema de Diseño
 // ==========================================
-$color-primary: #0f172a; // Oscuro profesional (Slate 900)
-$color-accent: #3b82f6; // Azul vibrante para llamadas a la acción (Blue 500)
-$color-bg-page: #f8fafc; // Fondo gris muy claro para contraste (Slate 50)
-$color-bg-card: #ffffff; // Blanco puro
+$color-primary: #0f172a;
+$color-accent: #3b82f6;
+$color-success: #22c55e;
+$color-warning: #f59e0b;
+
+$color-bg-page: #f8fafc;
+$color-bg-card: #ffffff;
+
 $text-main: #1e293b;
 $text-secondary: #64748b;
-$border-radius: 16px; // Bordes modernos y amigables
-$shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-$shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+$border-radius: 18px;
+$shadow-soft: 0 4px 8px rgba(0, 0, 0, 0.06);
+$shadow-hover: 0 25px 35px rgba(0,0,0,0.12);
 
 // ==========================================
-// 2. Estructura General
+// 2. General
 // ==========================================
 :host {
-    display: block;
-    padding: 2rem;
-    background-color: $color-bg-page;
-    min-height: 100vh;
-    font-family: 'Inter', system-ui, sans-serif; // Tipografía limpia
+  display: block;
+  padding: 2rem;
+  background-color: $color-bg-page;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 h2 {
-    font-size: 1.875rem;
-    font-weight: 800;
-    color: $text-main;
-    margin-bottom: 2.5rem;
-    text-align: center;
-    letter-spacing: -0.025em;
-}
+  font-size: 2rem;
+  font-weight: 800;
+  color: $text-main;
+  text-align: center;
+  margin-bottom: 3rem;
 
-// Mensajes de estado (Carga / Vacío)
-// Seleccionamos los divs directos que no sean el grid
-div:not(.grid):not(.foto):not(.info):not(.links):not(.acciones) {
-    text-align: center;
-    padding: 3rem;
-    color: $text-secondary;
-    font-size: 1.1rem;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: $border-radius;
-    max-width: 600px;
-    margin: 0 auto;
+  i {
+    color: $color-accent;
+    margin-right: 8px;
+  }
 }
 
 // ==========================================
-// 3. Grid Inteligente
+// 3. Estados (Cargando / Vacío)
+// ==========================================
+.estado {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.2rem;
+  border-radius: $border-radius;
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+  background: white;
+  box-shadow: $shadow-soft;
+  color: $text-secondary;
+
+  i {
+    margin-right: 8px;
+    color: $color-accent;
+  }
+
+  &.vacio i {
+    color: $color-warning;
+  }
+}
+
+// ==========================================
+// 4. GRID inteligente
 // ==========================================
 .grid {
-    display: grid;
-    // Heurística: Flexibilidad. Se adapta a móviles y pantallas 4k automáticamente
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2.5rem;
-    max-width: 1400px;
-    margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+  max-width: 1400px;
+  margin: auto;
 }
 
 // ==========================================
-// 4. Componente Card (Tarjeta)
+// 5. Tarjeta
 // ==========================================
 .card {
-    background-color: $color-bg-card;
-    border-radius: $border-radius;
-    box-shadow: $shadow-soft;
-    overflow: hidden; // Para que la imagen respete el borde redondeado
+  background: $color-bg-card;
+  border-radius: $border-radius;
+  box-shadow: $shadow-soft;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: $shadow-hover;
+  }
+
+  // Imagen estilo avatar grande centrado
+  .foto {
+    width: 100%;
+    height: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #e2e8f0;
+
+    img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.4s;
+
+      .card:hover & {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  // Info interna
+  .info {
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(0, 0, 0, 0.02);
+    gap: 0.8rem;
 
-    // Heurística: Feedback Visual. Elevación al pasar el mouse
-    &:hover {
-        transform: translateY(-8px);
-        box-shadow: $shadow-hover;
+    h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: $text-main;
 
-        .foto img {
-            transform: scale(1.08); // Zoom sutil
-        }
+      i {
+        color: $color-primary;
+        margin-right: 6px;
+      }
     }
 
-    // 4.1 Área de Imagen
-    .foto {
-        height: 220px;
-        width: 100%;
-        position: relative;
-        overflow: hidden;
-        background-color: #cbd5e1; // Placeholder mientras carga
+    // Badge de especialidad
+    .badge-especialidad {
+      background: rgba($color-accent, 0.1);
+      color: $color-accent;
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      width: fit-content;
 
-        img {
-            width: 55%;
-            height: 100%;
-            position: center;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-        }
+      i {
+        margin-right: 6px;
+      }
     }
 
-    // 4.2 Contenido
-    .info {
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        flex: 1; // Hace que esta sección ocupe todo el alto disponible
+    // Descripción con límite visual
+    .descripcion {
+      color: $text-secondary;
+      font-size: 1rem;
+      line-height: 1.5;
 
-        h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: $text-main;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    // Disponibilidad con icono y color
+    .disponibilidad {
+      color: $color-success;
+      background: rgba($color-success, 0.1);
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      font-weight: 600;
+      width: fit-content;
+
+      i {
+        margin-right: 6px;
+      }
+    }
+
+    // LINKS con iconos
+    .links {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 0.8rem;
+
+      a {
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: none;
+        color: $text-main;
+        transition: 0.2s ease;
+
+        i {
+          margin-right: 6px;
+          color: $color-accent;
         }
 
-        .especialidad {
-            font-size: 0.875rem;
-            font-weight: 600;
+        &:hover {
+          color: $color-accent;
+        }
+      }
+    }
+
+    // Botones principales
+    .acciones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: auto;
+
+      button {
+        padding: 0.9rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        border: none;
+        transition: 0.2s;
+
+        i {
+          margin-right: 8px;
+        }
+
+        &:first-child {
+          background: $color-primary;
+          color: white;
+
+          &:hover {
+            background: lighten($color-primary, 8%);
+          }
+        }
+
+        &:last-child {
+          background: transparent;
+          border: 2px solid #cbd5e1;
+          color: $text-main;
+
+          &:hover {
+            border-color: $color-accent;
             color: $color-accent;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1rem;
+            background: rgba($color-accent, 0.05);
+          }
         }
-
-        .descripcion {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: $text-secondary;
-            margin-bottom: 1.5rem;
-
-            // Heurística: Consistencia visual. Corta el texto si es muy largo
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        // 4.3 Redes Sociales (Iconos textuales)
-        .links {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-
-            a {
-                text-decoration: none;
-                font-size: 0.9rem;
-                font-weight: 500;
-                color: $text-main;
-                padding: 0.25rem 0;
-                border-bottom: 2px solid transparent;
-                transition: border-color 0.2s;
-
-                &:hover {
-                    color: $color-accent;
-                    border-color: $color-accent;
-                }
-            }
-        }
-
-        // 4.4 Botones de Acción
-        .acciones {
-            margin-top: auto; // Empuja los botones al fondo de la tarjeta (siempre alineados)
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-
-            button {
-                width: 100%;
-                padding: 0.875rem;
-                border-radius: 8px;
-                font-weight: 600;
-                font-size: 1rem;
-                cursor: pointer;
-                transition: background-color 0.2s, transform 0.1s;
-                border: none;
-
-                // Ley de Fitts: Botones grandes y fáciles de clicar
-
-                // Botón Principal (Ver Portfolio)
-                &:first-child {
-                    background-color: $color-primary;
-                    color: white;
-
-                    &:hover {
-                        background-color: lighten($color-primary, 10%);
-                    }
-
-                    &:active {
-                        transform: scale(0.98);
-                    }
-                }
-
-                // Botón Secundario (Agendar)
-                &:last-child {
-                    background-color: transparent;
-                    color: $text-main;
-                    border: 2px solid #e2e8f0;
-
-                    &:hover {
-                        border-color: $color-accent;
-                        color: $color-accent;
-                        background-color: rgba($color-accent, 0.05);
-                    }
-                }
-            }
-        }
+      }
     }
+  }
 }
 
-// Media query para móviles muy pequeños (ajustes finos)
+// ==========================================
+// Responsivo
+// ==========================================
 @media (max-width: 480px) {
-    :host {
-        padding: 1rem;
-    }
-
-    .grid {
-        grid-template-columns: 1fr;
-    }
-
-    .card .foto {
-        height: 180px;
-    }
+  :host { padding: 1rem; }
+  .grid { grid-template-columns: 1fr; }
+  .card .foto { height: 180px; }
 }
