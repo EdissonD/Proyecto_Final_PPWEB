@@ -5,155 +5,146 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+
   padding: 40px 20px;
-  gap: 20px;
+  gap: 25px;
   position: relative;
   overflow: hidden;
 
-  /* Fondo degradado premium */
-  background: linear-gradient(135deg, #f8fbff 0%, #e6efff 50%, #dce8ff 100%);
+  /* Fondo blanco premium */
+  background: #ffffff;
 
-  /* Luz suave flotante */
-  &::before {
+  /* Partículas flotando */
+  &::before,
+  &::after {
     content: "";
     position: absolute;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    filter: blur(90px);
+    animation: float-slow 12s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+
+  &::before {
+    background: rgba(99, 102, 241, 0.22);
     top: -120px;
     left: -80px;
-    width: 420px;
-    height: 420px;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.22), transparent 70%);
-    filter: blur(80px);
-    animation: pulse-light 8s ease-in-out infinite alternate;
   }
 
-  /* icono decorativo */
   &::after {
-    content: "✨";
-    position: absolute;
-    bottom: 20px;
-    right: 30px;
-    opacity: 0.1;
-    font-size: 4.5rem;
-    animation: float 6s ease-in-out infinite;
+    background: rgba(56, 189, 248, 0.18);
+    bottom: -150px;
+    right: -100px;
+    animation-delay: 2s;
   }
 
+  /* TARJETA CENTRAL flotante */
+  .home-card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(18px);
+    padding: 40px 35px;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    max-width: 580px;
+
+    box-shadow:
+      0 8px 30px rgba(0, 0, 0, 0.08),
+      0 0 25px rgba(255, 255, 255, 0.6);
+
+    animation: fade-up 0.8s ease-out forwards;
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    z-index: 5;
+  }
+
+  /* TÍTULO con icono animado */
   h1 {
     font-size: 2.8rem;
     font-weight: 800;
     color: #0f172a;
     margin: 0;
-
-    /* icono antes del título */
-    display: inline-flex;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 
-    &::before {
-      content: "🚀";
-      font-size: 2.4rem;
+    span.icon {
+      font-size: 2.5rem;
       animation: pop 0.8s ease;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
     }
 
-    animation: fade-in 0.8s ease-out;
+    animation: fade-up 0.9s ease-out;
   }
 
+  /* Texto moderno */
   p {
     font-size: 1.2rem;
-    color: #3b4252;
-    max-width: 550px;
+    color: #475569;
     margin: 0;
     line-height: 1.6;
-    animation: fade-in 1.2s ease-out;
+    max-width: 520px;
+    animation: fade-up 1.2s ease-out;
   }
 
-  /* BOTÓN PRO PREMIUM */
+  /* BOTÓN PRO ULTRA */
   button {
-    padding: 14px 38px;
-    border-radius: 999px;
+    padding: 14px 42px;
+    border-radius: 14px;
     border: none;
     background: linear-gradient(90deg, #4f46e5, #6366f1, #818cf8);
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 600;
     cursor: pointer;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.3px;
     position: relative;
     overflow: hidden;
 
-    /* Efecto brillo */
+    /* Luz deslizante */
     &::after {
       content: "";
       position: absolute;
       top: 0;
-      left: -100%;
+      left: -120%;
       width: 60%;
       height: 100%;
       background: linear-gradient(
         120deg,
         transparent,
-        rgba(255, 255, 255, 0.45),
+        rgba(255, 255, 255, 0.5),
         transparent
       );
-      animation: shine 2.8s infinite;
+      animation: shine 3s infinite;
     }
 
-    transition: transform 0.28s ease, box-shadow 0.28s ease;
+    transition: 0.3s ease;
 
     &:hover {
       transform: translateY(-4px);
-      box-shadow: 0 14px 28px rgba(99, 102, 241, 0.35);
-      filter: brightness(1.05);
+      box-shadow: 0 14px 26px rgba(99, 102, 241, 0.35);
+      filter: brightness(1.06);
     }
 
     &:active {
-      transform: translateY(0);
-      box-shadow: none;
+      transform: scale(0.98);
     }
   }
 }
 
-/* Animaciones */
-@keyframes fade-in {
+/* Animaciones suaves */
+@keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes shine {
-  0% {
-    left: -100%;
-  }
-  60% {
-    left: 130%;
-  }
-  100% {
-    left: 130%;
-  }
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse-light {
-  0% {
-    opacity: 0.35;
-  }
-  100% {
-    opacity: 0.9;
   }
 }
 
@@ -168,14 +159,40 @@
   }
 }
 
+@keyframes shine {
+  0% {
+    left: -120%;
+  }
+  60% {
+    left: 140%;
+  }
+  100% {
+    left: 140%;
+  }
+}
+
+@keyframes float-slow {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    transform: translateY(-40px) scale(1.05);
+  }
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .inicio-container {
+    gap: 10px;
+
     h1 {
       font-size: 2.2rem;
     }
     p {
       font-size: 1.05rem;
+    }
+    .home-card {
+      padding: 30px 20px;
     }
     button {
       width: 100%;

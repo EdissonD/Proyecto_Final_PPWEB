@@ -1,196 +1,275 @@
-// --- Variables de Diseño ---
-$primary-color: #2c3e50;
-$accent-color: #3498db;
-$bg-light: #f4f6f8;
-$border-color: #e0e0e0;
-$text-color: #2d2d2d;
-$text-muted: #6c757d;
+// --- NUEVA PALETA FUTURISTA ---
+$primary-color: #4f46e5;        // Indigo eléctrico
+$accent-color: #7c3aed;         // Púrpura brillante
+$bg-light: rgba(255, 255, 255, 0.6);
+$border-color: #d9e0f1;
+$text-color: #0f172a;
+$text-muted: #64748b;
 
-// Estados
-$status-pending-bg: #fff4cc;
-$status-pending-text: #a07400;
+// Estados futuristas con iconos
+$status-pending-bg: #fff9d6;
+$status-pending-text: #b98500;
 
-$status-approved-bg: #d9f7e3;
-$status-approved-text: #1e7a46;
+$status-approved-bg: #d8ffe8;
+$status-approved-text: #15803d;
 
-$status-rejected-bg: #ffd6d6;
-$status-rejected-text: #b02a37;
+$status-rejected-bg: #ffe0e5;
+$status-rejected-text: #c81e1e;
 
+// --- CONTENEDOR PRINCIPAL GLASS ---
 :host {
-    display: block;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    color: $text-color;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    background: #ffffff;
+  display: block;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: $text-color;
+
+  padding: 35px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  border-radius: 28px;
+
+  box-shadow:
+    0 8px 22px rgba(0,0,0,0.08),
+    0 0 40px rgba($accent-color, 0.15);
+
+  animation: fadeUp 0.6s cubic-bezier(.22,.61,.36,1);
 }
 
-// --- Encabezado ---
+// --- TITULO FUTURISTA ---
 h2 {
-    color: $primary-color;
-    font-size: 1.9rem;
-    margin-bottom: 25px;
-    padding-bottom: 12px;
-    border-bottom: 3px solid $accent-color;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: $primary-color;
+  margin-bottom: 25px;
 
-    &::before {
-        content: "📘";
-        font-size: 1.8rem;
-    }
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  &::before {
+    content: "🛡️";
+    font-size: 2.2rem;
+    animation: popIn 0.4s ease;
+    filter: drop-shadow(0 2px 4px rgba($primary-color, 0.4));
+  }
+
+  border-bottom: 5px solid $accent-color;
+  padding-bottom: 14px;
+
+  text-shadow: 0 2px 8px rgba($accent-color, 0.25);
 }
 
-// --- Mensajes de carga / vacío ---
+// --- MENSAJES DE CARGA O VACÍO ---
 div[ngIf="cargando"],
 div[ngIf*="asesorias.length === 0"] {
-    text-align: center;
-    padding: 45px;
-    background-color: $bg-light;
-    border-radius: 12px;
-    color: $text-muted;
-    margin-top: 20px;
-    font-size: 1.1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+  text-align: center;
+  padding: 45px;
 
-    &::before {
-        content: "⏳";
-        font-size: 1.5rem;
-    }
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(10px);
+
+  border-radius: 18px;
+  color: $text-muted;
+
+  margin-top: 25px;
+  font-size: 1.15rem;
+  border: 1px solid rgba($border-color, 0.4);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+
+  animation: fadeIn 0.3s ease;
+
+  &::before {
+    content: "🔄";
+    font-size: 1.9rem;
+    animation: spin 1s infinite linear;
+  }
 }
 
-// --- Contenedor Responsive ---
+// --- TABLA CON EFECTO FLOTANTE ---
 .table-container {
-    width: 100%;
-    overflow-x: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-    margin-top: 25px;
+  width: 100%;
+  overflow-x: auto;
+
+  border-radius: 18px;
+  padding: 6px;
+
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px);
+
+  box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+
+  transition: all 0.4s ease;
+
+  &:hover {
+    box-shadow: 0 12px 36px rgba($primary-color, 0.25);
+    transform: translateY(-2px);
+  }
+
+  margin-top: 28px;
 }
 
-// --- Tabla ---
+// --- TABLA ---
 table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-    min-width: 850px;
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 950px;
 
-    thead {
-        background-color: $primary-color;
-        color: white;
+  background: rgba(255,255,255,0.8);
 
-        th {
-            padding: 15px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            white-space: nowrap;
+  border-radius: 18px;
+  overflow: hidden;
 
-            &:first-child::before { content: "👨‍💻 "; }
-            &:nth-child(2)::before { content: "📅 "; }
-            &:nth-child(3)::before { content: "⏰ "; }
-            &:nth-child(4)::before { content: "💬 "; }
-            &:nth-child(5)::before { content: "🔖 "; }
-            &:nth-child(6)::before { content: "📩 "; }
-            &:nth-child(7)::before { content: "🔔 "; }
-        }
+  thead {
+    background: linear-gradient(90deg, $primary-color, $accent-color);
+    color: white;
+
+    th {
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      white-space: nowrap;
+      letter-spacing: 0.4px;
+
+      // ICONOS MATERIAL MÁS MODERNOS
+      &:first-child::before { content: "👤 "; }
+      &:nth-child(2)::before { content: "📆 "; }
+      &:nth-child(3)::before { content: "⏱️ "; }
+      &:nth-child(4)::before { content: "💬 "; }
+      &:nth-child(5)::before { content: "🏷️ "; }
+      &:nth-child(6)::before { content: "✉️ "; }
+      &:nth-child(7)::before { content: "🔔 "; }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $border-color;
+      transition: 0.25s ease;
+
+      &:hover {
+        background: rgba($primary-color, 0.07);
+        transform: scale(1.01);
+      }
     }
 
-    tbody {
-        tr {
-            border-bottom: 1px solid $border-color;
-            transition: background-color 0.2s;
-
-            &:hover {
-                background-color: lighten($bg-light, 4%);
-            }
-        }
-
-        td {
-            padding: 15px;
-            vertical-align: top;
-            font-size: 0.92rem;
-        }
+    td {
+      padding: 16px;
+      font-size: 0.95rem;
     }
+  }
 }
 
-// --- Badges de Estado ---
-span[class*='estado-'] {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 25px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
+// --- BADGES FUTURISTAS ---
+span[class*="estado-"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 
-    &.estado-pendiente {
-        background-color: $status-pending-bg;
-        color: $status-pending-text;
-        border: 1px solid rgba($status-pending-text, 0.3);
+  padding: 7px 16px;
+  border-radius: 50px;
 
-        &::before { content: "⏳"; }
-    }
+  font-size: 0.85rem;
+  font-weight: 700;
 
-    &.estado-aprobada {
-        background-color: $status-approved-bg;
-        color: $status-approved-text;
-        border: 1px solid rgba($status-approved-text, 0.3);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 
-        &::before { content: "✔"; }
-    }
+  animation: fadeIn 0.3s ease;
 
-    &.estado-rechazada {
-        background-color: $status-rejected-bg;
-        color: $status-rejected-text;
-        border: 1px solid rgba($status-rejected-text, 0.3);
+  &.estado-pendiente {
+    background: $status-pending-bg;
+    color: $status-pending-text;
+    &::before { content: "🕓"; }
+  }
 
-        &::before { content: "✖"; }
-    }
+  &.estado-aprobada {
+    background: $status-approved-bg;
+    color: $status-approved-text;
+    &::before { content: "✔️"; animation: pulse 1s infinite; }
+  }
+
+  &.estado-rechazada {
+    background: $status-rejected-bg;
+    color: $status-rejected-text;
+    &::before { content: "❌"; }
+  }
 }
 
-// --- Columna de notificación ---
+// --- NOTIFICACIONES ---
 td:last-child {
-    min-width: 250px;
-    background-color: #fafafa;
-    border-left: 3px solid $accent-color;
-    border-radius: 4px;
+  min-width: 260px;
+  background: rgba(247, 247, 255, 0.8);
+  backdrop-filter: blur(8px);
+
+  border-left: 4px solid $accent-color;
+  border-radius: 6px;
 }
 
 .nota-notificacion {
-    color: $accent-color;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: $accent-color;
 
-    &::before {
-        content: "ℹ️";
-        font-size: 1rem;
-    }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+
+  &::before {
+    content: "🔔";
+    animation: pulse 1.4s infinite;
+  }
 }
 
 small {
-    display: block;
-    background-color: white;
-    border: 1px dashed #cbd3da;
-    padding: 10px;
-    border-radius: 6px;
-    color: #555;
-    font-family: 'Courier New', monospace;
-    font-size: 0.8rem;
+  display: block;
+  background: white;
+  border: 1px dashed rgba(#cbd3da, 0.7);
+  padding: 11px;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #555;
 }
 
-// --- Responsive ---
+// --- ANIMACIONES ---
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+// --- RESPONSIVE ---
 @media (max-width: 768px) {
-    :host { padding: 10px; }
-    h2 { font-size: 1.6rem; }
-    table { min-width: 600px; }
+  :host { padding: 15px; }
+  h2 { font-size: 1.8rem; }
+  table { min-width: 700px; }
 }

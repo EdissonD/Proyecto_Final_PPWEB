@@ -1,285 +1,185 @@
-// ==========================================
-// 1. Variables del Sistema de Diseño
-// ==========================================
+/* ==========================================
+   1. Variables de Diseño
+   ========================================== */
 
-// Paleta principal (mejorada)
-$color-primary: #0f172a;      // Azul oscuro elegante
-$color-primary-light: #1e293b;
-$color-primary-dark: #0a0f1f;
+$primary-color: #2c3e50;
+$accent-color: #3498db;
 
-$color-accent: #3b82f6;       // Azul vibrante
-$color-accent-light: #60a5fa;
-$color-accent-dark: #1d4ed8;
+$bg-light: #f4f6f8;
+$bg-dark: #1e1e2e;
 
-$color-success: #22c55e;
-$color-warning: #f59e0b;
-$color-danger: #ef4444;
+$text-color: #e5e7eb;
+$text-muted: #94a3b8;
 
-// Fondos
-$color-bg-page: #f1f5f9;
-$color-bg-card: #ffffff;
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-border: rgba(255, 255, 255, 0.2);
 
-// Texto
-$text-main: #1e293b;
-$text-secondary: #64748b;
-
-// Bordes, sombras, radios
-$border-radius: 18px;
-$shadow-soft: 0 6px 12px rgba(0, 0, 0, 0.08);
-$shadow-hover: 0 20px 26px rgba(0, 0, 0, 0.12);
-
-// Animaciones globales
-$transition-base: 0.3s ease-in-out;
-
-
-// ==========================================
-// 2. General
-// ==========================================
-:host {
-  display: block;
-  padding: 2rem;
-  background-color: $color-bg-page;
-  min-height: 100vh;
-  font-family: "Inter", system-ui, sans-serif;
+/* Animaciones */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-h2 {
-  font-size: 2rem;
-  font-weight: 800;
-  color: $text-main;
+/* ==========================================
+   2. Layout principal tipo landing
+   ========================================== */
+
+.inicio-container {
+  max-width: 850px;
+  margin: 2rem auto;
+  padding: 2.2rem;
+  background: $glass-bg;
+  backdrop-filter: blur(12px);
+  border: 1px solid $glass-border;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  color: $text-color;
   text-align: center;
-  margin-bottom: 2.5rem;
+  animation: fadeSlideUp .6s ease-out;
+
+  h1 {
+    font-size: 2.3rem;
+    margin-bottom: .8rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: $text-muted;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ==========================================
+   3. Botones Material 3 + Glassmorphism
+   ========================================== */
+
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .75rem 1.6rem;
+  background: $accent-color;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all .2s ease;
+  box-shadow: 0 4px 20px rgba(52, 152, 219, 0.25);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(52, 152, 219, 0.35);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.25);
+  }
 
   i {
-    color: $color-accent;
-    margin-right: 8px;
+    font-size: 1.2rem;
   }
 }
 
+/* ==========================================
+   4. Tablas con animación fila por fila
+   ========================================== */
 
-// ==========================================
-// 3. Estados (Cargando / Vacío)
-// ==========================================
-.estado {
-  text-align: center;
-  padding: 2.5rem;
-  font-size: 1.1rem;
-  border-radius: $border-radius;
-  max-width: 520px;
-  margin: 0 auto 2rem auto;
-  background: white;
-  box-shadow: $shadow-soft;
-  color: $text-secondary;
-
-  i {
-    margin-right: 8px;
-    color: $color-accent;
-  }
-
-  &.vacio i {
-    color: $color-warning;
-  }
-}
-
-
-// ==========================================
-// 4. GRID inteligente
-// ==========================================
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.8rem;
-  max-width: 1400px;
-  margin: auto;
-  justify-content: center;
-}
-
-
-// ==========================================
-// 5. Tarjeta
-// ==========================================
-.card {
-  background: $color-bg-card;
-  border-radius: $border-radius;
-  box-shadow: $shadow-soft;
-  display: flex;
-  flex-direction: column;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
   overflow: hidden;
-  max-width: 320px;
-  margin: auto;
-  transition: $transition-base;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
 
-  .foto {
-    width: 100%;
-    height: 180px;
-    background: #e2e8f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  thead {
+    background: $primary-color;
+    color: #fff;
 
-    // ⛔ Quitamos redondeado heredado
-    border-radius: 0 !important;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      padding: 8px;
-      transition: transform 0.3s ease;
-
-      // ⛔ Sin redondeado NUNCA
-      border-radius: 0 !important;
-
-      &:hover {
-        transform: scale(1.03);
-      }
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: .5px;
     }
   }
 
-  // Información interna
-  .info {
-    padding: 1.2rem;
+  tbody tr {
+    animation: fadeSlideUp .45s ease both;
+    animation-delay: calc(var(--i) * 0.08s);
+  }
+
+  td {
+    padding: .9rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: $text-muted;
+  }
+
+  tr:hover td {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    transition: .2s ease;
+  }
+}
+
+/* ==========================================
+   5. Columnas colapsables en móvil
+   ========================================== */
+
+@media (max-width: 768px) {
+  table thead {
+    display: none;
+  }
+
+  table tr {
+    display: block;
+    margin-bottom: 1.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: .8rem 1rem;
+  }
+
+  table td {
     display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+    justify-content: space-between;
+    padding: .6rem 0;
 
-    h3 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: $text-main;
-
-      i {
-        color: $color-primary;
-        margin-right: 6px;
-      }
-    }
-
-    // Badge
-    .badge-especialidad {
-      background: mix($color-accent, white, 10%);
-      color: $color-accent;
-      padding: 0.3rem 0.7rem;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      width: fit-content;
-
-      i {
-        margin-right: 6px;
-      }
-    }
-
-    .descripcion {
-      color: $text-secondary;
-      font-size: 0.95rem;
-      line-height: 1.45;
-
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .disponibilidad {
-      background: mix($color-success, white, 10%);
-      color: $color-success;
-      padding: 0.35rem 0.6rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      width: fit-content;
-
-      i {
-        margin-right: 6px;
-      }
-    }
-
-    .links {
-      display: flex;
-      gap: 1.2rem;
-      margin-top: 0.6rem;
-
-      a {
-        font-size: 0.9rem;
-        font-weight: 600;
-        text-decoration: none;
-        color: $text-main;
-        transition: 0.2s ease;
-
-        i {
-          margin-right: 6px;
-          color: $color-accent;
-        }
-
-        &:hover {
-          color: $color-accent;
-        }
-      }
-    }
-
-    // Botones
-    .acciones {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      margin-top: auto;
-
-      button {
-        padding: 0.75rem;
-        font-size: 0.95rem;
-        font-weight: 600;
-        border-radius: 12px;
-        cursor: pointer;
-        border: none;
-        transition: $transition-base;
-
-        i {
-          margin-right: 8px;
-        }
-
-        &:first-child {
-          background: $color-primary;
-          color: white;
-
-          &:hover {
-            background: mix($color-primary, white, 15%);
-          }
-        }
-
-        &:last-child {
-          background: transparent;
-          border: 2px solid #cbd5e1;
-          color: $text-main;
-
-          &:hover {
-            border-color: $color-accent;
-            color: $color-accent;
-            background: mix($color-accent, white, 8%);
-          }
-        }
-      }
+    &::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #fff;
+      margin-right: .7rem;
     }
   }
 }
 
+/* ==========================================
+   6. Iconos mejorados en títulos y botones
+   ========================================== */
 
-// ==========================================
-// Responsivo
-// ==========================================
-@media (max-width: 480px) {
-  :host {
-    padding: 1rem;
-  }
+.icon-title {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #fff;
 
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .card {
-    max-width: 100%;
-  }
-
-  .card .foto {
-    height: 150px;
+  i {
+    font-size: 1.9rem;
+    color: $accent-color;
   }
 }
