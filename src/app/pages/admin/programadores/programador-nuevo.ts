@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ProgramadoresService } from '../../../services/programadores';
-import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 
 @Component({
     selector: 'app-programador-nuevo',
@@ -15,7 +14,7 @@ import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage
 export class ProgramadorNuevoComponent {
 
     form: FormGroup;
-    archivoFoto: File | null = null;
+    archivoFoto: File | null = null; // Aquí guardamos el archivo crudo
     previewUrl: string | null = null;
     cargando = false;
     mensaje = '';
@@ -23,8 +22,7 @@ export class ProgramadorNuevoComponent {
 
     constructor(
         private fb: FormBuilder,
-        private programadoresService: ProgramadoresService,
-        private storage: Storage,
+        private programadoresService: ProgramadoresService, // Servicio inyectado
         private router: Router
     ) {
         this.form = this.fb.group({
@@ -50,8 +48,10 @@ export class ProgramadorNuevoComponent {
             return;
         }
 
+        // 1. Guardamos el archivo para enviarlo al servicio después
         this.archivoFoto = input.files[0];
 
+        // 2. Generamos la vista previa localmente
         const reader = new FileReader();
         reader.onload = () => {
             this.previewUrl = reader.result as string;
@@ -76,6 +76,7 @@ export class ProgramadorNuevoComponent {
 
         const value = this.form.value;
 
+        // Procesar las horas (string -> array)
         let horasDisponibles: string[] = [];
         if (value.horasDisponiblesTexto) {
             horasDisponibles = value.horasDisponiblesTexto
@@ -84,30 +85,33 @@ export class ProgramadorNuevoComponent {
                 .filter((h: string) => h !== '');
         }
 
+        // Preparar el objeto de datos (SIN la URL de la foto todavía)
+        const data = {
+            nombre: value.nombre,
+            descripcion: value.descripcion,
+            especialidad: value.especialidad,
+            github: value.github,
+            linkedin: value.linkedin,
+            portafolio: value.portafolio,
+            emailContacto: value.emailContacto,
+            whatsapp: value.whatsapp,
+            disponibilidad: value.disponibilidad || '',
+            horasDisponibles: horasDisponibles
+            // La propiedad 'foto' NO se manda aquí, el servicio la crea al subir el archivo
+        };
+
         try {
-            const ruta = `programadores/${Date.now()}_${this.archivoFoto.name}`;
-            const storageRef = ref(this.storage, ruta);
-            await uploadBytes(storageRef, this.archivoFoto);
-            const urlFotoFinal = await getDownloadURL(storageRef);
-
-            const data = {
-                nombre: value.nombre,
-                descripcion: value.descripcion,
-                especialidad: value.especialidad,
-                github: value.github,
-                linkedin: value.linkedin,
-                portafolio: value.portafolio,
-                emailContacto: value.emailContacto,
-                whatsapp: value.whatsapp,
-                disponibilidad: value.disponibilidad || '',
-                horasDisponibles,
-                foto: urlFotoFinal
-            };
-
-            await this.programadoresService.crearProgramador(data, null);
+            //  CORRECCIÓN CLAVE:
+            // Pasamos 'data' y el archivo 'this.archivoFoto' por separado.
+            // El servicio subirá la foto a Storage y actualizará el documento.
+            await this.programadoresService.crearProgramador(data, this.archivoFoto);
 
             this.mensaje = 'Programador agregado correctamente';
-            this.router.navigate(['/admin/programadores']);
+
+            // Esperar un poco para que el usuario vea el mensaje o redirigir
+            setTimeout(() => {
+                this.router.navigate(['/admin/programadores']);
+            }, 1000);
 
         } catch (e) {
             console.error(e);
