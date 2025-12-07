@@ -2,89 +2,97 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
 import { AuthService, UsuarioApp } from '../../../../services/auth';
-
- 
-import { RouterModule } from '@angular/router';
-
- 
-import { ProgramadoresService, Programador } from '../../../../services/programadores';
-
-import { switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-programador-asesorias',
   standalone: true,
   templateUrl: './asesorias.html',
   styleUrls: ['./asesorias.scss'],
-  imports: [CommonModule, RouterModule]
+  imports: [CommonModule]
 })
 export class ProgramadorAsesoriasComponent implements OnInit {
 
+  usuario$!: Observable<UsuarioApp | null>;
   asesorias: Asesoria[] = [];
   cargando = true;
-  programadorActual: Programador | null = null;
+  error: string | null = null;
+
+  // para mostrar la “notificación simulada”
+  mensajeSimulado: string | null = null;
 
   constructor(
-    private authService: AuthService,
     private asesoriasService: AsesoriasService,
-    private programadoresService: ProgramadoresService
-  ) {}
+    private auth: AuthService
+  ) { }
 
   ngOnInit(): void {
-    this.authService.usuario$
-      .pipe(
-        switchMap((usuario: UsuarioApp | null) => {
-          if (!usuario || !usuario.idProgramador) {
-            this.cargando = false;
-            return of([]);
-          }
+    this.usuario$ = this.auth.usuario$;
 
-          // Cargar datos del programador (opcional)
-          this.programadoresService.getProgramador(usuario.idProgramador)
-            .subscribe(p => this.programadorActual = p || null);
-
-          // Cargar asesorías del programador
-          return this.asesoriasService.getAsesoriasPorProgramador(usuario.idProgramador);
-        })
-      )
-      .subscribe(lista => {
-        this.asesorias = lista;
+    this.auth.usuario$.subscribe(usuario => {
+      if (!usuario || !usuario.idProgramador) {
         this.cargando = false;
+        this.asesorias = [];
+        return;
+      }
+
+      this.asesoriasService.getAsesoriasPorProgramador(usuario.idProgramador)
+        .subscribe({
+          next: (lista) => {
+            this.asesorias = lista;
+            this.cargando = false;
+          },
+          error: (err) => {
+            console.error(err);
+            this.error = 'Ocurrió un error al cargar las asesorías.';
+            this.cargando = false;
+          }
+        });
+    });
+  }
+
+  cambiarEstado(asesoria: Asesoria, nuevoEstado: 'aprobada' | 'rechazada') {
+    const nombre = asesoria.nombreSolicitante;
+    const fechaHora = `${asesoria.fecha} ${asesoria.hora}`;
+
+    const textoBase =
+      nuevoEstado === 'aprobada'
+        ? `Hola ${nombre}, tu solicitud de asesoría para el ${fechaHora} ha sido APROBADA. 
+El programador te espera en el horario acordado.`
+        : `Hola ${nombre}, lamentablemente tu solicitud de asesoría para el ${fechaHora} ha sido RECHAZADA. 
+Motivo: (aquí el programador puede añadir una breve justificación).`;
+
+    const cambios: Partial<Asesoria> = {
+      estado: nuevoEstado,
+      respuestaProgramador: textoBase
+    };
+
+    if (!asesoria.id) {
+      console.error('La asesoría no tiene id');
+      return;
+    }
+
+    this.asesoriasService.updateAsesoria(asesoria.id, cambios)
+      .then(() => {
+        // actualizar en memoria
+        asesoria.estado = nuevoEstado;
+        asesoria.respuestaProgramador = textoBase;
+
+        // construir la “notificación simulada”
+        this.mensajeSimulado =
+          `Simulación de notificación por correo / WhatsApp
+
+Para: ${asesoria.emailSolicitante}
+Mensaje:
+${textoBase}`;
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Error al actualizar la asesoría');
       });
   }
 
-  async cambiarEstado(asesoria: Asesoria, nuevoEstado: 'aprobada' | 'rechazada') {
-    if (!asesoria.id) return;
-
-    let mensaje = '';
-
-    if (nuevoEstado === 'aprobada') {
-      mensaje = prompt(
-        'Mensaje de confirmación para el estudiante:',
-        'Tu asesoría ha sido aprobada 👍'
-      ) || '';
-    } else {
-      mensaje = prompt(
-        'Explica por qué rechazas la asesoría:',
-        'Lo siento, no podré atender esta asesoría.'
-      ) || '';
-    }
-
-    try {
-      await this.asesoriasService.updateAsesoria(asesoria.id, {
-        estado: nuevoEstado,
-        respuestaProgramador: mensaje
-      });
-
-      // ✅ Actualizar en memoria para reflejar el cambio sin recargar
-      asesoria.estado = nuevoEstado;
-      asesoria.respuestaProgramador = mensaje;
-
-      alert(`Asesoría ${nuevoEstado === 'aprobada' ? 'aprobada' : 'rechazada'} correctamente.`);
-    } catch (err) {
-      console.error(err);
-      alert('Error al actualizar la asesoría.');
-    }
+  cerrarMensajeSimulado() {
+    this.mensajeSimulado = null;
   }
 }

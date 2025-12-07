@@ -1,537 +1,404 @@
-// ------------------------------
-// 1. Variables — Colores, tipografías, espacio, sombras, animaciones
-// ------------------------------
-$font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
-$font-mono: "Fira Code", "Courier New", monospace;
+// =========================================
+// 🎨 Variables & Diseño Heurístico
+// =========================================
+$primary-color: #4f46e5; // Indigo moderno
+$primary-hover: #4338ca;
+$secondary-color: #0ea5e9; // Sky blue
+$danger-color: #ef4444; // Rojo suave
+$success-color: #10b981; // Verde esmeralda
+$warning-bg: #fff7ed;
+$warning-text: #c2410c;
+$bg-color: #f8fafc; // Gris muy claro para fondo
+$card-bg: #ffffff;
+$text-main: #1e293b;
+$text-muted: #64748b;
+$border-color: #e2e8f0;
+$shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+$shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+$shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+$radius: 0.75rem;
 
-// Paleta principal (manteniendo identidad pero mejorada)
-// Tonos pensados para elegancia + contraste
-$brand-primary: #0f172a;        // tono oscuro base (mantener identidad)
-$brand-primary-600: #0b1220;
-$brand-primary-400: #152033;
-$brand-primary-200: #2a3a4f;
-$accent: #3b82f6;               // acento vibrante (azul)
-$accent-variant: #60a5fa;
-$accent-soft: rgba(59,130,246,0.12);
+// =========================================
+// 🎬 Animaciones
+// =========================================
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 
-$neutral-100: #f7fafc;
-$neutral-200: #eef2f7;
-$neutral-300: #e2e8f0;
-$neutral-500: #94a3b8;
-$neutral-700: #334155;
-$neutral-900: #0b1220;
-
-$success: #10b981;
-$danger: #ef4444;
-$warning: #f59e0b;
-
-// Gradientes sutiles
-$gradient-card: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
-
-// Espaciado / Tipografía / Rounding
-$radius-sm: 8px;
-$radius-md: 12px;
-$radius-lg: 18px;
-
-$space-xs: 4px;
-$space-sm: 8px;
-$space-md: 16px;
-$space-lg: 24px;
-$space-xl: 40px;
-
-$font-size-base: 16px;
-$line-height-base: 1.45;
-
-// Sombras (sutiles y jerárquicas)
-$shadow-1: 0 1px 6px rgba(11,17,32,0.04);
-$shadow-2: 0 6px 20px rgba(11,17,32,0.08);
-$shadow-3: 0 12px 40px rgba(11,17,32,0.12);
-
-// Transiciones y tiempos
-$duration-fast: 160ms;
-$duration-medium: 280ms;
-$duration-slow: 420ms;
-$easing: cubic-bezier(.2,.9,.3,1);
-
-// Z-index
-$z-pop: 900;
-$z-modal: 1000;
-
-// Preferencias de animación reducido
-@media (prefers-reduced-motion: reduce) {
-  // we'll override animations later where needed
-}
-
-// ==============================
-// 2. Utilidades comunes
-// ==============================
-%visually-hidden {
-  position: absolute !important;
-  height: 1px; width: 1px;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap;
-}
-
-/* Utility for image-fit inside cards so images always show fully */
-@mixin image-fit-cover {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-// Small focus ring for accessibility
-@mixin focus-ring($color: $accent) {
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(red($color), green($color), blue($color), 0.14);
-  border-radius: $radius-sm;
-}
-
-// ==============================
-// 3. Reset + estilos base
-// ==============================
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  font-size: $font-size-base;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  font-family: $font-sans;
-  line-height: $line-height-base;
-  color: $neutral-900;
-  background: linear-gradient(180deg, $neutral-100 0%, $neutral-200 100%);
-  -webkit-font-smoothing: antialiased;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-  transition: background $duration-medium $easing;
-}
-
-// Container proporcionado por el usuario (incluido y mejorado)
-.programador-container {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: $space-lg;
-  background: white;
-  border-radius: $radius-md;
-  box-shadow: $shadow-2;
-  border: 1px solid rgba(11,17,32,0.03);
-}
-
-// Tipografía
-h1, h2, h3, h4 {
-  font-weight: 700;
-  color: $brand-primary-600;
-  line-height: 1.15;
-  margin: 0 0 $space-sm 0;
-}
-
-h1 { font-size: 2.125rem; } // ~34px
-h2 { font-size: 1.5rem; }   // ~24px
-h3 { font-size: 1.125rem; } // ~18px
-
-p {
-  margin: 0 0 $space-md 0;
-  color: $neutral-700;
-  font-size: 0.975rem;
-}
-
-// Links
-a {
-  color: $accent;
-  text-decoration: none;
-  transition: color $duration-fast $easing;
-  &:hover, &:focus {
-    color: $accent-variant;
-    text-decoration: underline;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-// Small helper for muted text
-.muted { color: $neutral-500; font-size: 0.94rem; }
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 
-// ==============================
-// 4. Componentes — Botones
-// ==============================
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-.button {
+@keyframes pulseButton {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+// =========================================
+// 🚀 Estilos Globales del Contenedor
+// =========================================
+:host {
+  display: block;
+  background-color: $bg-color;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: $text-main;
+}
+
+.programador-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  animation: fadeIn 0.6s ease-out;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $text-main;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.025em;
+    border-bottom: 2px solid $border-color;
+    padding-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    color: $text-main;
+    margin: 2rem 0 1rem;
+    font-weight: 600;
+  }
+}
+
+// =========================================
+// ⚠️ Alertas
+// =========================================
+.alerta {
+  background-color: $warning-bg;
+  border-left: 4px solid $warning-text;
+  color: $warning-text;
+  padding: 1rem 1.5rem;
+  border-radius: $radius;
+  box-shadow: $shadow-sm;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  animation: slideInUp 0.4s ease-out;
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+  }
+}
+
+// =========================================
+// 🔘 Botón Principal (Nuevo Proyecto)
+// =========================================
+// Selector específico para el botón que está directamente bajo el contenedor o div condicional
+.programador-container>div>button {
+  background: linear-gradient(135deg, $primary-color, $primary-hover);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: $radius;
+  cursor: pointer;
+  box-shadow: $shadow-md;
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
   display: inline-flex;
   align-items: center;
-  gap: $space-sm;
-  padding: 10px 16px;
-  border-radius: $radius-md;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: transform $duration-fast $easing, box-shadow $duration-fast $easing, background $duration-fast $easing;
-  user-select: none;
-  will-change: transform, box-shadow;
+  gap: 0.5rem;
 
-  // Icon sizing inside buttons
-  .btn-icon {
-    width: 18px;
-    height: 18px;
-    display: inline-block;
-    line-height: 0;
-  }
-
-  &:focus {
-    @include focus-ring($accent);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
   }
 
   &:active {
-    transform: translateY(1px) scale(0.998);
+    transform: translateY(0);
   }
 }
 
-// Primary button (accent)
-.button--primary {
-  background: linear-gradient(180deg, $accent, $accent-variant);
-  color: white;
-  box-shadow: 0 6px 18px rgba(59,130,246,0.18), $shadow-1;
+// =========================================
+// 📊 Tabla de Proyectos
+// =========================================
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: $card-bg;
+  border-radius: $radius;
+  overflow: hidden; // Para respetar el border-radius en las esquinas
+  box-shadow: $shadow-md;
+  margin-bottom: 2rem;
+  animation: fadeIn 0.8s ease-out;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(59,130,246,0.20);
-  }
-}
+  thead {
+    background-color: #f1f5f9;
 
-// Secondary / neutral button
-.button--secondary {
-  background: white;
-  color: $brand-primary-400;
-  border: 1px solid rgba($brand-primary-400, 0.06);
-  box-shadow: $shadow-1;
-
-  &:hover {
-    background: $neutral-100;
-    transform: translateY(-2px);
-  }
-}
-
-// Ghost / link-like
-.button--ghost {
-  background: transparent;
-  color: $brand-primary-600;
-  padding: 8px 10px;
-
-  &:hover { color: $accent; }
-}
-
-// Small micro ripple effect (pure CSS)
-.button {
-  position: relative;
-  overflow: hidden;
-
-  &::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 0;
-    height: 0;
-    transform: translate(-50%, -50%);
-    background: rgba(255,255,255,0.08);
-    border-radius: 50%;
-    transition: width $duration-medium $easing, height $duration-medium $easing, opacity $duration-medium $easing;
-    opacity: 0;
-  }
-
-  &:hover::after {
-    width: 220%;
-    height: 220%;
-    opacity: 1;
-  }
-
-  // reduce motion honor
-  @media (prefers-reduced-motion: reduce) {
-    &::after { transition: none; }
-    &:hover::after { width: 220%; height: 220%; }
-  }
-}
-
-// ==============================
-// 5. Tarjetas (Card) — imagen completa y contenido
-// ==============================
-
-.card {
-  background: $gradient-card;
-  border-radius: $radius-lg;
-  overflow: hidden;
-  box-shadow: $shadow-2;
-  border: 1px solid rgba(11,17,32,0.04);
-  transition: transform $duration-medium $easing, box-shadow $duration-medium $easing;
-  will-change: transform, box-shadow;
-
-  display: flex;
-  flex-direction: column;
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: $shadow-3;
-  }
-
-  // Imagen de cabecera que se adapta (no recorta innecesariamente)
-  &__media {
-    width: 100%;
-    height: 220px;
-    position: relative;
-    background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.00));
-    overflow: hidden;
-
-    img {
-      @include image-fit-cover; // asegura que la imagen llene el contenedor y quede completa visualmente
-      transition: transform $duration-medium $easing;
-    }
-
-    // ligero zoom en hover para dar dinamismo
-    .card:hover & img {
-      transform: scale(1.04);
+    th {
+      text-align: left;
+      padding: 1rem 1.5rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      color: $text-muted;
+      border-bottom: 1px solid $border-color;
     }
   }
 
-  &__body {
-    padding: $space-md;
-    display: flex;
-    flex-direction: column;
-    gap: $space-sm;
-  }
+  tbody {
+    tr {
+      transition: background-color 0.2s;
 
-  &__title {
-    font-size: 1.05rem;
-    color: $brand-primary-600;
-    margin-bottom: $space-xs;
-  }
-
-  &__meta {
-    display: flex;
-    gap: $space-sm;
-    align-items: center;
-    color: $neutral-500;
-    font-size: 0.9rem;
-  }
-
-  &__actions {
-    margin-top: $space-sm;
-    display: flex;
-    gap: $space-sm;
-    align-items: center;
-  }
-}
-
-// ==============================
-// 6. Contenedores destacados / Hero pequeño
-// ==============================
-.hero {
-  padding: $space-lg;
-  border-radius: $radius-lg;
-  background: linear-gradient(180deg, rgba($accent-variant,0.06), rgba(255,255,255,0));
-  border: 1px solid rgba(59,130,246,0.06);
-  box-shadow: $shadow-1;
-  display: flex;
-  gap: $space-lg;
-  align-items: center;
-  justify-content: space-between;
-
-  &__left {
-    flex: 1;
-  }
-
-  &__right {
-    min-width: 220px;
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: $accent-soft;
-    color: $accent;
-    font-weight: 700;
-    font-size: 0.85rem;
-  }
-}
-
-// ==============================
-// 7. Timeline / Sección animada
-// ==============================
-
-.timeline {
-  position: relative;
-  padding-left: 36px;
-  margin: $space-lg 0;
-
-  &::before {
-    content: "";
-    position: absolute;
-    left: 16px;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: linear-gradient(180deg, $accent, transparent 70%);
-    border-radius: 4px;
-    opacity: 0.95;
-  }
-
-  &__item {
-    position: relative;
-    margin-bottom: $space-lg;
-    padding: $space-sm 0;
-
-    &::before {
-      content: "";
-      position: absolute;
-      left: 6px;
-      top: 6px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: white;
-      border: 3px solid $accent;
-      box-shadow: 0 2px 6px rgba(11,17,32,0.06);
-    }
-
-    &__card {
-      background: white;
-      border-radius: $radius-md;
-      padding: $space-md;
-      box-shadow: $shadow-1;
-      transition: transform $duration-medium $easing, box-shadow $duration-medium $easing;
+      &:last-child td {
+        border-bottom: none;
+      }
 
       &:hover {
-        transform: translateX(6px);
-        box-shadow: $shadow-2;
+        background-color: #f8fafc;
+      }
+
+      td {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid $border-color;
+        color: $text-main;
+        vertical-align: middle;
+
+        // Acciones (Botones dentro de la tabla)
+        button {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.85rem;
+          border-radius: 6px;
+          border: 1px solid transparent;
+          cursor: pointer;
+          transition: all 0.2s;
+          margin-right: 0.5rem;
+          font-weight: 500;
+
+          // Botón Editar
+          &:first-of-type {
+            background-color: rgba($secondary-color, 0.1);
+            color: darken($secondary-color, 10%);
+
+            &:hover {
+              background-color: $secondary-color;
+              color: white;
+            }
+          }
+
+          // Botón Eliminar
+          &:last-of-type {
+            background-color: rgba($danger-color, 0.1);
+            color: darken($danger-color, 10%);
+
+            &:hover {
+              background-color: $danger-color;
+              color: white;
+            }
+          }
+        }
       }
     }
   }
 }
 
-// ==============================
-// 8. Badges, chips y estados
-// ==============================
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: $space-xs;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 0.82rem;
-  background: rgba(11,17,32,0.04);
-  color: $brand-primary-600;
-  box-shadow: none;
-}
+// Mensaje de carga o vacío
+div>p,
+div>div {
 
-// Estado success / danger
-.badge--success { background: rgba($success, 0.08); color: $success; }
-.badge--danger  { background: rgba($danger, 0.08); color: $danger; }
-
-// ==============================
-// 9. Form controls (accesible y elegante)
-// ==============================
-.input {
-  display: block;
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: $radius-sm;
-  border: 1px solid rgba(11,17,32,0.06);
-  background: white;
-  font-size: 0.95rem;
-  transition: box-shadow $duration-fast $easing, border-color $duration-fast $easing;
-
-  &:focus {
-    @include focus-ring($accent);
-    border-color: $accent;
+  &.cargando,
+  &:empty {
+    color: $text-muted;
+    font-style: italic;
+    padding: 1rem;
   }
 }
 
-.label {
-  display: block;
-  margin-bottom: $space-xs;
-  color: $neutral-700;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
+// =========================================
+// 📝 Formulario (Crear/Editar)
+// =========================================
+.proyecto-form {
+  background-color: $card-bg;
+  padding: 2rem;
+  border-radius: $radius;
+  box-shadow: $shadow-lg;
+  border: 1px solid $border-color;
+  animation: slideInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 2rem;
 
-// ==============================
-// 10. Microinteracciones y animaciones
-// ==============================
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: $primary-color;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
 
-// Small fade-up entrance
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+  form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
 
-.fade-up {
-  animation: fadeUp $duration-slow $easing both;
-}
+    // Responsive: 2 columnas en pantallas grandes
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
 
-// Floating subtle effect
-@keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0); }
-}
+      // Elementos que ocupan todo el ancho (Descripción, Repositorio, Demo)
+      div:nth-child(2),
+      // Descripción
+      div:nth-child(5),
+      // Tecnologías
+      div:nth-child(6),
+      // Repo
+      div:nth-child(7) {
+        // Demo
+        grid-column: span 2;
+      }
+    }
 
-.float-subtle { animation: float 6s ease-in-out infinite; }
+    div {
+      display: flex;
+      flex-direction: column;
 
-// Honor reduced motion preference
-@media (prefers-reduced-motion: reduce) {
-  .fade-up, .float-subtle, .card, .timeline__item__card {
-    animation: none !important;
-    transition: none !important;
+      label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: $text-main;
+      }
+
+      input,
+      select,
+      textarea {
+        padding: 0.75rem;
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        background-color: #fcfcfc;
+        transition: border-color 0.2s, box-shadow 0.2s;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
+          background-color: white;
+        }
+
+        &::placeholder {
+          color: #cbd5e1;
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+    }
+
+    // Botones del formulario
+    button[type="submit"],
+    button[type="button"] {
+      grid-column: span 1;
+      padding: 0.85rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.1s;
+      margin-top: 1rem;
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+
+    button[type="submit"] {
+      background-color: $success-color;
+      color: white;
+      border: none;
+      box-shadow: 0 4px 6px -1px rgba($success-color, 0.3);
+
+      &:hover {
+        background-color: darken($success-color, 5%);
+      }
+
+      &:disabled {
+        background-color: #9ca3af;
+        cursor: not-allowed;
+      }
+    }
+
+    button[type="button"] {
+      background-color: white;
+      color: $text-muted;
+      border: 1px solid $border-color;
+
+      &:hover {
+        background-color: #f1f5f9;
+        color: $text-main;
+      }
+    }
   }
 }
 
-// ==============================
-// 11. Layout responsivo y helpers
-// ==============================
-.row {
-  display: flex;
-  gap: $space-lg;
-  align-items: stretch;
-  flex-wrap: wrap;
-}
-
-.col {
-  flex: 1;
-  min-width: 240px;
-}
-
-// Helpers
-.text-center { text-align: center; }
-.d-flex { display: flex; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-
-// ==============================
-// 12. Ejemplos de uso (clase combinada)
-// ==============================
-
-.card--horizontal {
-  display: flex;
-  gap: $space-md;
-  align-items: center;
-
-  &__media {
-    width: 140px;
-    height: 120px;
-    flex-shrink: 0;
+// =========================================
+// 📱 Responsividad
+// =========================================
+@media (max-width: 768px) {
+  .programador-container {
+    padding: 1rem;
   }
 
-  @media (max-width: 720px) {
-    flex-direction: column;
-    &__media { width: 100%; height: 160px; }
+  // Hacer la tabla scrolleable horizontalmente en móviles
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .proyecto-form form {
+    grid-template-columns: 1fr; // Todo a una columna
+
+    div:nth-child(n) {
+      grid-column: span 1;
+    }
   }
 }
-

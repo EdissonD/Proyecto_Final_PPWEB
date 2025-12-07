@@ -1,536 +1,278 @@
-// =========================================
-// 1. VARIABLES DEL SISTEMA DE DISEÑO
-// =========================================
+// Variables de diseño (Paleta de colores profesional)
+$font-stack: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+$color-primary: #2c3e50; // Azul oscuro corporativo
+$color-background: #f8f9fa; // Gris muy suave para fondo
+$color-white: #ffffff;
+$color-text: #34495e;
+$color-muted: #7f8c8d;
+$color-border: #e0e0e0;
 
-// -- Colores principales (mantengo tu primary #3f51b5 y lo extiendo)
-$color-primary: #3f51b5;            // azul moderno (base)
-$color-primary-600: #334296;
-$color-primary-400: #5b6bd6;
-$color-primary-200: #dfe6ff;
-$color-accent: #7c4dff;             // acento púrpura para dinámica visual
-$color-success: #2e7d32;            // verde (mantengo)
-$color-danger: #d32f2f;             // rojo (mantengo)
-$color-warning: #ed6c02;            // naranja (mantengo)
+// Colores de estado
+$color-success: #27ae60; // Verde vibrante para aprobar
+$color-danger: #e74c3c; // Rojo suave para rechazar
+$color-disabled: #bdc3c7; // Gris para estados deshabilitados
 
-$color-bg: #0f172a;                 // fondo oscuro alternativo (moderno)
-$color-surface: #ffffff;            // tarjeta / superficie principal
-$color-muted: #6b7280;              // textos secundarios
-$color-text: #111827;               // texto principal (contraste)
-$color-border: #e6e9ef;             // bordes suaves
-$color-bg-light: #f7f8fb;           // fondo de áreas claras
+// Sombras y bordes
+$shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.05);
+$shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.1);
+$radius: 8px;
 
-// -- Tonos semitransparentes para sombras/overlays
-$overlay-strong: rgba(15, 23, 42, 0.6);
-$shadow-dark: rgba(2, 6, 23, 0.08);
-
-// -- Tipografías y tamaños
-$font-sans: "Inter", "Roboto", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
-$font-size-base: 16px;
-$line-height-base: 1.45;
-
-$h1: 2.0rem;
-$h2: 1.5rem;
-$h3: 1.125rem;
-$text-small: 0.875rem;
-
-// -- Espaciado (sistema modular)
-$space-xxs: 4px;
-$space-xs: 8px;
-$space-sm: 12px;
-$space-md: 16px;
-$space-lg: 24px;
-$space-xl: 32px;
-$radius-sm: 6px;
-$radius-md: 12px;
-$radius-lg: 18px;
-
-// -- Sombras y bordes
-$shadow-sm: 0 1px 2px $shadow-dark;
-$shadow-md: 0 6px 18px $shadow-dark;
-$shadow-lg: 0 24px 48px rgba(2,6,23,0.12);
-$glass-border: 1px solid rgba(255,255,255,0.06);
-
-// -- Animaciones
-$anim-fast: 0.12s;
-$anim-medium: 0.28s;
-$anim-slow: 0.45s;
-
-// -- Z-index
-$z-top: 9999;
-
-// =========================================
-// 2. MIXINS / UTILIDADES
-// =========================================
-
-@mixin flex-center($dir: row, $jc: center, $ai: center) {
-  display: flex;
-  flex-direction: $dir;
-  justify-content: $jc;
-  align-items: $ai;
-}
-
-@mixin transition($props...) {
-  transition: #{join($props, ", ")} $anim-medium cubic-bezier(.2,.9,.3,1);
-}
-
-@mixin card-surface {
-  background: $color-surface;
-  border-radius: $radius-md;
-  box-shadow: $shadow-md;
-  border: 1px solid $color-border;
-}
-
-// truncar texto
-@mixin ellipsis($lines: 1) {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: $lines;
-  -webkit-box-orient: vertical;
-}
-
-// =========================================
-// 3. ESTILOS BASE (body, tipografías, links)
-// =========================================
-
-:root {
-  font-family: $font-sans;
-  font-size: $font-size-base;
-  color-scheme: light;
-}
-
-/* Host (útil para componentes Angular / Web Components) */
-:host, body {
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(180deg, $color-bg-light 0%, #ffffff 100%);
+:host {
+  display: block;
+  font-family: $font-stack;
   color: $color-text;
-  font-family: $font-sans;
-  line-height: $line-height-base;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Contenedor general */
-.app-container {
-  padding: $space-lg;
+  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: $color-white;
 }
 
-/* Encabezados */
-h1, h2, h3, h4 {
-  color: $color-text;
-  margin: 0 0 $space-sm 0;
-  letter-spacing: -0.01em;
-}
-
-h1 { font-size: $h1; font-weight: 700; }
-h2 { font-size: $h2; font-weight: 650; color: $color-primary-600; }
-h3 { font-size: $h3; font-weight: 600; }
-p { margin: 0 0 $space-sm 0; color: $color-text; }
-
-// enlaces
-a {
+// ---------------------------------------------------------
+// Título
+// ---------------------------------------------------------
+h2 {
+  font-size: 1.75rem;
   color: $color-primary;
-  text-decoration: none;
-  @include transition(color, transform);
-  &:hover { color: $color-primary-400; transform: translateY(-1px); }
-}
-
-// formulario / inputs base
-input, textarea, select {
-  font-family: inherit;
-  font-size: 0.95rem;
-  padding: $space-sm $space-md;
-  border-radius: $radius-sm;
-  border: 1px solid $color-border;
-  background: #fff;
-  color: $color-text;
-  @include transition(border-color, box-shadow);
-  &:focus {
-    outline: none;
-    border-color: $color-primary;
-    box-shadow: 0 6px 18px rgba(59,130,246,0.08);
-  }
-}
-
-// =========================================
-// 4. COMPONENTES VISUALES
-// =========================================
-
-// ---------- Contenedores destacados ----------
-.hero {
-  @include card-surface;
-  padding: $space-lg;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: $space-md;
-  align-items: center;
-  background: linear-gradient(135deg, $color-primary-200 0%, rgba($color-accent,0.06) 100%);
-  border: 1px solid rgba($color-primary-400, 0.12);
-
-  .hero-info {
-    h2 { color: $color-primary-600; }
-    p { color: $color-muted; font-size: $text-small; }
-  }
-
-  .hero-cta {
-    @include flex-center(column, center, center);
-    gap: $space-xs;
-  }
-
-  @media (max-width: 720px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-// ---------- Tarjetas (cards) ----------
-.card {
-  @include card-surface;
-  padding: $space-md;
-  border-radius: $radius-md;
-  overflow: hidden;
-  position: relative;
-  @include transition(transform, box-shadow);
-  background-clip: padding-box;
-
-  &.elevated { box-shadow: $shadow-lg; }
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 50px rgba(2,6,23,0.10);
-  }
-
-  // Header interno de la card
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: $space-sm;
-    margin-bottom: $space-sm;
-
-    .title { font-weight: 700; color: $color-text; }
-    .meta { color: $color-muted; font-size: $text-small; }
-  }
-
-  .card-body {
-    color: $color-text;
-    font-size: 0.95rem;
-  }
-
-  .card-footer {
-    margin-top: $space-md;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: $space-sm;
-  }
-}
-
-// ---------- Tarjeta con imagen (image card) ----------
-.card-media {
-  @extend .card;
-  padding: 0;
-  overflow: hidden;
-  display: grid;
-  grid-template-rows: 180px 1fr;
-  min-height: 220px;
-
-  .media {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;               // imagen ocupa el contenedor
-    display: block;
-    border-bottom-left-radius: $radius-md;
-    border-bottom-right-radius: $radius-md;
-  }
-
-  .media-overlay {
-    position: absolute;
-    left: 0; right: 0; top: 0;
-    height: 180px;
-    background: linear-gradient(180deg, rgba(15,23,42,0.0) 0%, rgba(15,23,42,0.45) 100%);
-    pointer-events: none;
-  }
-
-  .card-body {
-    padding: $space-md;
-  }
-
-  // Asegura que la imagen nunca sea circular y siempre cubra la tarjeta
-  img { border-radius: 0; }
-}
-
-// =========================================
-// 5. BOTONES (clase .btn)
-// =========================================
-
-.btn {
-  @include flex-center(row, center, center);
-  padding: 10px 14px;
+  margin-bottom: 1.5rem;
   font-weight: 600;
-  border-radius: $radius-sm;
-  border: none;
-  cursor: pointer;
-  min-height: 40px;
-  @include transition(transform, box-shadow, background-color);
-  box-shadow: $shadow-sm;
-  text-decoration: none;
-
-  &--primary {
-    background: linear-gradient(180deg, $color-primary 0%, $color-primary-600 100%);
-    color: #fff;
-    &:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(51,66,150,0.14); }
-    &:active { transform: translateY(0); }
-  }
-
-  &--secondary {
-    background: transparent;
-    color: $color-primary;
-    border: 1px solid rgba($color-primary,0.12);
-    &:hover { background: rgba($color-primary,0.04); }
-  }
-
-  &--ghost {
-    background: transparent;
-    color: $color-muted;
-    &:hover { background: $color-bg-light; color: $color-text; }
-  }
-
-  &--danger {
-    background: linear-gradient(180deg, $color-danger, darken($color-danger,6%));
-    color: #fff;
-  }
-
-  // iconos dentro de botones
-  i { font-size: 1rem; margin-right: 8px; opacity: 0.95; }
-}
-
-// =========================================
-// 6. BADGES / ESTADOS
-// =========================================
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: $space-xs;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 0.78rem;
-  text-transform: none;
-  border: 1px solid rgba(0,0,0,0.04);
-
-  &--pending {
-    background: linear-gradient(90deg, lighten($color-warning, 42%), rgba($color-warning, 0.06));
-    color: darken($color-warning, 8%);
-    border-color: lighten($color-warning, 30%);
-  }
-
-  &--approved {
-    background: linear-gradient(90deg, lighten($color-success, 42%), rgba($color-success, 0.06));
-    color: darken($color-success, 8%);
-    border-color: lighten($color-success, 30%);
-  }
-
-  &--rejected {
-    background: linear-gradient(90deg, lighten($color-danger, 42%), rgba($color-danger, 0.06));
-    color: darken($color-danger, 8%);
-    border-color: lighten($color-danger, 30%);
-  }
-}
-
-// =========================================
-// 7. TABLA RESPONSIVA (contenedor + tabla)
-// =========================================
-
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-  border-radius: $radius-md;
-  background: linear-gradient(180deg, #fff, #fff);
-  padding: $space-sm;
-  border: 1px solid $color-border;
-  box-shadow: $shadow-sm;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 720px;
-  font-size: 0.95rem;
-
-  thead th {
-    text-align: left;
-    padding: $space-sm $space-md;
-    background: transparent;
-    color: $color-muted;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.78rem;
-    letter-spacing: 0.6px;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid $color-border;
-    transition: background-color $anim-fast ease, transform $anim-medium;
-    &:hover { background: rgba(59,130,246,0.02); transform: translateY(-2px); }
-  }
-
-  td {
-    padding: $space-sm $space-md;
-    vertical-align: middle;
-  }
-
-  .col-actions { white-space: nowrap; }
-}
-
-// =========================================
-// 8. LOADING / STATES VACÍOS
-// =========================================
-
-.loading-state, .empty-state {
-  @include card-surface;
-  @include flex-center(column, center, center);
-  padding: $space-lg;
-  gap: $space-sm;
-  color: $color-muted;
-  text-align: center;
-
-  i { font-size: 2.2rem; color: $color-primary; opacity: 0.92; }
-  p { margin: 0; }
-}
-
-// =========================================
-// 9. TIMELINE SENCILLO (opcional / animado)
-// =========================================
-
-.timeline {
   position: relative;
-  padding-left: 28px;
-  &::before {
-    content: "";
+  padding-bottom: 0.5rem;
+
+  &::after {
+    content: '';
     position: absolute;
-    left: 9px;
-    top: 0;
     bottom: 0;
-    width: 2px;
-    background: linear-gradient(180deg, $color-primary, rgba($color-primary,0.28));
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background-color: $color-primary;
     border-radius: 2px;
   }
+}
 
-  .timeline-item {
-    position: relative;
-    padding: $space-sm 0 $space-sm $space-md;
-    margin-bottom: $space-sm;
+// ---------------------------------------------------------
+// Estados de Carga y Vacío (Feedback al usuario)
+// ---------------------------------------------------------
+div[ngIf="cargando"],
+div[ngIf="!cargando && asesorias.length === 0"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  background-color: $color-background;
+  border-radius: $radius;
+  color: $color-muted;
+  font-style: italic;
+  border: 1px dashed $color-border;
+  margin-bottom: 1rem;
 
-    .dot {
-      position: absolute;
-      left: 0;
-      top: 6px;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: $color-surface;
-      border: 4px solid $color-primary;
-      box-shadow: 0 6px 20px rgba(51,66,150,0.08);
-    }
-
-    .content { padding-left: $space-xs; }
+  p {
+    margin: 0;
+    font-size: 1.1rem;
   }
 }
 
-// =========================================
-// 10. ANIMACIONES / MICROINTERACCIONES
-// =========================================
+// ---------------------------------------------------------
+// Tabla de Datos
+// ---------------------------------------------------------
+table {
+  width: 100%;
+  border-collapse: separate; // Necesario para border-radius en filas
+  border-spacing: 0;
+  margin-top: 1rem;
+  background: $color-white;
+  box-shadow: $shadow-soft;
+  border-radius: $radius;
+  overflow: hidden; // Para recortar las esquinas de la tabla
 
-@keyframes pulse-weak {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.02); opacity: 0.95; }
-  100% { transform: scale(1); opacity: 1; }
+  thead {
+    background-color: $color-primary;
+    color: $color-white;
+
+    th {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+
+      &:first-child {
+        padding-left: 2rem;
+      }
+
+      &:last-child {
+        text-align: center;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.2s ease, transform 0.1s ease;
+
+      // Línea separadora
+      td {
+        padding: 1.2rem 1.5rem;
+        border-bottom: 1px solid $color-border;
+        vertical-align: middle;
+        font-size: 0.95rem;
+
+        &:first-child {
+          padding-left: 2rem;
+          font-weight: 600; // Resaltar el nombre
+          color: $color-primary;
+        }
+
+        // Columna de acciones centrada
+        &:last-child {
+          text-align: center;
+          white-space: nowrap; // Evita que los botones se rompan en dos líneas
+        }
+      }
+
+      // Efecto Hover en la fila
+      &:hover {
+        background-color: lighten($color-background, 1%);
+        transform: scale(1.005);
+        box-shadow: $shadow-soft;
+        z-index: 1;
+        position: relative;
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
 }
 
-.pulse {
-  animation: pulse-weak 3s ease-in-out infinite;
+// ---------------------------------------------------------
+// Botones de Acción (Estilo "Pill")
+// ---------------------------------------------------------
+button {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  margin: 0 0.25rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: white;
+
+  &:hover:not([disabled]) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active:not([disabled]) {
+    transform: translateY(0);
+  }
+
+  // Estilo específico para "Aprobar" (Primer botón)
+  &:first-of-type {
+    background-color: $color-success;
+
+    &:hover:not([disabled]) {
+      background-color: darken($color-success, 5%);
+    }
+  }
+
+  // Estilo específico para "Rechazar" (Segundo botón)
+  &:last-of-type {
+    background-color: $color-danger;
+
+    &:hover:not([disabled]) {
+      background-color: darken($color-danger, 5%);
+    }
+  }
+
+  // Estado Deshabilitado
+  &[disabled] {
+    background-color: lighten($color-disabled, 10%);
+    color: darken($color-disabled, 10%);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+    opacity: 0.6;
+  }
 }
 
-.fade-in {
-  animation: fadeIn $anim-slow ease both;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+// ---------------------------------------------------------
+// Notificación Simulada (Estilo "Toast")
+// ---------------------------------------------------------
+.notificacion-simulada {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 350px;
+  background-color: $color-white;
+  border-left: 5px solid $color-primary;
+  box-shadow: $shadow-hover;
+  border-radius: $radius;
+  padding: 1.5rem;
+  animation: slideIn 0.4s ease-out forwards;
+  z-index: 1000;
 
-// =========================================
-// 11. ACCESIBILIDAD Y CONTRASTE
-// =========================================
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    color: $color-primary;
+  }
 
-.high-contrast {
-  color: #0b1220;
-  background: #fff;
-  border-color: darken($color-border, 6%);
-}
-
-.visually-hidden {
-  position: absolute !important;
-  height: 1px; width: 1px;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap;
-}
-
-// =========================================
-// 12. AJUSTES RESPONSIVOS
-// =========================================
-
-@media (max-width: 1024px) {
-  .app-container { padding: $space-md; }
-  .card-media { grid-template-rows: 160px 1fr; }
-}
-
-@media (max-width: 720px) {
-  h1 { font-size: 1.5rem; }
-  .btn { min-height: 44px; width: 100%; justify-content: center; }
-  .table { min-width: 600px; }
-}
-
-// =========================================
-// 13. EJEMPLOS DE USO (clases que encajan con tu HTML existente)
-// =========================================
-
-/* Encabezado con icono similar a tu h2 */
-.header-title {
-  display: flex;
-  align-items: center;
-  gap: $space-sm;
-  padding-bottom: $space-sm;
-  border-bottom: 2px solid rgba($color-primary-400, 0.08);
-
-  i { color: $color-primary; font-size: 1.2rem; }
-}
-
-/* Acciones (botones) para cada fila - namespace .acciones */
-.acciones {
-  display: inline-flex;
-  gap: $space-xs;
-  align-items: center;
+  pre {
+    background-color: $color-background;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: $color-text;
+    white-space: pre-wrap; // Ajuste de texto
+    border: 1px solid darken($color-background, 5%);
+    margin-bottom: 1rem;
+  }
 
   button {
-    @extend .btn;
-    padding: 8px 10px;
-    min-height: 36px;
-    border-radius: 8px;
-    font-size: 0.85rem;
+    width: 100%;
+    margin: 0;
+    background-color: $color-primary;
+    color: white;
+    border-radius: 6px; // Botón cuadrado para diferenciar de la tabla
+
+    &:hover {
+      background-color: lighten($color-primary, 10%);
+    }
+  }
+}
+
+// Animación de entrada para la notificación
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
 
-  .btn-aprobar { @extend .btn--primary; background: linear-gradient(90deg, $color-success, darken($color-success, 6%)); }
-  .btn-rechazar { @extend .btn--danger; }
-  .gestionado {
-    color: $color-muted;
-    font-style: italic;
-    display: inline-flex;
-    gap: 6px;
-    align-items: center;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ---------------------------------------------------------
+// Responsividad básica
+// ---------------------------------------------------------
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .notificacion-simulada {
+    width: 90%;
+    right: 5%;
+    left: 5%;
   }
 }

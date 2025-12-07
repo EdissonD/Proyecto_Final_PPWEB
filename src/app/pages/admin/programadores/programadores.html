@@ -1,10 +1,6 @@
-<!-- Título con efecto de escritura permanente -->
-<h2 class="typing-title">Lista de programadores</h2>
 
-<!-- Botón modernooooo -->
-<button 
-    class="btn-nuevo"
-    [routerLink]="['/admin/programadores/nuevo']">
+<h2 class="typing-title">Lista de programadores</h2>
+<button class="btn-nuevo" [routerLink]="['/admin/programadores/nuevo']">
     <i class="icon">➕</i> Nuevo programador
 </button>
 
@@ -18,11 +14,6 @@
             <th>Acciones</th>
         </tr>
     </thead>
-
-
-
-
-
     <tbody>
         <tr *ngFor="let p of lista">
             <td><img *ngIf="p.foto" [src]="p.foto" width="70"></td>
@@ -30,9 +21,10 @@
             <td>{{ p.especialidad }}</td>
             <td><a *ngIf="p.github" [href]="p.github" target="_blank">Github</a></td>
             <td>
-                <button (click)="eliminar(p.id)" class="btn btn-danger">Eliminar</button>  |
-                <button [routerLink]="['/admin/programadores/editar', p.id]" class="btn btn-primary">Editar</button>  |
-                <button [routerLink]="['/admin/programadores', p.id, 'proyectos']" class="btn btn-info"> Proyectos</button>
+                <button (click)="eliminar(p.id)" class="btn btn-danger">Eliminar</button> |
+                <button [routerLink]="['/admin/programadores/editar', p.id]" class="btn btn-primary">Editar</button> |
+                <button [routerLink]="['/admin/programadores', p.id, 'proyectos']" class="btn btn-info">
+                    Proyectos</button>
             </td>
         </tr>
     </tbody>

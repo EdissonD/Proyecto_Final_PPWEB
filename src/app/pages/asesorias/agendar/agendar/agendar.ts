@@ -21,7 +21,7 @@ export class AgendarAsesoriaComponent implements OnInit {
   programador: Programador | null = null;
   cargando = false;
 
-  // 👉 Propiedad para guardar las horas traídas del programador
+  //  Propiedad para guardar las horas traídas del programador
   horasDisponibles: string[] = [];
 
   // guardamos aquí el usuario logueado

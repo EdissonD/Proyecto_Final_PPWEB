@@ -59,18 +59,17 @@
 
     <h3>Disponibilidad y Horarios</h3>
 
+    <!-- DISPONIBILIDAD -->
     <div class="form-group">
-        <label>Disponibilidad (Descripción general)</label>
+        <label><i class="fa-solid fa-clock"></i> Disponibilidad</label>
         <textarea formControlName="disponibilidad" rows="3"
             placeholder="Ej: Lunes a Viernes de 14:00 a 18:00"></textarea>
     </div>
 
+    <!-- HORAS EXACTAS -->
     <div class="form-group">
-        <p class="ayuda">
-            Horas específicas (HH:mm) para el calendario. Ej: <strong>09:00, 10:30, 16:00</strong>
-        </p>
-        <label>Horas disponibles (Array)</label>
-        <input type="text" formControlName="horasDisponiblesTexto">
+        <label><i class="fa-solid fa-hourglass-half"></i> Horas exactas (separadas por coma)</label>
+        <input type="text" formControlName="horasDisponiblesTexto" placeholder="09:00, 10:30, 16:00">
     </div>
 
     <hr>

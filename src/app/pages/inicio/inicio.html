@@ -1,7 +1,46 @@
-<app-menu></app-menu>
+<div class="inicio-wrapper" *ngIf="(usuario$ | async) as usuario; else invitado">
 
-<div class="inicio-container">
     <h1>Bienvenido al sistema</h1>
-    <p>Esta es la página de inicio.</p>
-    <button routerLink="/mis-asesorias">Mis asesorías</button>
+    <p class="subtitulo">
+        Hola {{ usuario.nombre || usuario.email }} 👋
+    </p>
+
+    <div class="acciones">
+        <button type="button" (click)="irAPanel(usuario)">
+            Ir a mi panel
+        </button>
+
+        <a routerLink="/usuarios">Explorar programadores</a>
+
+        <a *ngIf="usuario.rol === 'usuario'" routerLink="/mis-asesorias">
+            Mis asesorías
+        </a>
+
+        <a *ngIf="usuario.rol === 'programador'" routerLink="/programador/asesorias">
+            Asesorías recibidas
+        </a>
+    </div>
 </div>
+
+<ng-template #invitado>
+    <h1>Bienvenido al sistema</h1>
+    <p class="subtitulo">
+        Puedes explorar los portafolios o iniciar sesión.
+    </p>
+
+    <div class="acciones">
+        <a routerLink="/usuarios">Ver programadores</a>
+        <a routerLink="/login">Iniciar sesión</a>
+    </div>
+</ng-template>
+
+<section class="inicio-asesorias">
+    <h2>¿Necesitas una asesoría?</h2>
+    <p>
+        Explora los portafolios y agenda una asesoría con el programador que prefieras.
+    </p>
+
+    <a routerLink="/usuarios" class="btn-agendar-inicio">
+        Ver programadores y agendar asesoría
+    </a>
+</section>

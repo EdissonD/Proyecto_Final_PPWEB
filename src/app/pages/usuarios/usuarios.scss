@@ -14,9 +14,9 @@ $text-secondary: #64748b;
 
 $border-radius: 20px;
 $shadow-soft: 0 4px 10px rgba(0, 0, 0, 0.06);
-$shadow-hover: 0 25px 40px rgba(0,0,0,0.13);
+$shadow-hover: 0 25px 40px rgba(0, 0, 0, 0.13);
 
-$transition: 0.35s cubic-bezier(.25,.8,.25,1);
+$transition: 0.35s cubic-bezier(.25, .8, .25, 1);
 
 
 // ==========================================
@@ -63,9 +63,9 @@ h2 {
   max-width: 620px;
   margin: 0 auto 2.5rem auto;
 
-  background: rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: $shadow-soft;
 
   color: $text-secondary;
@@ -106,7 +106,7 @@ h2 {
 .card {
   background: $color-bg-card;
   border-radius: $border-radius;
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(10px);
 
   box-shadow: $shadow-soft;
@@ -135,7 +135,7 @@ h2 {
   // Imagen estilo avatar
   .foto {
     width: 100%;
-    height: 240px;
+    height: 250px;
     background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
     display: flex;
     justify-content: center;
@@ -147,7 +147,7 @@ h2 {
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(255,255,255,0.4), transparent 70%);
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.4), transparent 70%);
       opacity: 0;
       transition: 0.5s;
     }
@@ -157,12 +157,12 @@ h2 {
     }
 
     img {
-      width: 150px;
-      height: 150px;
+      width: 220px;
+      height: 220px; // CORREGIDO: Igual al ancho para círculo perfecto
       border-radius: 50%;
       object-fit: cover;
       border: 5px solid white;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
       transition: 0.4s;
 
       .card:hover & {
@@ -284,7 +284,7 @@ h2 {
           position: absolute;
           width: 0;
           height: 0;
-          background: rgba(255,255,255,0.4);
+          background: rgba(255, 255, 255, 0.4);
           border-radius: 50%;
           transform: translate(-50%, -50%);
           opacity: 0;
@@ -305,7 +305,7 @@ h2 {
         &:first-child {
           background: $color-primary;
           color: white;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 
           &:hover {
             background: lighten($color-primary, 8%);
@@ -330,10 +330,19 @@ h2 {
 
 
 // ==========================================
-// Mobile Mejorado
+// 6. Mobile Mejorado
 // ==========================================
 @media (max-width: 480px) {
-  :host { padding: 1.2rem; }
-  .grid { grid-template-columns: 1fr; gap: 1.8rem; }
-  .card .foto { height: 200px; }
+  :host {
+    padding: 1.2rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+  }
+
+  .card .foto {
+    height: 200px;
+  }
 }

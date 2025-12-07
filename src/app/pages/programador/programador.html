@@ -1,7 +1,124 @@
 <app-menu></app-menu>
 
 <div class="programador-container">
+
     <h1>Panel de Programador</h1>
-    <p>Aquí el programador gestionará su portafolio y sus asesorías.</p>
-    
+
+    <!-- Caso: no hay usuario -->
+    <div *ngIf="!usuario">
+        <p>Debes iniciar sesión como programador para gestionar tus proyectos.</p>
+    </div>
+
+    <!-- Caso: usuario sin idProgramador -->
+    <div *ngIf="usuario && !usuario.idProgramador" class="alerta">
+        <p>
+            Tu usuario tiene rol <strong>{{ usuario.rol }}</strong>, pero no tiene un
+            <code>idProgramador</code> asociado en la colección <strong>usuarios</strong>.
+            Pide al administrador que te vincule con tu ficha de programador.
+        </p>
+    </div>
+
+    <!-- Caso: usuario programador con idProgramador -->
+    <div *ngIf="usuario && usuario.idProgramador">
+
+        <h2>Mis proyectos</h2>
+
+        <button type="button" (click)="nuevoProyecto()">
+            Nuevo proyecto
+        </button>
+
+        <div *ngIf="cargando">
+            Cargando proyectos...
+        </div>
+
+        <table *ngIf="!cargando && proyectos.length > 0">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Rol</th>
+                    <th>Tecnologías</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of proyectos">
+                    <td>{{ p.nombre }}</td>
+                    <td>{{ p.tipoProyecto }}</td>
+                    <td>{{ p.tipoParticipacion }}</td>
+                    <td>{{ p.tecnologias }}</td>
+                    <td>
+                        <button type="button" (click)="editarProyecto(p)">Editar</button>
+                        <button type="button" (click)="eliminarProyecto(p)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p *ngIf="!cargando && proyectos.length === 0">
+            Aún no tienes proyectos registrados.
+        </p>
+
+        <!-- Formulario para crear/editar proyectos -->
+        <div class="proyecto-form" *ngIf="modo === 'nuevo' || modo === 'editar'">
+
+            <h3 *ngIf="modo === 'nuevo'">Nuevo proyecto</h3>
+            <h3 *ngIf="modo === 'editar'">Editar proyecto</h3>
+
+            <form [formGroup]="form" (ngSubmit)="guardarProyecto()">
+
+                <div>
+                    <label>Nombre del proyecto</label>
+                    <input type="text" formControlName="nombre">
+                </div>
+
+                <div>
+                    <label>Descripción</label>
+                    <textarea rows="4" formControlName="descripcion"></textarea>
+                </div>
+
+                <div>
+                    <label>Tipo de proyecto</label>
+                    <select formControlName="tipoProyecto">
+                        <option *ngFor="let t of tiposProyecto" [value]="t.valor">
+                            {{ t.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Tipo de participación</label>
+                    <select formControlName="tipoParticipacion">
+                        <option *ngFor="let t of tiposParticipacion" [value]="t.valor">
+                            {{ t.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Tecnologías utilizadas</label>
+                    <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, MySQL...">
+                </div>
+
+                <div>
+                    <label>Repositorio</label>
+                    <input type="url" formControlName="repoUrl" placeholder="https://github.com/...">
+                </div>
+
+                <div>
+                    <label>Demo / despliegue</label>
+                    <input type="url" formControlName="demoUrl" placeholder="https://mi-app.web.app/...">
+                </div>
+
+                <button type="submit" [disabled]="cargando || form.invalid">
+                    {{ cargando ? 'Guardando...' : 'Guardar' }}
+                </button>
+
+                <button type="button" (click)="cancelarEdicion()">
+                    Cancelar
+                </button>
+
+            </form>
+        </div>
+    </div>
 </div>

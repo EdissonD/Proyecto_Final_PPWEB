@@ -1,61 +1,46 @@
-<h2><i class="fas fa-headset icon-title"></i> Asesorías recibidas</h2>
+<h2>Asesorías recibidas</h2>
 
-<div *ngIf="cargando" class="loading">
-    <i class="fas fa-spinner fa-spin"></i> Cargando asesorías...
+<div *ngIf="cargando">
+    Cargando solicitudes...
 </div>
 
-<div *ngIf="!cargando && asesorias.length === 0" class="sin-asesorias">
-    <i class="fas fa-inbox"></i>
-    <p>No tienes asesorías solicitadas por el momento.</p>
+<div *ngIf="!cargando && asesorias.length === 0">
+    <p>No tienes solicitudes de asesoría por el momento.</p>
 </div>
 
- 
-<div class="table-container">
-    <table *ngIf="!cargando && asesorias.length > 0" class="tabla-asesorias">
-        <thead>
-            <tr>
-                <th><i class="fas fa-user"></i> Solicitante</th>
-                <th><i class="fas fa-envelope"></i> Correo</th>
-                <th><i class="fas fa-calendar"></i> Fecha</th>
-                <th><i class="fas fa-clock"></i> Hora</th>
-                <th><i class="fas fa-comment-dots"></i> Comentario</th>
-                <th><i class="fas fa-flag"></i> Estado</th>
-                <th><i class="fas fa-reply"></i> Respuesta</th>
-                <th><i class="fas fa-tools"></i> Acciones</th>
-            </tr>
-        </thead>
+<table *ngIf="!cargando && asesorias.length > 0">
+    <thead>
+        <tr>
+            <th>Solicitante</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Comentario</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let a of asesorias">
+            <td>{{ a.nombreSolicitante }}</td>
+            <td>{{ a.fecha }}</td>
+            <td>{{ a.hora }}</td>
+            <td>{{ a.comentario || '-' }}</td>
+            <td>{{ a.estado | titlecase }}</td>
+            <td>
+                <button type="button" (click)="cambiarEstado(a, 'aprobada')" [disabled]="a.estado === 'aprobada'">
+                    Aprobar
+                </button>
+                <button type="button" (click)="cambiarEstado(a, 'rechazada')" [disabled]="a.estado === 'rechazada'">
+                    Rechazar
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-        <tbody>
-            <tr *ngFor="let a of asesorias">
-                <td>{{ a.nombreSolicitante }}</td>
-                <td>{{ a.emailSolicitante }}</td>
-                <td>{{ a.fecha }}</td>
-                <td>{{ a.hora }}</td>
-                <td>{{ a.comentario || '-' }}</td>
-
-                <td>
-                    <span 
-                        class="estado-{{ a.estado }}">
-                        {{ a.estado | titlecase }}
-                    </span>
-                </td>
-
-                <td>{{ a.respuestaProgramador || '-' }}</td>
-
-                <td class="acciones">
-                    <button *ngIf="a.estado === 'pendiente'" (click)="cambiarEstado(a, 'aprobada')">
-                        <i class="fas fa-check"></i> Aprobar
-                    </button>
-
-                    <button *ngIf="a.estado === 'pendiente'" (click)="cambiarEstado(a, 'rechazada')">
-                        <i class="fas fa-times"></i> Rechazar
-                    </button>
-
-                    <span *ngIf="a.estado !== 'pendiente'" class="gestionado">
-                        <i class="fas fa-check-circle"></i> Gestionada
-                    </span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<!-- Panel de notificación simulada -->
+<div *ngIf="mensajeSimulado" class="notificacion-simulada">
+    <h3>Notificación simulada</h3>
+    <pre>{{ mensajeSimulado }}</pre>
+    <button type="button" (click)="cerrarMensajeSimulado()">Cerrar</button>
 </div>
