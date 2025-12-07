@@ -1,188 +1,263 @@
-// ==========================================
-// 1. Variables & Tokens de Diseño
-// ==========================================
-$primary-color: #2563eb; // Azul estándar moderno
-$primary-hover: #1d4ed8; // Azul más oscuro para interacción
-$text-main: #1f2937; // Gris oscuro (casi negro)
-$text-secondary: #6b7280; // Gris medio para etiquetas/ayuda
-$border-color: #e5e7eb; // Gris claro para bordes
-$bg-input: #f9fafb; // Fondo muy sutil para inputs
-$bg-card: #ffffff; // Fondo blanco para la tarjeta
-$radius: 8px; // Bordes redondeados suaves
-$shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-
-// ==========================================
-// 2. Contenedor Principal
-// ==========================================
 :host {
-    display: block;
-    max-width: 650px; // Ancho óptimo para formularios (Ley de Miller)
-    margin: 3rem auto;
-    padding: 2.5rem;
-    background-color: $bg-card;
-    border-radius: $radius * 2; // Borde más redondeado para el contenedor
-    box-shadow: $shadow;
-    font-family: 'Inter', system-ui, sans-serif;
-}
-
-// ==========================================
-// 3. Tipografía y Separadores
-// ==========================================
-h2 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: $text-main;
-    text-align: center;
-    margin-bottom: 2rem;
-    letter-spacing: -0.025em;
-}
-
-h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: $text-main;
-    margin: 1.5rem 0 1rem 0;
     display: flex;
-    align-items: center;
+    min-height: 100vh;
+    padding: 2.2rem 1rem;
+    justify-content: center;
+    align-items: flex-start;
+    background:
+        radial-gradient(circle at top, rgba(29, 185, 84, 0.16), transparent 55%),
+        var(--color-bg);
+    animation: project-form-fade-in 0.4s ease-out;
+}
 
-    // Detalle visual: pequeña línea antes del subtítulo si quieres
-    &::before {
-        content: '';
-        display: inline-block;
-        width: 4px;
-        height: 1.1rem;
-        background-color: $primary-color;
-        margin-right: 0.75rem;
-        border-radius: 2px;
+/* =========================
+   TÍTULO
+   ========================= */
+
+h2 {
+    color: var(--color-text);
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 1.8rem;
+    text-align: center;
+    letter-spacing: 0.01em;
+    position: relative;
+
+    &::after {
+        content: "";
+        width: 80px;
+        height: 3px;
+        background: var(--color-primary);
+        display: block;
+        margin: 10px auto 0;
+        border-radius: 999px;
+        box-shadow: 0 0 14px rgba(29, 185, 84, 0.7);
     }
 }
 
-hr {
-    border: 0;
-    height: 1px;
-    background-color: $border-color;
-    margin: 2rem 0;
-}
+/* =========================
+   FORMULARIO / CARD
+   ========================= */
 
-// ==========================================
-// 4. Estilos del Formulario
-// ==========================================
 form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem; // Espacio consistente entre campos
+    width: 100%;
+    max-width: 620px;
+    padding: 2.3rem 2.1rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-elevated);
+    backdrop-filter: blur(10px);
+    animation: project-form-slide-up 0.4s ease-out;
 
-    // Wrapper de cada campo (div)
     >div {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    // Etiquetas
-    label {
-        font-size: 0.95rem;
-        font-weight: 500;
-        color: $text-main;
-    }
-
-    // Inputs, Textarea y Select unificados
-    input[type="text"],
-    textarea,
-    select {
-        padding: 0.75rem 1rem;
-        font-size: 1rem;
-        line-height: 1.5;
-        color: $text-main;
-        background-color: $bg-input;
-        border: 1px solid $border-color;
-        border-radius: $radius;
-        transition: all 0.2s ease-in-out;
-        width: 100%;
-        box-sizing: border-box;
-
-        // Placeholder
-        &::placeholder {
-            color: lighten($text-secondary, 20%);
-        }
-
-        // Estado Focus (Accesibilidad y UX)
-        &:focus {
-            outline: none;
-            background-color: #fff;
-            border-color: $primary-color;
-            box-shadow: 0 0 0 3px rgba($primary-color, 0.15); // Anillo de enfoque
-        }
-    }
-
-    // Ajustes específicos para Textarea
-    textarea {
-        resize: vertical; // Solo permitir redimensionar verticalmente
-        min-height: 100px;
-    }
-
-    // Ajustes para Select (Flecha personalizada)
-    select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        background-size: 1.25rem;
-        padding-right: 2.5rem;
-        cursor: pointer;
-    }
-
-    // Texto de ayuda (.ayuda)
-    .ayuda {
-        font-size: 0.85rem;
-        color: $text-secondary;
-        margin-top: -0.5rem; // Acercarlo al input anterior o título
-        margin-bottom: 0.5rem;
-        font-style: italic;
-    }
-
-    // ==========================================
-    // 5. Botón de Guardar
-    // ==========================================
-    button[type="submit"] {
-        margin-top: 1.5rem;
-        padding: 1rem;
-        font-size: 1rem;
-        font-weight: 600;
-        color: white;
-        background-color: $primary-color;
-        border: none;
-        border-radius: $radius;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 4px 6px -1px rgba($primary-color, 0.4);
-
-        &:hover:not(:disabled) {
-            background-color: $primary-hover;
-            transform: translateY(-2px);
-        }
-
-        &:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        &:disabled {
-            background-color: #cbd5e1; // Gris deshabilitado
-            color: #94a3b8;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
+        margin-bottom: 1.2rem;
     }
 }
 
-// ==========================================
-// 6. Responsividad
-// ==========================================
-@media (max-width: 600px) {
+/* =========================
+   LABELS
+   ========================= */
+
+label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.45rem;
+}
+
+/* =========================
+   CAMPOS DE TEXTO / SELECT / TEXTAREA
+   ========================= */
+
+input[type="text"],
+input[type="url"],
+select,
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--color-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast),
+        transform var(--transition-fast);
+
+    &::placeholder {
+        color: var(--color-text-muted);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        background-color: var(--color-bg-hover);
+        box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.55);
+        transform: translateY(-1px);
+    }
+
+    &:disabled {
+        background-color: rgba(15, 23, 42, 0.6);
+        cursor: not-allowed;
+        opacity: 0.8;
+    }
+}
+
+/* Estados de validación Angular (si los usas) */
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.65);
+}
+
+input.ng-valid.ng-touched,
+textarea.ng-valid.ng-touched,
+select.ng-valid.ng-touched {
+    border-color: var(--color-success);
+    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.65);
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+/* SELECT con flecha custom */
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.8rem center;
+    background-repeat: no-repeat;
+    background-size: 1.05rem 1.05rem;
+    padding-right: 2.4rem;
+    cursor: pointer;
+}
+
+/* =========================
+   BOTONES
+   ========================= */
+
+button {
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform var(--transition-fast),
+        opacity var(--transition-fast);
+}
+
+/* Guardar proyecto = acción primaria */
+
+button[type="submit"] {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 1.4rem;
+    padding: 0.9rem 1.5rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+    color: #ffffff;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 38px rgba(0, 0, 0, 0.7);
+        filter: brightness(1.03);
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.6);
+    }
+
+    &:disabled {
+        background: rgba(148, 163, 184, 0.7);
+        cursor: not-allowed;
+        box-shadow: none;
+        opacity: 0.9;
+    }
+}
+
+/* Cancelar = acción secundaria */
+
+button[type="button"] {
+    margin-top: 0.7rem;
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    background-color: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background-color: var(--color-bg-hover);
+        color: var(--color-text);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+}
+
+/* =========================
+   ANIMACIONES
+   ========================= */
+
+@keyframes project-form-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes project-form-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.99);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 640px) {
     :host {
-        margin: 1rem;
-        padding: 1.5rem; // Menos padding en móviles
+        padding: 1.4rem 0.75rem;
+    }
+
+    form {
+        padding: 1.9rem 1.4rem;
     }
 
     h2 {

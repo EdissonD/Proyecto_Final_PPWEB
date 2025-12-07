@@ -1,11 +1,245 @@
 /* styles.scss (global) */
 
+/* =======================
+   PALETA GLOBAL / BASE
+   ======================= */
+
+:root {
+    /* Tipografía / layout */
+    --font-family-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --transition-fast: 0.18s ease-out;
+
+    /* Colores semánticos (base) */
+    --color-bg: #121212;
+    --color-bg-elevated: #181818;
+    --color-bg-hover: #1f1f1f;
+
+    --color-primary: #1db954;
+    --color-primary-hover: #1ed760;
+
+    --color-text: #ffffff;
+    --color-text-muted: #b3b3b3;
+
+    --color-border: #282828;
+
+    --color-danger: #f87171;
+    --color-success: #22c55e;
+    --color-info: #38bdf8;
+
+    --shadow-elevated: 0 18px 40px rgba(0, 0, 0, 0.65);
+
+    /* Extras útiles */
+    --overlay-bg: rgba(2, 6, 23, 0.72);
+    --focus-ring: 0 0 0 3px rgba(29, 185, 84, 0.35);
+}
+
+/* =======================
+   TEMA OSCURO (Spotify vibe)
+   ======================= */
+
+:root.theme-dark {
+    --color-bg: #121212;
+    --color-bg-elevated: #181818;
+    --color-bg-hover: #1f1f1f;
+
+    --color-primary: #1db954;
+    --color-primary-hover: #1ed760;
+
+    --color-text: #f9fafb;
+    --color-text-muted: #9ca3af;
+
+    --color-border: #262626;
+
+    --color-danger: #f97373;
+    --color-success: #22c55e;
+    --color-info: #38bdf8;
+
+    --shadow-elevated: 0 18px 40px rgba(0, 0, 0, 0.7);
+
+    --overlay-bg: rgba(2, 6, 23, 0.72);
+    --focus-ring: 0 0 0 3px rgba(29, 185, 84, 0.35);
+}
+
+/* =======================
+   TEMA CLARO
+   ======================= */
+
+:root.theme-light {
+    --color-bg: #f9fafb;
+    --color-bg-elevated: #ffffff;
+    --color-bg-hover: #f3f4f6;
+
+    --color-primary: #1db954;
+    --color-primary-hover: #18a34a;
+
+    --color-text: #111827;
+    --color-text-muted: #6b7280;
+
+    --color-border: #e5e7eb;
+
+    --color-danger: #dc2626;
+    --color-success: #16a34a;
+    --color-info: #2563eb;
+
+    --shadow-elevated: 0 16px 30px rgba(15, 23, 42, 0.18);
+
+    --overlay-bg: rgba(15, 23, 42, 0.42);
+    --focus-ring: 0 0 0 3px rgba(29, 185, 84, 0.25);
+}
+
+/* =======================
+   BASE GLOBAL
+   ======================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family-base);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+/* Un focus visible coherente */
+:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: 0.5rem;
+}
+
+/* =======================
+   COMPONENTES GLOBALES REUSABLES
+   ======================= */
+
+/* Botones */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+
+    padding: 0.55rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        transform .12s ease,
+        box-shadow var(--transition-fast),
+        opacity var(--transition-fast);
+
+    &:hover {
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0) scale(0.98);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+
+    &:hover {
+        background: var(--color-primary-hover);
+    }
+}
+
+.btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+    box-shadow: 0 14px 30px color-mix(in oklab, var(--color-danger) 28%, rgba(0, 0, 0, .6));
+
+    &:hover {
+        background: color-mix(in oklab, var(--color-danger) 88%, white);
+    }
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+    border-color: transparent;
+
+    &:hover {
+        background: var(--color-bg-hover);
+        color: var(--color-text);
+    }
+}
+
+/* Card */
+.card {
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-elevated);
+    padding: 1rem 1.2rem;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+    width: 100%;
+    background: var(--color-bg-elevated);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+
+    padding: 0.55rem 0.75rem;
+    color: var(--color-text);
+    font-size: 0.92rem;
+    outline: none;
+
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background var(--transition-fast),
+        color var(--transition-fast);
+
+    &::placeholder {
+        color: var(--color-text-muted);
+    }
+
+    &:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 35%, transparent);
+    }
+}
+
+/* =======================
+   CONFIRM (ELIMINAR) - USA VARIABLES
+   ======================= */
+
 .confirm-overlay {
     position: fixed;
     inset: 0;
 
-    /* similar al toast (oscuro + blur) */
-    background: rgba(2, 6, 23, 0.72);
+    background: var(--overlay-bg);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 
@@ -26,25 +260,22 @@
     pointer-events: auto;
 }
 
-/* Modal con acento "peligro" (eliminar) */
+/* Modal con acento peligro (eliminar) */
 .confirm-modal {
-    --danger: #ef4444;
-
     width: min(92vw, 460px);
-    color: #f8fafc;
+    color: var(--color-text);
 
-    background: rgba(2, 6, 23, 0.92);
+    background: color-mix(in oklab, var(--color-bg-elevated) 92%, transparent);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 
-    border-radius: 1rem;
+    border-radius: var(--radius-lg);
     padding: 1.35rem 1.35rem;
 
-    box-shadow:
-        0 22px 55px rgba(0, 0, 0, 0.62),
-        0 0 0 1px rgba(148, 163, 184, 0.14);
+    box-shadow: var(--shadow-elevated);
+    border: 1px solid var(--color-border);
+    border-left: 6px solid var(--color-danger);
 
-    border-left: 6px solid var(--danger);
     position: relative;
     overflow: hidden;
 
@@ -63,13 +294,13 @@
         pointer-events: none;
     }
 
-    /* glow suave rojo en el lado izquierdo */
+    /* glow suave del lado izquierdo (danger) */
     &::after {
         content: "";
         position: absolute;
         inset: 0;
         background: linear-gradient(90deg,
-                color-mix(in oklab, var(--danger) 30%, transparent),
+                color-mix(in oklab, var(--color-danger) 30%, transparent),
                 transparent 55%);
         opacity: 0.18;
         pointer-events: none;
@@ -79,7 +310,7 @@
 .confirm-modal h3 {
     margin: 0 0 0.45rem;
     font-size: 1.05rem;
-    font-weight: 700;
+    font-weight: 750;
     letter-spacing: 0.2px;
 }
 
@@ -87,7 +318,7 @@
     margin: 0 0 1.15rem;
     font-size: 0.95rem;
     line-height: 1.45;
-    color: rgba(248, 250, 252, 0.85);
+    color: var(--color-text-muted);
 }
 
 .botones {
@@ -96,7 +327,7 @@
     gap: 0.6rem;
 }
 
-/* Botones con estilo consistente */
+/* Botones del confirm: compatibles con tu HTML actual */
 .btn-ok,
 .btn-cancelar {
     border: 0;
@@ -104,48 +335,49 @@
     padding: 0.55rem 1rem;
     font-size: 0.92rem;
     cursor: pointer;
-    transition: transform .12s ease, background .12s ease, opacity .12s ease, box-shadow .12s ease;
     user-select: none;
+
+    transition: transform .12s ease, background .12s ease, opacity .12s ease, box-shadow .12s ease;
 
     &:active {
         transform: translateY(0) scale(0.98);
     }
 
     &:focus-visible {
-        outline: 3px solid rgba(239, 68, 68, 0.45);
+        outline: 3px solid color-mix(in oklab, var(--color-danger) 40%, transparent);
         outline-offset: 2px;
     }
 }
 
-/* Acción principal: ELIMINAR (rojo, más notorio) */
+/* Acción principal: ELIMINAR */
 .btn-ok {
     background: linear-gradient(180deg,
-            color-mix(in oklab, #ef4444 88%, white),
-            #ef4444);
+            color-mix(in oklab, var(--color-danger) 88%, white),
+            var(--color-danger));
     color: #fff;
-    font-weight: 700;
+    font-weight: 750;
 
     box-shadow:
-        0 14px 30px rgba(239, 68, 68, 0.25),
+        0 14px 30px color-mix(in oklab, var(--color-danger) 24%, rgba(0, 0, 0, .65)),
         0 0 0 1px rgba(255, 255, 255, 0.10) inset;
 
     &:hover {
         transform: translateY(-1px);
         box-shadow:
-            0 18px 36px rgba(239, 68, 68, 0.32),
+            0 18px 36px color-mix(in oklab, var(--color-danger) 30%, rgba(0, 0, 0, .65)),
             0 0 0 1px rgba(255, 255, 255, 0.12) inset;
     }
 }
 
-/* Secundario: cancelar (oscuro “neutro” tipo toast) */
+/* Secundario: cancelar */
 .btn-cancelar {
-    background: rgba(255, 255, 255, 0.06);
-    color: rgba(248, 250, 252, 0.92);
+    background: color-mix(in oklab, var(--color-bg-hover) 75%, transparent);
+    color: var(--color-text);
 
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-border) 75%, transparent) inset;
 
     &:hover {
-        background: rgba(255, 255, 255, 0.12);
+        background: var(--color-bg-hover);
         transform: translateY(-1px);
     }
 }

@@ -1,59 +1,95 @@
+<!-- admin-layout.component.html -->
+
 <div class="admin-shell" *ngIf="usuario$ | async as usuario">
 
     <!-- TOPBAR ADMIN -->
     <header class="admin-topbar">
-        <div class="topbar-left">
-            <div class="brand">
-                <i class="bi bi-speedometer2"></i>
-                <span>Admin</span>
-            </div>
 
-            <nav class="admin-nav">
+        <div class="topbar-left">
+            <a class="brand" routerLink="/admin" aria-label="Ir al Dashboard">
+                <i class="bi bi-speedometer2" aria-hidden="true"></i>
+                <span>Admin</span>
+            </a>
+
+            <nav class="admin-nav" aria-label="Navegación admin">
                 <a routerLink="/admin" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
-                    <i class="bi bi-grid-fill"></i>
-                    Dashboard
+                    <i class="bi bi-grid-fill" aria-hidden="true"></i>
+                    <span>Dashboard</span>
                 </a>
 
                 <a routerLink="/admin/programadores" routerLinkActive="activo">
-                    <i class="bi bi-code-slash"></i>
-                    Programadores
+                    <i class="bi bi-code-slash" aria-hidden="true"></i>
+                    <span>Programadores</span>
                 </a>
 
                 <a routerLink="/usuarios" routerLinkActive="activo">
-                    <i class="bi bi-folder2-open"></i>
-                    Portafolios públicos
+                    <i class="bi bi-folder2-open" aria-hidden="true"></i>
+                    <span>Portafolios públicos</span>
                 </a>
 
                 <a routerLink="/mis-asesorias" routerLinkActive="activo">
-                    <i class="bi bi-calendar-check"></i>
-                    Mis asesorías
+                    <i class="bi bi-calendar-check" aria-hidden="true"></i>
+                    <span>Mis asesorías</span>
                 </a>
             </nav>
         </div>
 
         <div class="topbar-right">
-            <div class="user-card">
-                <div class="avatar">
-                    {{ usuario.nombre ? (usuario.nombre[0] | uppercase) : 'A' }}
+
+            <!-- TOGGLE TEMA -->
+            <app-theme-toggle></app-theme-toggle>
+
+            <!-- USUARIO -->
+            <div class="user-card" aria-label="Usuario">
+                <div class="avatar" aria-hidden="true">
+                    {{ usuario?.nombre ? (usuario.nombre[0] | uppercase) : 'A' }}
                 </div>
+
                 <div class="user-text">
-                    <div class="name">{{ usuario.nombre }}</div>
-                    <div class="role">{{ usuario.rol | titlecase }}</div>
+                    <div class="name">{{ usuario?.nombre || 'Admin' }}</div>
+                    <div class="role">{{ (usuario?.rol || 'usuario') | titlecase }}</div>
                 </div>
-                <button type="button" class="logout-btn" (click)="logout()">
-                    <i class="bi bi-box-arrow-right"></i>
+
+                <button type="button" class="logout-btn" (click)="logout()" aria-label="Cerrar sesión"
+                    title="Cerrar sesión">
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
                 </button>
             </div>
+
         </div>
     </header>
 
     <!-- CONTENIDO PRINCIPAL -->
-    <main class="admin-content">
-
+    <main class="admin-content" role="main">
         <router-outlet></router-outlet>
-        <app-notificacion></app-notificacion>
-
     </main>
-<app-notificacion></app-notificacion>
+
+    <!-- NOTIFICACIÓN GLOBAL (SOLO UNA VEZ) -->
+    <app-notificacion></app-notificacion>
 
 </div>
+
+<!-- Opcional: mientras carga usuario$ -->
+<ng-template #cargando>
+    <div class="admin-shell loading">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <div class="brand">
+                    <i class="bi bi-speedometer2" aria-hidden="true"></i>
+                    <span>Admin</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <app-theme-toggle></app-theme-toggle>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            <div class="loading-state">
+                Cargando...
+            </div>
+        </main>
+
+        <app-notificacion></app-notificacion>
+    </div>
+</ng-template>

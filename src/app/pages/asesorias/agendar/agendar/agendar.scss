@@ -1,59 +1,126 @@
-// VARIABLES DE TEMA
-$primary: #7c3aed; // Violeta eléctrico
-$cyan: #06b6d4; // Cyan futurista
-$bg-glass: rgba(255, 255, 255, 0.65);
-$bg-glass-dark: rgba(255, 255, 255, 0.1);
-$text-dark: #1e293b;
-$shadow-glow: 0 0 20px rgba(124, 58, 237, 0.3);
-$shadow-cyan: 0 0 15px rgba(6, 182, 212, 0.4);
+/* =========================================================
+   AGENDA UI — SCSS COMPLETO (Monocromático) + Modo Claro
+   Activa claro con: <body class="light"> ... o contenedor .light
+   (Angular): :host-context(.light) aplica al componente.
+   ========================================================= */
+
+/* =======================
+   DEFAULT (MODO OSCURO)
+   ======================= */
 
 :host {
     display: block;
-    font-family: 'Exo 2', 'Inter', sans-serif; // Sugerencia: Importar fuente 'Exo 2' de Google Fonts
-    color: $text-dark;
+    font-family: 'Exo 2', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     padding: 2rem 1rem;
+    color: var(--color-text);
+
+    /* ====== PALETA (monocromática: 1 color) ====== */
+    --color-bg: #0b1220;
+    --color-bg-elevated: rgba(15, 23, 42, 0.72);
+    --color-bg-hover: rgba(30, 41, 59, 0.72);
+
+    --color-text: rgba(248, 250, 252, 0.92);
+    --color-text-muted: rgba(148, 163, 184, 0.85);
+    --color-border: rgba(148, 163, 184, 0.22);
+
+    --color-primary: #1db954;
+    /* único color protagonista */
+    --color-info: #1db954;
+    /* igual: evita meter azul */
+    --color-success: #1db954;
+    /* igual */
+
+    /* Monocromático total (ocupado en verde apagado) */
+    --color-danger: rgba(29, 185, 84, 0.55);
+    /* Si quieres rojo real para "ocupado", usa esto:
+     --color-danger: rgba(248, 113, 113, 0.95);
+  */
+
+    --shadow-elevated: 0 20px 60px rgba(0, 0, 0, 0.65);
+    --transition-fast: 160ms ease;
+
+    background:
+        radial-gradient(circle at top, rgba(29, 185, 84, 0.14), transparent 55%),
+        var(--color-bg);
+
+    animation: agenda-fade-in 0.35s ease-out;
 }
 
-// =======================
-// CONTENEDOR FLOTANTE
-// =======================
+/* =======================
+   MODO CLARO (override)
+   ======================= */
+
+:host-context(.light) {
+    --color-bg: #f7fafc;
+    --color-bg-elevated: rgba(255, 255, 255, 0.74);
+    --color-bg-hover: rgba(241, 245, 249, 0.96);
+
+    --color-text: rgba(15, 23, 42, 0.92);
+    --color-text-muted: rgba(71, 85, 105, 0.85);
+    --color-border: rgba(148, 163, 184, 0.55);
+
+    --color-primary: #16a34a;
+    --color-info: #16a34a;
+    --color-success: #16a34a;
+
+    /* Monocromático también */
+    --color-danger: rgba(22, 163, 74, 0.45);
+    /* Si quieres rojo real en claro:
+     --color-danger: rgba(239, 68, 68, 0.9);
+  */
+
+    --shadow-elevated: 0 18px 40px rgba(2, 6, 23, 0.12);
+
+    background:
+        radial-gradient(circle at top, rgba(22, 163, 74, 0.12), transparent 55%),
+        var(--color-bg);
+}
+
+/* Opcional: baja glow en claro */
+:host-context(.light) .glass-card::before {
+    opacity: 0.45;
+}
+
+/* =======================
+   CONTENEDOR / CARD
+   ======================= */
+
 .main-container {
-    max-width: 500px;
+    max-width: 540px;
     margin: 0 auto;
     perspective: 1000px;
 }
 
 .glass-card {
-    background: $bg-glass;
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-radius: 30px;
-    padding: 2.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.1),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-    transition: transform 0.3s ease;
+    background: var(--color-bg-elevated);
+    backdrop-filter: blur(20px) saturate(170%);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    border-radius: 1.8rem;
+    padding: 2.3rem 2.1rem;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-elevated);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     overflow: hidden;
 
-    // Brillo de fondo decorativo
+    /* Glow decorativo (monocromático) */
     &::before {
-        content: '';
+        content: "";
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle at 50% 50%, rgba($primary, 0.15), transparent 60%);
-        z-index: -1;
+        inset: -40%;
+        background:
+            radial-gradient(circle at 20% 0%, rgba(29, 185, 84, 0.22), transparent 60%),
+            radial-gradient(circle at 80% 100%, rgba(29, 185, 84, 0.14), transparent 60%);
+        opacity: 0.65;
         pointer-events: none;
+        z-index: -1;
     }
 }
 
-// =======================
-// CABECERA
-// =======================
+/* =======================
+   CABECERA
+   ======================= */
+
 .header-section {
     text-align: center;
     margin-bottom: 2rem;
@@ -62,60 +129,76 @@ $shadow-cyan: 0 0 15px rgba(6, 182, 212, 0.4);
         font-size: 1.5rem;
         font-weight: 800;
         margin: 0;
-        background: linear-gradient(135deg, $primary, $cyan);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+
+        /* Solo verde (sin azul) */
+        background: linear-gradient(135deg, var(--color-primary), rgba(29, 185, 84, 0.65));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+    }
+
+    .highlight {
+        text-transform: none;
     }
 
     .sub {
-        font-size: 0.85rem;
-        color: lighten($text-dark, 30%);
-        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        margin-top: 0.55rem;
         text-transform: uppercase;
-        letter-spacing: 2px;
+        letter-spacing: 0.18em;
     }
 }
 
-// =======================
-// HUD NAVIGATOR (FECHA)
-// =======================
+/* =======================
+   HUD NAVIGATOR (FECHA)
+   ======================= */
+
 .hud-control {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: white;
-    border-radius: 20px;
-    padding: 0.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    background: var(--color-bg);
+    border-radius: 1.3rem;
+    padding: 0.55rem;
     margin-bottom: 2rem;
-    border: 1px solid rgba($primary, 0.1);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
 }
 
 .nav-btn {
-    width: 45px;
-    height: 45px;
-    border-radius: 14px;
+    width: 42px;
+    height: 42px;
+    border-radius: 1rem;
     border: none;
-    background: rgba($primary, 0.1);
-    color: $primary;
-    font-size: 1.2rem;
+    background: rgba(29, 185, 84, 0.12);
+    color: var(--color-primary);
+    font-size: 1.1rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
     display: flex;
     align-items: center;
     justify-content: center;
 
+    .icon {
+        pointer-events: none;
+    }
+
     &:hover {
-        background: $primary;
-        color: white;
-        box-shadow: $shadow-glow;
-        transform: scale(1.05);
+        background: var(--color-primary);
+        color: #ffffff;
+        box-shadow: 0 0 20px rgba(29, 185, 84, 0.35);
+        transform: translateY(-1px) scale(1.04);
     }
 
     &:active {
-        transform: scale(0.95);
+        transform: translateY(0) scale(0.97);
+        box-shadow: none;
     }
 }
 
@@ -123,26 +206,24 @@ $shadow-cyan: 0 0 15px rgba(6, 182, 212, 0.4);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 
     .label {
-        font-size: 0.6rem;
-        color: #94a3b8;
-        letter-spacing: 1.5px;
+        font-size: 0.65rem;
+        color: var(--color-text-muted);
+        letter-spacing: 0.16em;
         text-transform: uppercase;
-        margin-bottom: 2px;
+        margin-bottom: 0.15rem;
     }
 
     .date-text {
         font-size: 1.1rem;
         text-transform: uppercase;
         font-weight: 800;
-        color: $text-dark;
     }
 
     .year {
-        font-size: 0.7rem;
-        color: $cyan;
+        font-size: 0.75rem;
+        color: rgba(29, 185, 84, 0.9);
         font-weight: 700;
     }
 }
@@ -150,104 +231,139 @@ $shadow-cyan: 0 0 15px rgba(6, 182, 212, 0.4);
 .divider-glow {
     border: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba($primary, 0.3), transparent);
     margin: 2rem 0;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(148, 163, 184, 0.45),
+            transparent);
 }
 
-// =======================
-// GRID DE HORAS (CHIPS)
-// =======================
-.slots-section h3 {
-    font-size: 0.9rem;
-    text-align: center;
-    color: $text-dark;
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+/* =======================
+   GRID DE HORAS
+   ======================= */
+
+.slots-section {
+    h3 {
+        font-size: 0.85rem;
+        text-align: center;
+        color: var(--color-text-muted);
+        margin-bottom: 1.4rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+    }
 }
 
 .slots-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); // 3 columnas fijas
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
     margin-bottom: 2rem;
 }
 
 .slot-btn {
     position: relative;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    padding: 0.8rem 0;
-    border-radius: 12px;
+    background: var(--color-bg);
+    border: 1px solid rgba(148, 163, 184, 0.55);
+    padding: 0.75rem 0;
+    border-radius: 0.85rem;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
+    transition:
+        background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.25s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     .time {
         font-weight: 700;
-        color: $text-dark;
-        font-size: 0.95rem;
-        z-index: 2;
-        position: relative;
+        font-size: 0.9rem;
     }
 
     .status-dot {
         width: 6px;
         height: 6px;
-        background: #10b981; // Verde disponible
-        border-radius: 50%;
-        margin: 4px auto 0;
-        box-shadow: 0 0 5px #10b981;
-        transition: 0.3s;
+        border-radius: 999px;
+        margin-top: 0.25rem;
+        background: var(--color-success);
+        box-shadow: 0 0 6px rgba(29, 185, 84, 0.55);
+        transition: background-color 0.25s, box-shadow 0.25s;
     }
 
     &:hover:not(.ocupado):not(.seleccionado) {
         transform: translateY(-3px);
-        background: white;
-        border-color: $cyan;
-        box-shadow: $shadow-cyan;
+        background: var(--color-bg-hover);
+        border-color: rgba(29, 185, 84, 0.85);
+        box-shadow: 0 12px 28px rgba(29, 185, 84, 0.18);
     }
 
     &.seleccionado {
-        background: linear-gradient(135deg, $primary, darken($primary, 10%));
+        background: linear-gradient(135deg, rgba(29, 185, 84, 0.95), rgba(29, 185, 84, 0.55));
         border-color: transparent;
-        box-shadow: $shadow-glow;
+        box-shadow: 0 0 22px rgba(29, 185, 84, 0.38);
 
         .time {
-            color: white;
+            color: #ffffff;
         }
 
         .status-dot {
-            background: $cyan;
-            box-shadow: 0 0 8px $cyan;
+            background: rgba(248, 250, 252, 0.92);
+            box-shadow: 0 0 10px rgba(248, 250, 252, 0.25);
         }
     }
 
     &.ocupado {
-        opacity: 0.6;
+        opacity: 0.5;
         cursor: not-allowed;
-        background: #f1f5f9;
+        background: rgba(15, 23, 42, 0.75);
         border-color: transparent;
 
         .time {
-            color: #94a3b8;
+            color: var(--color-text-muted);
             text-decoration: line-through;
         }
 
         .status-dot {
-            background: #ef4444;
+            background: var(--color-danger);
             box-shadow: none;
         }
     }
 }
 
-// =======================
-// FORMULARIO ESTILIZADO
-// =======================
+/* =======================
+   EMPTY STATE
+   ======================= */
+
+.empty-state {
+    margin: 1.5rem 0 1.8rem;
+    padding: 1.1rem 1rem;
+    border-radius: 1rem;
+    border: 1px dashed rgba(148, 163, 184, 0.55);
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* En oscuro, el empty-state necesita más contraste */
+:host .empty-state {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+:host-context(.light) .empty-state {
+    background: rgba(241, 245, 249, 0.72);
+}
+
+/* =======================
+   FORMULARIO
+   ======================= */
+
 .future-form {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 1.15rem;
 }
 
 .input-group {
@@ -255,87 +371,204 @@ $shadow-cyan: 0 0 15px rgba(6, 182, 212, 0.4);
         display: block;
         font-size: 0.8rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        color: $primary;
+        margin-bottom: 0.45rem;
+        color: rgba(29, 185, 84, 0.9);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
     }
 
     input,
     textarea {
         width: 100%;
-        padding: 12px 16px;
-        border-radius: 12px;
-        border: 2px solid transparent;
-        background: rgba(255, 255, 255, 0.5);
+        padding: 0.8rem 1rem;
+        border-radius: 0.85rem;
+        border: 1px solid transparent;
+        background: var(--color-bg);
         font-family: inherit;
-        transition: 0.3s;
+        font-size: 0.9rem;
+        color: var(--color-text);
         outline: none;
-        box-sizing: border-box; // Importante
+        box-sizing: border-box;
+        transition:
+            border-color 0.25s,
+            box-shadow 0.25s,
+            background-color 0.25s,
+            transform 0.25s;
+
+        &::placeholder {
+            color: var(--color-text-muted);
+        }
 
         &:focus {
-            background: white;
-            border-color: $cyan;
-            box-shadow: 0 0 0 4px rgba($cyan, 0.15);
+            background: var(--color-bg-hover);
+            border-color: rgba(29, 185, 84, 0.85);
+            box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.35);
+            transform: translateY(-1px);
         }
     }
+
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    /* Estados Angular (si los usas) */
+    input.ng-invalid.ng-touched,
+    textarea.ng-invalid.ng-touched {
+        border-color: var(--color-danger);
+        box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.22);
+    }
+
+    input.ng-valid.ng-touched,
+    textarea.ng-valid.ng-touched {
+        border-color: rgba(29, 185, 84, 0.85);
+        box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.28);
+    }
 }
+
+/* =======================
+   DATA READOUT
+   ======================= */
 
 .data-readout {
     display: flex;
-    gap: 1rem;
-    background: rgba($primary, 0.05);
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px dashed rgba($primary, 0.3);
+    gap: 0.9rem;
+    background: rgba(29, 185, 84, 0.08);
+    padding: 0.7rem 0.85rem;
+    border-radius: 0.9rem;
+    border: 1px dashed rgba(29, 185, 84, 0.32);
+    font-size: 0.8rem;
 
-    .readout-item {
-        font-size: 0.8rem;
-
-        span {
-            font-weight: 800;
-            color: $primary;
-        }
+    .readout-item span {
+        font-weight: 700;
+        color: var(--color-primary);
     }
 }
+
+/* =======================
+   BOTÓN PRINCIPAL
+   ======================= */
 
 .btn-action {
     margin-top: 1rem;
-    background: linear-gradient(90deg, $cyan, $primary);
+    width: 100%;
     border: none;
-    padding: 1rem;
-    border-radius: 16px;
-    color: white;
+    border-radius: 1rem;
+    padding: 0.95rem;
+
+    background: linear-gradient(90deg, rgba(29, 185, 84, 0.62), rgba(29, 185, 84, 0.98));
+    color: #ffffff;
+
     font-weight: 800;
-    letter-spacing: 1px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: 0.3s;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        filter var(--transition-fast),
+        opacity var(--transition-fast);
+
+    .btn-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 0 0, rgba(248, 250, 252, 0.18), transparent 60%);
+        opacity: 0;
+        transition: opacity 0.25s;
+    }
 
     &:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba($primary, 0.4);
-        filter: brightness(1.1);
+        filter: brightness(1.06);
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+    }
+
+    &:hover:not(:disabled)::before {
+        opacity: 1;
     }
 
     &:disabled {
-        background: #cbd5e1;
+        background: rgba(148, 163, 184, 0.7);
         cursor: wait;
+        box-shadow: none;
+        opacity: 0.9;
     }
 }
 
-// =======================
-// RESPONSIVE
-// =======================
-@media (max-width: 480px) {
-    .slots-grid {
-        grid-template-columns: repeat(2, 1fr);
+/* =======================
+   LOADING SCREEN
+   ======================= */
+
+.loading-screen {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-text-muted);
+    gap: 0.7rem;
+
+    p {
+        font-size: 0.95rem;
+    }
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 3px solid rgba(148, 163, 184, 0.25);
+    border-top-color: var(--color-primary);
+    animation: spinner-rotate 0.8s linear infinite;
+}
+
+/* =======================
+   ANIMACIONES
+   ======================= */
+
+@keyframes agenda-fade-in {
+    from {
+        opacity: 0;
     }
 
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes spinner-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* =======================
+   RESPONSIVE
+   ======================= */
+
+@media (max-width: 480px) {
     .glass-card {
-        padding: 1.5rem;
+        padding: 1.8rem 1.5rem;
     }
 
     .hud-control {
-        padding: 0.8rem;
+        padding: 0.65rem;
+    }
+
+    .slots-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
