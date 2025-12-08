@@ -1,11 +1,9 @@
-
 import { ProyectosService, Proyecto } from '../../../../../services/proyectos';
-// src/app/pages/admin/programadores/proyectos/proyectos/proyectos.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
-import { NotificacionesService } from '../../../../../services/notificaciones'; // ✅ 4 niveles hacia arriba
+import { NotificacionesService } from '../../../../../services/notificaciones';
 
 @Component({
   selector: 'app-proyectos-admin',
@@ -32,9 +30,15 @@ export class ProyectosAdminComponent implements OnInit {
 
     this.proyectosService
       .getProyectosDeProgramador(this.idProgramador)
-      .subscribe(proys => {
-        this.proyectos = proys;
-        this.cargando = false;
+      .subscribe({
+        next: (proys) => {
+          this.proyectos = proys;
+          this.cargando = false;
+        },
+        error: () => {
+          this.cargando = false;
+          this.noti.error('No se pudieron cargar los proyectos');
+        }
       });
   }
 
@@ -60,9 +64,26 @@ export class ProyectosAdminComponent implements OnInit {
   }
 
   async eliminarProyecto(idProyecto: string) {
-    const ok = confirm('¿Eliminar este proyecto?');
-    if (!ok) return;
 
-    await this.proyectosService.eliminarProyecto(idProyecto);
+    // 🔥 Ahora usamos la confirmación PRO del sistema, NO alert()
+    const confirmado = await this.noti.confirmar(
+      '¿Eliminar proyecto?',
+      'Esta acción es permanente y no se puede deshacer.'
+    );
+
+    if (!confirmado) return;
+
+    try {
+      await this.proyectosService.eliminarProyecto(idProyecto);
+
+      this.noti.exito('Proyecto eliminado correctamente');
+
+      // recargar lista
+      this.proyectos = this.proyectos.filter(p => p.id !== idProyecto);
+
+    } catch (err) {
+      console.error(err);
+      this.noti.error('No se pudo eliminar el proyecto');
+    }
   }
 }
