@@ -1,5 +1,8 @@
-<div class="notificacion-contenedor" *ngIf="visible">
-    <div class="notificacion" [ngClass]="tipo">
+<div class="notificacion-contenedor"
+     *ngIf="visible"
+     aria-live="polite">
+    <div class="notificacion error" role="alert">
+
 
         <div class="icono">
             <ng-container [ngSwitch]="tipo">

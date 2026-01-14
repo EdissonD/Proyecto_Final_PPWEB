@@ -1,3 +1,68 @@
+/* ======================================================
+   VARIABLES GLOBALES – DARK (DEFAULT)
+====================================================== */
+
+:root {
+  --color-bg: #0f1310;
+  --color-bg-elevated: #151b16;
+  --color-bg-hover: rgba(255, 255, 255, 0.06);
+
+  --color-text: #f2f5f3;
+  --color-text-muted: #a3b0a8;
+
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  --color-primary: #1db954;
+  --color-primary-hover: #2ed573;
+
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  --shadow-elevated: 0 20px 40px rgba(0, 0, 0, 0.7);
+
+  --transition-fast: 0.18s ease;
+}
+
+/* ======================================================
+   VARIABLES – MODO CLARO
+====================================================== */
+
+body[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-bg-elevated: #f5f7f6;
+  --color-bg-hover: rgba(0, 0, 0, 0.05);
+
+  --color-text: #0f1a14;
+  --color-text-muted: #5f6f66;
+
+  --color-border: rgba(0, 0, 0, 0.12);
+
+  --shadow-elevated: 0 16px 36px rgba(0, 0, 0, 0.18);
+}
+
+/* ======================================================
+   FLASH BLANCO AL CAMBIAR A CLARO
+====================================================== */
+
+body[data-theme="light"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 9999;
+  animation: flash-light 0.35s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes flash-light {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ======================================================
+   HOST
+====================================================== */
+
 :host {
   display: block;
   max-width: 900px;
@@ -9,16 +74,19 @@
     radial-gradient(circle at top, rgba(29, 185, 84, 0.16), transparent 55%),
     var(--color-bg);
   animation: inicio-fade-in 0.35s ease-out;
+  position: relative;
+  overflow: hidden;
 }
 
-/*TÍTULOS*/
+/* ======================================================
+   TÍTULOS
+====================================================== */
 
 h1 {
   font-size: 2.1rem;
   margin-bottom: 0.3rem;
   font-weight: 800;
   letter-spacing: 0.01em;
-  color: var(--color-text);
 }
 
 .subtitulo {
@@ -27,18 +95,22 @@ h1 {
   margin-bottom: 1.8rem;
 }
 
-/* BLOQUE PRINCIPAL (LOGIN / INVITADO) */
+/* ======================================================
+   BLOQUE PRINCIPAL
+====================================================== */
 
 .inicio-wrapper {
   background: var(--color-bg-elevated);
-  padding: 2rem 2rem;
+  padding: 2rem;
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-elevated);
   animation: inicio-card-in 0.35s ease-out;
 }
 
-/* ACCIONES (BOTONES y LINKS) */
+/* ======================================================
+   ACCIONES – BOTONES
+====================================================== */
 
 .acciones {
   display: flex;
@@ -53,40 +125,38 @@ h1 {
     font-size: 0.95rem;
     border: 1px solid transparent;
     cursor: pointer;
-    transition:
-      background-color var(--transition-fast),
-      color var(--transition-fast),
-      transform var(--transition-fast),
-      box-shadow var(--transition-fast),
-      border-color var(--transition-fast);
-    text-decoration: none;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.35rem;
+    text-decoration: none;
+    transition:
+      background-color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      filter var(--transition-fast);
   }
 
-  /* Botón primario (Ir a mi panel / Iniciar sesión) */
+  /* BOTÓN PRINCIPAL */
   button,
   a[routerLink="/login"] {
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-    color: #ffffff;
+    color: #fff;
     box-shadow: 0 14px 30px rgba(0, 0, 0, 0.65);
 
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85);
-      filter: brightness(1.03);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.85);
     }
 
     &:active {
-      transform: translateY(0);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.7);
+      transform: scale(0.96);
+      animation: pulse 0.25s ease-out;
     }
   }
 
-  /* Links secundarios (Explorar / Mis asesorías / Asesorías recibidas / Ver programadores) */
+  /* LINKS SECUNDARIOS */
   a:not([routerLink="/login"]) {
     background: transparent;
     color: var(--color-text-muted);
@@ -96,17 +166,37 @@ h1 {
       background: var(--color-bg-hover);
       color: var(--color-text);
       transform: translateY(-1px);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
     }
 
     &:active {
-      transform: translateY(0);
-      box-shadow: none;
+      transform: scale(0.97);
     }
   }
 }
 
-/* SECCIÓN AGENDAR ASESORÍA */
+/* ======================================================
+   GLASS CLICK
+====================================================== */
+
+button:active::after,
+a:active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  border-radius: inherit;
+  animation: glass-click 0.35s ease-out;
+}
+
+@keyframes glass-click {
+  from { opacity: 0.6; }
+  to { opacity: 0; }
+}
+
+/* ======================================================
+   ASESORÍAS
+====================================================== */
 
 .inicio-asesorias {
   margin-top: 3rem;
@@ -120,102 +210,63 @@ h1 {
 
   h2 {
     font-size: 1.7rem;
-    margin-bottom: 0.5rem;
     font-weight: 700;
-    color: var(--color-text);
   }
 
   p {
-    font-size: 1rem;
     color: var(--color-text-muted);
     max-width: 620px;
     margin: 0.6rem auto 1.8rem;
     line-height: 1.6;
   }
-
-  .btn-agendar-inicio {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.9rem 1.8rem;
-    border-radius: var(--radius-md);
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
-    transition:
-      background-color var(--transition-fast),
-      transform var(--transition-fast),
-      box-shadow var(--transition-fast),
-      filter var(--transition-fast);
-
-    &:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.04);
-      box-shadow: 0 22px 46px rgba(0, 0, 0, 0.9);
-    }
-
-    &:active {
-      transform: translateY(0);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.75);
-    }
-  }
 }
 
-/* ANIMACIONES */
+/* ======================================================
+   ANIMACIONES
+====================================================== */
 
 @keyframes inicio-fade-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes inicio-card-in {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.99);
+    transform: translateY(10px) scale(0.98);
   }
-
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: none;
   }
 }
 
-/*RESPONSIVE*/
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+/* ======================================================
+   MOBILE – EFECTOS MÁS SUAVES
+====================================================== */
 
 @media (max-width: 600px) {
   :host {
     padding: 1.5rem 1rem;
   }
 
-  .inicio-wrapper {
-    padding: 1.7rem 1.4rem;
-  }
-
   .acciones {
     flex-direction: column;
-    align-items: stretch;
 
     a,
     button {
       width: 100%;
-      text-align: center;
     }
   }
 
-  .inicio-asesorias {
-    padding: 2rem 1.5rem;
-  }
-
-  h1 {
-    font-size: 1.8rem;
+  button:active {
+    animation: none;
+    transform: scale(0.97);
   }
 }

@@ -1,3 +1,43 @@
+/* =====================================================
+   SISTEMA DE COLORES · FORMATO ÚNICO (REUTILIZABLE)
+   ===================================================== */
+
+:root {
+  /* Fondo */
+  --color-bg: #f8fafc;
+  --color-bg-elevated: #ffffff;
+  --color-bg-hover: #f1f5f9;
+
+  /* Texto */
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+
+  /* Estados */
+  --color-success: #22c55e;
+  --color-success-soft: rgba(34, 197, 94, 0.18);
+
+  --color-warning: #f59e0b;
+  --color-warning-soft: rgba(245, 158, 11, 0.18);
+
+  --color-danger: #ef4444;
+  --color-danger-soft: rgba(239, 68, 68, 0.18);
+
+  --color-info: #38bdf8;
+  --color-info-soft: rgba(56, 189, 248, 0.18);
+
+  /* UI */
+  --radius-md: 0.6rem;
+  --radius-lg: 0.9rem;
+
+  --shadow-elevated: 0 12px 30px rgba(15, 23, 42, 0.08);
+
+  --transition-fast: 0.18s ease;
+}
+
+/* =====================================================
+   CONTENEDOR PRINCIPAL
+   ===================================================== */
+
 :host {
   display: block;
   max-width: 1200px;
@@ -5,12 +45,14 @@
   padding: 2.2rem 1.4rem;
   color: var(--color-text);
   background:
-    radial-gradient(circle at top, rgba(29, 185, 84, 0.16), transparent 55%),
+    radial-gradient(circle at top, rgba(34, 197, 94, 0.08), transparent 60%),
     var(--color-bg);
   animation: mis-asesorias-fade-in 0.35s ease-out;
 }
 
-/*TÍTULO*/
+/* =====================================================
+   TÍTULO
+   ===================================================== */
 
 h2 {
   font-size: 2rem;
@@ -20,40 +62,26 @@ h2 {
   align-items: center;
   gap: 0.7rem;
   color: var(--color-text);
-  text-shadow: 0 2px 10px rgba(15, 23, 42, 0.6);
   letter-spacing: 0.02em;
-  border-bottom: 3px solid rgba(148, 163, 184, 0.4);
+  border-bottom: 3px solid #e2e8f0;
   padding-bottom: 0.8rem;
 
   &::before {
     content: "🛡️";
     font-size: 2rem;
-    filter: drop-shadow(0 3px 6px rgba(15, 23, 42, 0.7));
   }
 }
 
-/* ESTADOS CARGANDO / VACÍO
-   (Opcional: agrega clases si quieres afinar más) */
-
-div[ng-reflect-ng-if],
-div[ng-reflect-ng-if='false']+div {
-  /* Fallback muy suave por si Angular refleja atributos */
-  text-align: center;
-  padding: 1.4rem 1.2rem;
-  border-radius: var(--radius-lg);
-  background: var(--color-bg-elevated);
-  border: 1px dashed rgba(148, 163, 184, 0.6);
-  color: var(--color-text-muted);
-  margin-top: 1.2rem;
-  font-size: 0.95rem;
-}
+/* =====================================================
+   ESTADOS (CARGANDO / VACÍO)
+   ===================================================== */
 
 .estado-msg {
   text-align: center;
   padding: 1.4rem 1.2rem;
   border-radius: var(--radius-lg);
   background: var(--color-bg-elevated);
-  border: 1px dashed rgba(148, 163, 184, 0.6);
+  border: 1px dashed #cbd5f5;
   color: var(--color-text-muted);
   margin-top: 1.2rem;
   font-size: 0.95rem;
@@ -72,7 +100,9 @@ div[ng-reflect-ng-if='false']+div {
   content: "📭";
 }
 
-/*TABLA PRINCIPAL*/
+/* =====================================================
+   TABLA PRINCIPAL
+   ===================================================== */
 
 table {
   width: 100%;
@@ -86,10 +116,10 @@ table {
   min-width: 900px;
 }
 
+/* HEADER */
+
 thead {
-  background: linear-gradient(135deg,
-      rgba(15, 23, 42, 0.98),
-      rgba(15, 23, 42, 0.98));
+  background: #f1f5f9;
 }
 
 thead th {
@@ -100,48 +130,28 @@ thead th {
   letter-spacing: 0.1em;
   text-align: left;
   color: var(--color-text-muted);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.6);
+  border-bottom: 1px solid #e2e8f0;
 }
 
-/* Iconos por columna (header) */
+/* Iconos header */
 
-thead th:nth-child(1)::before {
-  content: "👤 ";
-}
+thead th:nth-child(1)::before { content: "👤 "; }
+thead th:nth-child(2)::before { content: "📆 "; }
+thead th:nth-child(3)::before { content: "⏱️ "; }
+thead th:nth-child(4)::before { content: "💬 "; }
+thead th:nth-child(5)::before { content: "🏷️ "; }
+thead th:nth-child(6)::before { content: "✉️ "; }
+thead th:nth-child(7)::before { content: "🔔 "; }
 
-thead th:nth-child(2)::before {
-  content: "📆 ";
-}
-
-thead th:nth-child(3)::before {
-  content: "⏱️ ";
-}
-
-thead th:nth-child(4)::before {
-  content: "💬 ";
-}
-
-thead th:nth-child(5)::before {
-  content: "🏷️ ";
-}
-
-thead th:nth-child(6)::before {
-  content: "✉️ ";
-}
-
-thead th:nth-child(7)::before {
-  content: "🔔 ";
-}
+/* BODY */
 
 tbody tr {
-  border-bottom: 1px solid rgba(31, 41, 55, 0.7);
-  transition:
-    background-color var(--transition-fast),
-    transform var(--transition-fast);
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
 
 tbody tr:nth-child(even) {
-  background-color: rgba(15, 23, 42, 0.55);
+  background-color: #f8fafc;
 }
 
 tbody tr:hover {
@@ -155,7 +165,9 @@ tbody td {
   vertical-align: top;
 }
 
-/* BADGES DE ESTADO */
+/* =====================================================
+   BADGES DE ESTADO
+   ===================================================== */
 
 span.estado-pendiente,
 span.estado-aprobada,
@@ -167,16 +179,14 @@ span.estado-rechazada {
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 700;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
 }
 
 /* Pendiente */
 
 span.estado-pendiente {
-  background: rgba(250, 204, 21, 0.12);
-  color: #facc15;
-  border: 1px solid rgba(250, 204, 21, 0.45);
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+  border: 1px solid rgba(245, 158, 11, 0.4);
 
   &::before {
     content: "🕓";
@@ -186,9 +196,9 @@ span.estado-pendiente {
 /* Aprobada */
 
 span.estado-aprobada {
-  background: rgba(34, 197, 94, 0.12);
+  background: var(--color-success-soft);
   color: var(--color-success);
-  border: 1px solid rgba(34, 197, 94, 0.55);
+  border: 1px solid rgba(34, 197, 94, 0.4);
 
   &::before {
     content: "✔️";
@@ -199,20 +209,22 @@ span.estado-aprobada {
 /* Rechazada */
 
 span.estado-rechazada {
-  background: rgba(239, 68, 68, 0.12);
+  background: var(--color-danger-soft);
   color: var(--color-danger);
-  border: 1px solid rgba(239, 68, 68, 0.55);
+  border: 1px solid rgba(239, 68, 68, 0.4);
 
   &::before {
     content: "❌";
   }
 }
 
-/* COLUMNA DE NOTIFICACIÓN */
+/* =====================================================
+   COLUMNA NOTIFICACIÓN
+   ===================================================== */
 
 tbody td:last-child {
   min-width: 260px;
-  background: rgba(15, 23, 42, 0.7);
+  background: var(--color-info-soft);
   border-left: 3px solid var(--color-info);
   border-radius: 0.4rem;
 }
@@ -235,66 +247,41 @@ tbody td:last-child {
 tbody td:last-child small {
   display: block;
   margin-top: 0.1rem;
-  background: var(--color-bg);
+  background: #ffffff;
   border-radius: 0.5rem;
   padding: 0.6rem 0.7rem;
-  border: 1px dashed rgba(148, 163, 184, 0.7);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  border: 1px dashed #cbd5f5;
   font-size: 0.78rem;
   color: var(--color-text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/*ANIMACIONES */
+/* =====================================================
+   ANIMACIONES
+   ===================================================== */
 
 @keyframes mis-asesorias-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes mis-asesorias-table-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(0.995);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(8px) scale(0.995); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes asesorias-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 @keyframes asesorias-pulse {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.12);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
 }
 
-/* RESPONSIVE */
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
 
 @media (max-width: 900px) {
   :host {
