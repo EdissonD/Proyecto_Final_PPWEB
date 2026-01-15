@@ -62,4 +62,8 @@ export class MisAsesoriasComponent implements OnInit {
     const p = this.mapProgramadores.get(idProgramador);
     return p ? p.nombre : 'Programador';
   }
+  trackByAsesoria(_: number, a: any) {
+  return a.id;
+}
+
 }

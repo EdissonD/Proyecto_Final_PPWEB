@@ -195,4 +195,8 @@ export class AgendarAsesoriaComponent implements OnInit {
       this.cargando = false;
     }
   }
+  trackByHora(_: number, slot: any) {
+  return slot.hora;
+}
+
 }

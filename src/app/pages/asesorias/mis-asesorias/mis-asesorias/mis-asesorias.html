@@ -1,71 +1,82 @@
 <h2>Mis asesorías</h2>
 
-<div *ngIf="cargando">
-    Cargando tus solicitudes...
+<!-- CARGANDO -->
+<div *ngIf="cargando" class="estado-msg cargando">
+  Cargando tus solicitudes...
 </div>
 
-<div *ngIf="!cargando && asesorias.length === 0">
-    <p>No has solicitado ninguna asesoría todavía.</p>
+<!-- VACÍO -->
+<div *ngIf="!cargando && asesorias.length === 0" class="estado-msg vacio">
+  No has solicitado ninguna asesoría todavía.
 </div>
 
+<!-- TABLA -->
 <table *ngIf="!cargando && asesorias.length > 0">
-    <thead>
-        <tr>
-            <th>Programador</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Comentario</th>
-            <th>Estado</th>
-            <th>Mensaje del programador</th>
-            <th>Notificación simulada</th>
-        </tr>
-    </thead>
+  <thead>
+    <tr>
+      <th>Programador</th>
+      <th>Fecha</th>
+      <th>Hora</th>
+      <th>Comentario</th>
+      <th>Estado</th>
+      <th>Mensaje del programador</th>
+      <th>Notificación simulada</th>
+    </tr>
+  </thead>
 
-    <tbody>
-        <tr *ngFor="let a of asesorias">
-            <td>{{ nombreProgramador(a.idProgramador) }}</td>
-            <td>{{ a.fecha }}</td>
-            <td>{{ a.hora }}</td>
-            <td>{{ a.comentario || '-' }}</td>
+  <tbody>
+    <tr *ngFor="let a of asesorias; trackBy: trackByAsesoria">
+      <td>{{ nombreProgramador(a.idProgramador) }}</td>
+      <td>{{ a.fecha }}</td>
+      <td>{{ a.hora }}</td>
+      <td>{{ a.comentario || '-' }}</td>
 
-            <td>
-                <span [ngClass]="{
+      <!-- ESTADO -->
+      <td>
+        <span
+          [ngClass]="{
             'estado-pendiente': a.estado === 'pendiente',
             'estado-aprobada': a.estado === 'aprobada',
             'estado-rechazada': a.estado === 'rechazada'
           }">
-                    {{ a.estado | titlecase }}
-                </span>
-            </td>
+          {{ a.estado | titlecase }}
+        </span>
+      </td>
 
-            <td>
-                <ng-container *ngIf="a.respuestaProgramador; else sinRespuesta">
-                    {{ a.respuestaProgramador }}
-                </ng-container>
-                <ng-template #sinRespuesta>
-                    <span *ngIf="a.estado === 'pendiente'">
-                        El programador aún no responde.
-                    </span>
-                    <span *ngIf="a.estado !== 'pendiente'">
-                        (Sin mensaje)
-                    </span>
-                </ng-template>
-            </td>
+      <!-- MENSAJE PROGRAMADOR -->
+      <td>
+        <ng-container *ngIf="a.respuestaProgramador; else sinRespuesta">
+          {{ a.respuestaProgramador }}
+        </ng-container>
 
-            <td>
-                <ng-container *ngIf="a.estado !== 'pendiente'; else pendienteNotif">
-                    <p class="nota-notificacion">
-                        Esta es la información que habrías recibido por correo o WhatsApp:
-                    </p>
-                    <small>
-                        Estado: {{ a.estado | titlecase }}<br>
-                        Mensaje: {{ a.respuestaProgramador || '(Sin mensaje adicional)' }}
-                    </small>
-                </ng-container>
-                <ng-template #pendienteNotif>
-                    <small>Aún no hay notificación: tu solicitud sigue pendiente.</small>
-                </ng-template>
-            </td>
-        </tr>
-    </tbody>
+        <ng-template #sinRespuesta>
+          <span *ngIf="a.estado === 'pendiente'">
+            El programador aún no responde.
+          </span>
+          <span *ngIf="a.estado !== 'pendiente'">
+            (Sin mensaje)
+          </span>
+        </ng-template>
+      </td>
+
+      <!-- NOTIFICACIÓN -->
+      <td>
+        <ng-container *ngIf="a.estado !== 'pendiente'; else pendienteNotif">
+          <p class="nota-notificacion">
+            Esta es la información que habrías recibido por correo o WhatsApp:
+          </p>
+          <small>
+            Estado: {{ a.estado | titlecase }}<br>
+            Mensaje: {{ a.respuestaProgramador || '(Sin mensaje adicional)' }}
+          </small>
+        </ng-container>
+
+        <ng-template #pendienteNotif>
+          <small>
+            Aún no hay notificación: tu solicitud sigue pendiente.
+          </small>
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
 </table>

@@ -1,4 +1,17 @@
 /* ===============================
+   Sistema de Color – Azul
+   =============================== */
+$blue-100: #9dddfa; // texto destacado
+$blue-200: #76b6d2; // acento suave
+$blue-300: #4e90ab; // primario
+$blue-400: #246c86; // secundario
+$blue-500: #004a62; // fondo oscuro
+$blue-600: #002a40; // fondo profundo
+
+$transition-fast: 0.18s ease;
+$transition-med: 0.28s ease;
+
+/* ===============================
    Shell general
    =============================== */
 .layout {

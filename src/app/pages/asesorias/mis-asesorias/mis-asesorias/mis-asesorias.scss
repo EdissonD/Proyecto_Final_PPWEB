@@ -157,6 +157,7 @@ tbody tr:nth-child(even) {
 tbody tr:hover {
   background-color: var(--color-bg-hover);
   transform: translateY(-1px);
+  will-change: transform;
 }
 
 tbody td {

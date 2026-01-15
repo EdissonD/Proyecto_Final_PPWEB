@@ -1,85 +1,129 @@
 <div class="main-container" *ngIf="programador">
 
-    <div class="glass-card">
-        <header class="header-section">
-            <h2>Agendar con <span class="highlight">{{ programador.nombre }}</span></h2>
-            <p class="sub">Sincronización de agenda</p>
-        </header>
+  <div class="glass-card">
+    <header class="header-section">
+      <h2>
+        Agendar con
+        <span class="highlight">{{ programador.nombre }}</span>
+      </h2>
+      <p class="sub">Sincronización de agenda</p>
+    </header>
 
-        <div class="hud-control">
-            <button class="nav-btn left" (click)="diaAnterior()">
-                <span class="icon">❮</span>
-            </button>
+    <!-- HUD -->
+    <div class="hud-control">
+      <button
+        type="button"
+        class="nav-btn left"
+        aria-label="Día anterior"
+        (click)="diaAnterior()">
+        <span class="icon">❮</span>
+      </button>
 
-            <div class="hud-display">
-                <span class="label">FECHA SELECCIONADA</span>
-                <strong class="date-text">{{ fechaSeleccionada | date:'EEEE d MMMM':'':'es' }}</strong>
-                <span class="year">{{ fechaSeleccionada | date:'yyyy' }}</span>
-            </div>
+      <div class="hud-display">
+        <span class="label">FECHA SELECCIONADA</span>
+        <strong class="date-text">
+          {{ fechaSeleccionada | date:'EEEE d MMMM':'':'es' }}
+        </strong>
+        <span class="year">
+          {{ fechaSeleccionada | date:'yyyy' }}
+        </span>
+      </div>
 
-            <button class="nav-btn right" (click)="diaSiguiente()">
-                <span class="icon">❯</span>
-            </button>
-        </div>
-
-        <hr class="divider-glow">
-
-        <div class="slots-section" *ngIf="disponibilidadDiaSeleccionado.length > 0">
-            <h3>Bloques Temporales Disponibles</h3>
-
-            <div class="slots-grid">
-                <button class="slot-btn" *ngFor="let slot of disponibilidadDiaSeleccionado"
-                    [class.ocupado]="slot.ocupado"
-                    [class.seleccionado]="form.value.hora === slot.hora && form.value.fecha === fechaSeleccionadaStr"
-                    [disabled]="slot.ocupado" (click)="seleccionarHora(slot)">
-
-                    <span class="time">{{ slot.hora }}</span>
-                    <div class="status-dot"></div>
-                </button>
-            </div>
-        </div>
-
-        <div class="empty-state" *ngIf="disponibilidadDiaSeleccionado.length === 0">
-            <p>⚠️ No hay bloques de tiempo configurados.</p>
-        </div>
-
-        <form [formGroup]="form" (ngSubmit)="enviarSolicitud()" class="future-form">
-
-            <div class="input-group">
-                <label>Identidad (Nombre)</label>
-                <input type="text" formControlName="nombreSolicitante" placeholder="Ingresa tu nombre">
-            </div>
-
-            <div class="input-group">
-                <label>Enlace de contacto (Email)</label>
-                <input type="email" formControlName="emailSolicitante" placeholder="correo@ejemplo.com">
-            </div>
-
-            <div class="data-readout">
-                <div class="readout-item">
-                    <span>Fecha:</span> {{ fechaSeleccionadaStr }}
-                </div>
-                <div class="readout-item">
-                    <span>Hora:</span> {{ form.value.hora || '--:--' }}
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>Datos adicionales</label>
-                <textarea formControlName="comentario" rows="2" placeholder="Comentarios opcionales..."></textarea>
-            </div>
-
-            <button class="btn-action" type="submit" [disabled]="cargando || form.invalid">
-                <span class="btn-content">
-                    {{ cargando ? 'PROCESANDO...' : 'CONFIRMAR ENLACE' }}
-                </span>
-            </button>
-
-        </form>
+      <button
+        type="button"
+        class="nav-btn right"
+        aria-label="Día siguiente"
+        (click)="diaSiguiente()">
+        <span class="icon">❯</span>
+      </button>
     </div>
+
+    <hr class="divider-glow">
+
+    <!-- SLOTS -->
+    <div class="slots-section" *ngIf="disponibilidadDiaSeleccionado.length > 0">
+      <h3>Bloques Temporales Disponibles</h3>
+
+      <div class="slots-grid">
+        <button
+          type="button"
+          class="slot-btn"
+          *ngFor="let slot of disponibilidadDiaSeleccionado; trackBy: trackByHora"
+          [class.ocupado]="slot.ocupado"
+          [class.seleccionado]="
+            form.value.hora === slot.hora &&
+            form.value.fecha === fechaSeleccionadaStr
+          "
+          [disabled]="slot.ocupado"
+          (click)="seleccionarHora(slot)">
+
+          <span class="time">{{ slot.hora }}</span>
+          <div class="status-dot"></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="disponibilidadDiaSeleccionado.length === 0">
+      <p>⚠️ No hay bloques de tiempo configurados.</p>
+    </div>
+
+    <!-- FORM -->
+    <form
+      class="future-form"
+      [formGroup]="form"
+      (ngSubmit)="enviarSolicitud()">
+
+      <div class="input-group">
+        <label>Identidad (Nombre)</label>
+        <input
+          type="text"
+          formControlName="nombreSolicitante"
+          placeholder="Ingresa tu nombre">
+      </div>
+
+      <div class="input-group">
+        <label>Enlace de contacto (Email)</label>
+        <input
+          type="email"
+          formControlName="emailSolicitante"
+          placeholder="correo@ejemplo.com">
+      </div>
+
+      <div class="data-readout">
+        <div class="readout-item">
+          <span>Fecha:</span>
+          {{ fechaSeleccionadaStr }}
+        </div>
+        <div class="readout-item">
+          <span>Hora:</span>
+          {{ form.value.hora || '--:--' }}
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Datos adicionales</label>
+        <textarea
+          rows="2"
+          formControlName="comentario"
+          placeholder="Comentarios opcionales...">
+        </textarea>
+      </div>
+
+      <button
+        class="btn-action"
+        type="submit"
+        [disabled]="cargando || form.invalid">
+        <span class="btn-content">
+          {{ cargando ? 'PROCESANDO...' : 'CONFIRMAR ENLACE' }}
+        </span>
+      </button>
+
+    </form>
+  </div>
 </div>
 
+<!-- LOADING -->
 <div *ngIf="!programador" class="loading-screen">
-    <div class="spinner"></div>
-    <p>Cargando sistema...</p>
+  <div class="spinner"></div>
+  <p>Cargando sistema...</p>
 </div>
