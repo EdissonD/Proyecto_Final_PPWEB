@@ -1,249 +1,857 @@
 /* ===============================
-   Sistema cromático – Azul
+   Sistema de Color Gaming - Public
    =============================== */
-$blue-100: #9dddfa; // texto destacado
-$blue-200: #76b6d2; // acento
-$blue-300: #4e90ab; // primario
-$blue-400: #246c86; // secundario
-$blue-500: #004a62; // fondo
-$blue-600: #002a40; // fondo profundo
 
-$transition-fast: 0.18s ease;
-$transition-med: 0.28s ease;
+// Paleta Gaming Principal
+$gaming-cyan: #00d4ff;
+$gaming-magenta: #ff3366;
+$gaming-purple: #9945ff;
+$gaming-green: #00ff88;
+$gaming-yellow: #ffb800;
+$gaming-orange: #ff6b35;
+$gaming-blue: #3b82f6;
 
-// ===============================
-// 🌐 Layout Público estilo Spotify
-// ===============================
+// Backgrounds Gaming
+$bg-dark: #0a0e27;
+$bg-secondary: #131830;
+$bg-card: #1a1f3a;
+$bg-glass: rgba(26, 31, 58, 0.88);
 
-$spotify-green: #1db954;
-$spotify-green-soft: rgba(29, 185, 84, 0.18);
-$transition-fast: 0.18s ease;
-$transition-med: 0.28s ease;
+// Textos
+$text-primary: #ffffff;
+$text-secondary: #a0aec0;
+$text-accent: $gaming-cyan;
 
-// ===============================
-// Shell general
-// ===============================
+// Transiciones
+$transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-med: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
 /* ===============================
-   Shell general
+   Host / Shell General Gaming
    =============================== */
+
 :host {
   display: block;
   min-height: 100vh;
-  font-family: "Inter", system-ui, sans-serif;
-  color: $blue-100;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: $text-primary;
+  background: $bg-dark;
+  position: relative;
+  overflow-x: hidden;
+  
+  // Fondo animado gaming público
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.25;
+    background: 
+      radial-gradient(circle at 10% 20%, rgba($gaming-cyan, 0.2) 0%, transparent 40%),
+      radial-gradient(circle at 90% 60%, rgba($gaming-blue, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 50% 100%, rgba($gaming-green, 0.12) 0%, transparent 50%);
+    animation: bgGlowPublic 30s ease-in-out infinite;
+    pointer-events: none;
+  }
+  
+  // Patrón de puntos
+  &::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.03;
+    background-image: radial-gradient(
+      circle,
+      rgba($gaming-cyan, 0.6) 1px,
+      transparent 1px
+    );
+    background-size: 30px 30px;
+    pointer-events: none;
+  }
+}
 
-  background:
-    radial-gradient(circle at top, rgba($blue-200, .25), transparent 60%),
-    $blue-600;
+@keyframes bgGlowPublic {
+  0%, 100% { 
+    opacity: 0.25;
+    transform: scale(1) rotate(0deg);
+  }
+  33% {
+    opacity: 0.35;
+    transform: scale(1.05) rotate(5deg);
+  }
+  66% {
+    opacity: 0.3;
+    transform: scale(0.98) rotate(-5deg);
+  }
 }
 
 /* ===============================
-   HEADER PÚBLICO
+   HEADER PÚBLICO Gaming
    =============================== */
+
 .public-header {
   position: sticky;
   top: 0;
   z-index: 30;
-
-  padding: .8rem 1.8rem;
+  
+  padding: 1rem 2.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.2rem;
-
-  background: rgba($blue-600, .95);
-  backdrop-filter: blur(16px) saturate(160%);
-  border-bottom: 1px solid rgba($blue-300, .35);
-
+  gap: 1.5rem;
+  
+  background: $bg-glass;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  
+  border-bottom: 1px solid rgba($gaming-blue, 0.25);
+  
   box-shadow:
-    0 18px 40px rgba(0, 0, 0, .85),
-    0 1px 0 rgba($blue-200, .2);
-
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba($gaming-cyan, 0.12) inset,
+    0 0 60px rgba($gaming-blue, 0.08);
+  
+  position: relative;
   transition: all $transition-med;
-
+  animation: slideDownPublic 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  // Borde superior con gradiente público
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($gaming-cyan, 0.6) 15%,
+      rgba($gaming-blue, 0.8) 50%,
+      rgba($gaming-green, 0.5) 85%,
+      transparent
+    );
+    opacity: 0.9;
+    box-shadow: 0 0 20px rgba($gaming-blue, 0.5);
+  }
+  
+  // Efecto de escaneo horizontal
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($gaming-cyan, 0.08),
+      transparent
+    );
+    animation: scanPublic 10s ease-in-out infinite;
+    pointer-events: none;
+  }
+  
   h1 {
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 800;
     display: flex;
     align-items: center;
-    gap: .5rem;
-
-    color: $blue-100;
-    letter-spacing: .06em;
+    gap: 0.7rem;
+    
+    background: linear-gradient(
+      135deg,
+      $gaming-cyan 0%,
+      $gaming-blue 50%,
+      $gaming-green 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    
+    letter-spacing: 0.03em;
     text-transform: uppercase;
-
+    position: relative;
+    z-index: 1;
+    
+    text-shadow: 0 0 30px rgba($gaming-cyan, 0.3);
+    
     i {
-      font-size: 1.4rem;
-      color: $blue-200;
-      filter: drop-shadow(0 0 10px rgba($blue-200, .6));
+      font-size: 1.7rem;
+      background: linear-gradient(135deg, $gaming-cyan, $gaming-blue);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 15px rgba($gaming-cyan, 0.6));
+      animation: iconGlow 3s ease-in-out infinite;
     }
   }
-
+  
   nav {
     display: flex;
     align-items: center;
-    gap: .4rem;
+    gap: 0.6rem;
+    flex-wrap: wrap;
     overflow-x: auto;
-    scrollbar-width: none;
-
+    scrollbar-width: thin;
+    scrollbar-color: rgba($gaming-cyan, 0.3) transparent;
+    position: relative;
+    z-index: 1;
+    
     &::-webkit-scrollbar {
-      display: none;
+      height: 4px;
     }
-
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba($gaming-cyan, 0.3);
+      border-radius: 4px;
+      
+      &:hover {
+        background: rgba($gaming-cyan, 0.5);
+      }
+    }
+    
     a,
     button {
-      border-radius: 999px;
-      padding: .38rem .95rem;
+      border-radius: 11px;
+      padding: 0.65rem 1.2rem;
       border: 1px solid transparent;
-      font-size: .9rem;
-
-      color: $blue-200;
-      background: transparent;
+      
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: $text-secondary;
+      background: rgba(255, 255, 255, 0.04);
       text-decoration: none;
-
+      white-space: nowrap;
+      
       display: inline-flex;
       align-items: center;
-      gap: .4rem;
+      gap: 0.5rem;
       cursor: pointer;
-
-      transition: all $transition-fast;
-
-      i {
-        font-size: 1rem;
+      
+      position: relative;
+      overflow: hidden;
+      transition: all $transition-med;
+      
+      // Efecto ripple
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba($gaming-cyan, 0.15);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
       }
-
+      
+      i {
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
+        transition: all $transition-fast;
+      }
+      
+      span {
+        position: relative;
+        z-index: 1;
+      }
+      
       &:hover {
-        background: rgba($blue-400, .3);
-        border-color: rgba($blue-200, .6);
-        color: $blue-100;
-        transform: translateY(-1px);
-        box-shadow: 0 12px 26px rgba(0, 0, 0, .8);
+        background: rgba($gaming-cyan, 0.12);
+        border-color: rgba($gaming-cyan, 0.4);
+        color: $text-primary;
+        transform: translateY(-2px);
+        box-shadow: 
+          0 8px 20px rgba(0, 0, 0, 0.4),
+          0 0 20px rgba($gaming-cyan, 0.25);
+        
+        &::before {
+          width: 200px;
+          height: 200px;
+        }
+        
+        i {
+          transform: scale(1.1);
+          color: $gaming-cyan;
+        }
       }
-
+      
       &:active {
-        transform: translateY(0);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, .85);
+        transform: translateY(0) scale(0.98);
       }
     }
-
+    
     a.activo {
-      background: rgba($blue-500, .95);
-      border-color: $blue-200;
-      color: $blue-100;
+      background: linear-gradient(
+        135deg,
+        rgba($gaming-cyan, 0.22) 0%,
+        rgba($gaming-blue, 0.18) 100%
+      );
+      border: 1px solid rgba($gaming-cyan, 0.5);
+      color: $text-primary;
       font-weight: 600;
-      box-shadow: 0 16px 38px rgba(0, 0, 0, .95);
-
+      
+      box-shadow: 
+        0 4px 16px rgba($gaming-cyan, 0.35),
+        0 0 30px rgba($gaming-cyan, 0.15) inset;
+      
+      position: relative;
+      
+      // Barra inferior animada
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 10%;
+        right: 10%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          $gaming-cyan,
+          $gaming-blue,
+          transparent
+        );
+        border-radius: 2px;
+        box-shadow: 0 0 10px rgba($gaming-cyan, 0.8);
+        animation: activeGlowPublic 2.5s ease-in-out infinite;
+      }
+      
       i {
-        color: $blue-100;
+        color: $gaming-cyan;
+        filter: drop-shadow(0 0 10px rgba($gaming-cyan, 0.7));
+      }
+      
+      &:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 
+          0 8px 24px rgba($gaming-cyan, 0.45),
+          0 0 40px rgba($gaming-cyan, 0.2) inset;
       }
     }
-
+    
+    // User Pill especial
     .user-pill {
-      border-radius: 999px;
-      padding: .35rem .95rem;
-      font-size: .9rem;
+      border-radius: 50px;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.9rem;
       display: inline-flex;
       align-items: center;
-      gap: .4rem;
-
-      background: rgba($blue-600, .95);
-      border: 1px solid rgba($blue-200, .55);
-      color: $blue-100;
-
-      max-width: 260px;
+      gap: 0.6rem;
+      
+      background: linear-gradient(
+        135deg,
+        rgba($gaming-blue, 0.2) 0%,
+        rgba($gaming-cyan, 0.15) 100%
+      );
+      border: 1px solid rgba($gaming-cyan, 0.4);
+      color: $text-primary;
+      
+      max-width: 280px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-
+      
+      box-shadow: 
+        0 4px 12px rgba($gaming-cyan, 0.25),
+        0 0 20px rgba($gaming-cyan, 0.1) inset;
+      
+      transition: all $transition-med;
+      
       i {
-        font-size: 1.1rem;
-        color: $blue-100;
+        font-size: 1.2rem;
+        color: $gaming-cyan;
+        filter: drop-shadow(0 0 8px rgba($gaming-cyan, 0.6));
       }
-    }
-
-    button {
-      border-color: rgba(255, 160, 160, .6);
-      color: #ffd2d2;
-
+      
       &:hover {
-        background: rgba(255, 80, 80, .25);
-        border-color: rgba(255, 120, 120, .85);
-        color: #fff1f1;
+        background: linear-gradient(
+          135deg,
+          rgba($gaming-blue, 0.25) 0%,
+          rgba($gaming-cyan, 0.2) 100%
+        );
+        border-color: rgba($gaming-cyan, 0.6);
+        transform: translateY(-2px);
+        box-shadow: 
+          0 8px 20px rgba($gaming-cyan, 0.35),
+          0 0 30px rgba($gaming-cyan, 0.15) inset;
       }
     }
+    
+    // Botón salir especial
+    button {
+      background: rgba($gaming-magenta, 0.12);
+      border-color: rgba($gaming-magenta, 0.35);
+      color: lighten($gaming-magenta, 18%);
+      
+      &::before {
+        background: rgba($gaming-magenta, 0.2);
+      }
+      
+      &:hover {
+        background: rgba($gaming-magenta, 0.2);
+        border-color: rgba($gaming-magenta, 0.5);
+        color: lighten($gaming-magenta, 25%);
+        box-shadow: 
+          0 8px 20px rgba($gaming-magenta, 0.3),
+          0 0 20px rgba($gaming-magenta, 0.2);
+        
+        i {
+          color: $gaming-magenta;
+          transform: translateX(3px) scale(1.1);
+        }
+      }
+    }
+  }
+}
+
+@keyframes slideDownPublic {
+  from { 
+    transform: translateY(-120%); 
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0); 
+    opacity: 1;
+  }
+}
+
+@keyframes scanPublic {
+  0% { left: -50%; }
+  50%, 100% { left: 150%; }
+}
+
+@keyframes iconGlow {
+  0%, 100% { 
+    filter: drop-shadow(0 0 15px rgba($gaming-cyan, 0.6));
+  }
+  50% { 
+    filter: drop-shadow(0 0 25px rgba($gaming-cyan, 0.9));
+  }
+}
+
+@keyframes activeGlowPublic {
+  0%, 100% { 
+    opacity: 0.7;
+    box-shadow: 0 0 10px rgba($gaming-cyan, 0.6);
+  }
+  50% { 
+    opacity: 1;
+    box-shadow: 0 0 20px rgba($gaming-cyan, 1);
   }
 }
 
 /* ===============================
-   CONTENIDO
+   CONTENIDO Principal
    =============================== */
+
 .public-content {
-  min-height: calc(100vh - 60px - 46px);
-  padding: 1.8rem 1.9rem 2.6rem;
+  min-height: calc(100vh - 60px - 50px);
+  padding: 2.2rem 2.5rem 3rem;
+  
+  position: relative;
+  z-index: 1;
+  
+  // Gradiente sutil de fondo
+  background: 
+    radial-gradient(
+      ellipse at top,
+      rgba($gaming-blue, 0.06) 0%,
+      transparent 60%
+    ),
+    $bg-dark;
+  
+  color: $text-primary;
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
+}
 
-  background:
-    radial-gradient(circle at top, rgba($blue-400, .25), transparent 55%),
-    $blue-600;
-
-  color: $blue-100;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .public-content > * {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 /* ===============================
-   FOOTER
+   FOOTER Gaming
    =============================== */
+
 .public-footer {
-  border-top: 1px solid rgba($blue-200, .45);
-  padding: .8rem 1.9rem;
-  font-size: .85rem;
-  color: rgba($blue-100, .75);
-  background: rgba($blue-600, .96);
+  border-top: 1px solid rgba($gaming-cyan, 0.2);
+  padding: 1.2rem 2.2rem;
+  font-size: 0.9rem;
+  color: $text-secondary;
+  background: rgba($bg-card, 0.8);
+  backdrop-filter: blur(12px);
   text-align: center;
+  position: relative;
+  z-index: 1;
+  
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+  
+  // Borde superior brillante
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($gaming-cyan, 0.5),
+      transparent
+    );
+  }
+  
+  // Efecto de brillo sutil
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at center,
+      rgba($gaming-cyan, 0.03),
+      transparent 60%
+    );
+    pointer-events: none;
+  }
 }
 
 /* ===============================
-   RESPONSIVE
+   Estados Especiales
    =============================== */
+
+// Estado de carga
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba($bg-dark, 0.95);
+  backdrop-filter: blur(10px);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.8rem;
+  
+  animation: fadeIn 0.3s ease;
+  
+  .spinner {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: $gaming-cyan;
+    border-right-color: $gaming-blue;
+    border-bottom-color: $gaming-green;
+    animation: spin 1.2s linear infinite;
+    box-shadow: 
+      0 0 40px rgba($gaming-cyan, 0.5),
+      0 0 60px rgba($gaming-blue, 0.3);
+  }
+  
+  .loading-text {
+    color: $text-secondary;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ===============================
+   RESPONSIVE Gaming
+   =============================== */
+
 @media (max-width: 900px) {
   .public-header {
-    padding: .75rem 1.2rem;
+    padding: 1rem 1.6rem;
+    
+    h1 {
+      font-size: 1.3rem;
+      
+      i {
+        font-size: 1.5rem;
+      }
+    }
   }
-
+  
   .public-content {
-    padding: 1.4rem 1.2rem 2.2rem;
+    padding: 1.8rem 1.6rem 2.5rem;
+  }
+  
+  .public-footer {
+    padding: 1rem 1.6rem;
+    font-size: 0.85rem;
   }
 }
 
 @media (max-width: 640px) {
   .public-header {
     flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .public-header nav {
-    width: 100%;
-    flex-wrap: wrap;
-    row-gap: .3rem;
-
-    a,
-    button,
-    .user-pill {
-      margin-top: .1rem;
+    align-items: stretch;
+    padding: 1rem 1.2rem;
+    gap: 1rem;
+    
+    h1 {
+      font-size: 1.2rem;
+      
+      i {
+        font-size: 1.4rem;
+      }
     }
+    
+    nav {
+      width: 100%;
+      gap: 0.5rem;
+      
+      a,
+      button,
+      .user-pill {
+        flex: 1 1 calc(50% - 0.25rem);
+        justify-content: center;
+        font-size: 0.85rem;
+        padding: 0.6rem 1rem;
+        
+        i {
+          font-size: 1rem;
+        }
+      }
+      
+      .user-pill {
+        flex-basis: 100%;
+        max-width: 100%;
+        justify-content: flex-start;
+      }
+      
+      button {
+        flex-basis: 100%;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+  
+  .public-content {
+    padding: 1.5rem 1.2rem 2rem;
+    
+    > * {
+      max-width: 100%;
+    }
+  }
+  
+  .public-footer {
+    padding: 0.9rem 1.2rem;
+    font-size: 0.8rem;
+  }
+}
 
+@media (max-width: 480px) {
+  .public-header nav {
     a,
     button {
-      flex: 1 1 48%;
-      justify-content: center;
+      flex: 1 1 100%;
     }
   }
+}
 
-  .public-content > * {
-    max-width: 100%;
+/* ===============================
+   Elementos Decorativos (Opcional)
+   =============================== */
+
+// Círculos flotantes de fondo
+.bg-circles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  
+  .circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.05;
+    
+    &:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      top: -100px;
+      left: -100px;
+      background: radial-gradient(circle, $gaming-cyan, transparent);
+      animation: float1 20s ease-in-out infinite;
+    }
+    
+    &:nth-child(2) {
+      width: 200px;
+      height: 200px;
+      top: 50%;
+      right: -50px;
+      background: radial-gradient(circle, $gaming-blue, transparent);
+      animation: float2 25s ease-in-out infinite;
+    }
+    
+    &:nth-child(3) {
+      width: 250px;
+      height: 250px;
+      bottom: -80px;
+      left: 30%;
+      background: radial-gradient(circle, $gaming-green, transparent);
+      animation: float3 30s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, 50px) scale(1.1); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, 60px) scale(0.9); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(60px, -30px) scale(1.15); }
+}
+
+/* ===============================
+   Modo Reducido de Movimiento
+   =============================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  :host::before,
+  :host::after,
+  .public-header::after,
+  .bg-circles .circle {
+    animation: none !important;
+  }
+}
+
+/* ===============================
+   Accesibilidad
+   =============================== */
+
+*:focus-visible {
+  outline: 2px solid $gaming-cyan;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+// Alto contraste
+@media (prefers-contrast: high) {
+  .public-header {
+    border-bottom-width: 2px;
+  }
+  
+  nav a,
+  nav button,
+  nav .user-pill {
+    border-width: 2px;
+  }
+  
+  .public-footer {
+    border-top-width: 2px;
+  }
+}
+
+/* ===============================
+   Theme Toggle Integration
+   =============================== */
+
+nav app-theme-toggle {
+  display: inline-flex;
+}
+
+@media (max-width: 640px) {
+  nav app-theme-toggle {
+    order: -1;
+    flex: 1 1 auto;
+  }
+}
+
+/* ===============================
+   Utilidades
+   =============================== */
+
+// Helper para contenido destacado
+.featured-content {
+  background: linear-gradient(
+    135deg,
+    rgba($gaming-cyan, 0.08),
+    rgba($gaming-blue, 0.05)
+  );
+  border: 1px solid rgba($gaming-cyan, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba($gaming-cyan, 0.15);
+}
+
+// Hero section estilo
+.hero-section {
+  padding: 3rem 0;
+  text-align: center;
+  
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, $gaming-cyan, $gaming-blue, $gaming-green);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    color: $text-secondary;
+    max-width: 600px;
+    margin: 0 auto;
   }
 }

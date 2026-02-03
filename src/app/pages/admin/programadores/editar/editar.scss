@@ -1,313 +1,300 @@
+/* ===============================
+   EDITAR PROGRAMADOR – GAMING UI
+   =============================== */
+
 :host {
-    display: block;
-    padding: 2.5rem 1rem;
-    min-height: 100vh;
-    background: radial-gradient(circle at top, rgba(29, 185, 84, 0.18), transparent 55%),
-        var(--color-bg);
-    animation: form-fade-in 0.4s ease-out;
+  display: block;
+  min-height: 100vh;
+  padding: 2.5rem 1rem;
+
+  background:
+    radial-gradient(circle at top, rgba($gaming-cyan, 0.15), transparent 55%),
+    $bg-dark;
+
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* =========================
+/* ===============================
    TÍTULOS
-   ========================= */
+   =============================== */
 
 h2 {
-    text-align: center;
-    color: var(--color-text);
-    font-size: 2.1rem;
-    font-weight: 800;
-    margin-bottom: 2rem;
-    position: relative;
-    letter-spacing: 0.02em;
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  margin-bottom: 2.2rem;
 
-    &::after {
-        content: "";
-        width: 72px;
-        height: 3px;
-        background: var(--color-primary);
-        display: block;
-        margin: 10px auto 0;
-        border-radius: 999px;
-        box-shadow: 0 0 12px rgba(29, 185, 84, 0.6);
-    }
+  background: linear-gradient(
+    135deg,
+    $gaming-cyan,
+    $gaming-blue,
+    $gaming-green
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 90px;
+    height: 3px;
+    margin: 0.7rem auto 0;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      $gaming-cyan,
+      $gaming-blue,
+      transparent
+    );
+    box-shadow: 0 0 16px rgba($gaming-cyan, 0.7);
+  }
 }
 
 h3 {
-    margin: 2.2rem 0 1rem;
-    color: var(--color-text);
-    font-weight: 700;
-    font-size: 1.25rem;
-    padding-left: 22px;
-    position: relative;
+  margin: 2.4rem 0 1rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $text-primary;
+  padding-left: 1.5rem;
+  position: relative;
 
-    &::before {
-        content: "";
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        background: var(--color-primary);
-        border-radius: 50%;
-        left: 0;
-        top: 7px;
-        box-shadow: 0 0 10px rgba(29, 185, 84, 0.6);
-    }
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: $gaming-cyan;
+    box-shadow: 0 0 12px rgba($gaming-cyan, 0.8);
+  }
 }
 
 /* Separadores */
 hr {
-    border: none;
-    border-top: 1px solid rgba(148, 163, 184, 0.35);
-    margin: 1.8rem 0 1.2rem;
+  border: none;
+  border-top: 1px solid rgba($gaming-cyan, 0.25);
+  margin: 2rem 0 1.5rem;
 }
 
-/* =========================
-   FORMULARIO / CARD
-   ========================= */
+/* ===============================
+   FORM CARD
+   =============================== */
 
 form {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 2.4rem 2.3rem;
-    border-radius: var(--radius-lg);
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-elevated);
-    backdrop-filter: blur(12px);
-    animation: form-slide-up 0.4s ease-out;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2.6rem 2.4rem;
+
+  background: $bg-glass;
+  border-radius: 18px;
+  border: 1px solid rgba($gaming-blue, 0.35);
+
+  backdrop-filter: blur(22px) saturate(170%);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba($gaming-cyan, 0.12) inset;
+
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .form-group {
-    margin-bottom: 1.45rem;
+  margin-bottom: 1.5rem;
 }
 
-/* =========================
+/* ===============================
    LABELS
-   ========================= */
+   =============================== */
 
 label {
-    font-weight: 600;
-    color: var(--color-text);
-    display: flex;
-    gap: 0.45rem;
-    align-items: center;
-    margin-bottom: 0.4rem;
-    font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.45rem;
 
-    i {
-        color: var(--color-primary);
-        font-size: 1.05rem;
-    }
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $text-secondary;
+
+  i {
+    color: $gaming-cyan;
+    filter: drop-shadow(0 0 6px rgba($gaming-cyan, 0.8));
+  }
 }
 
-/* =========================
-   CAMPOS DE TEXTO
-   ========================= */
+/* ===============================
+   INPUTS / TEXTAREA
+   =============================== */
 
 input,
 textarea {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    font-size: 0.97rem;
-    background: var(--color-bg);
-    color: var(--color-text);
-    outline: none;
-    transition:
-        border-color var(--transition-fast),
-        box-shadow var(--transition-fast),
-        background-color var(--transition-fast),
-        transform var(--transition-fast);
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
 
-    &::placeholder {
-        color: var(--color-text-muted);
-    }
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba($gaming-blue, 0.35);
+  color: $text-primary;
 
-    &:focus {
-        border-color: var(--color-primary);
-        background: var(--color-bg-hover);
-        box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.55);
-        transform: translateY(-1px);
-    }
+  font-size: 0.95rem;
+  outline: none;
+
+  transition: all $transition-fast;
+
+  &::placeholder {
+    color: $text-secondary;
+  }
+
+  &:focus {
+    border-color: $gaming-cyan;
+    background: rgba($gaming-cyan, 0.06);
+    box-shadow: 0 0 0 1px rgba($gaming-cyan, 0.6);
+    transform: translateY(-1px);
+  }
 }
 
-/* Estados de validación Angular */
+/* Validaciones Angular */
 input.ng-invalid.ng-touched,
 textarea.ng-invalid.ng-touched {
-    border-color: var(--color-danger);
-    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.6);
+  border-color: $gaming-magenta;
+  box-shadow: 0 0 0 1px rgba($gaming-magenta, 0.6);
 }
 
 input.ng-valid.ng-touched,
 textarea.ng-valid.ng-touched {
-    border-color: var(--color-success);
-    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.6);
+  border-color: $gaming-green;
+  box-shadow: 0 0 0 1px rgba($gaming-green, 0.6);
 }
 
 textarea {
-    resize: vertical;
-    min-height: 110px;
+  resize: vertical;
+  min-height: 110px;
 }
 
-/* =========================
-   INPUT FILE / FOTO
-   ========================= */
+/* ===============================
+   FOTO / FILE INPUT
+   =============================== */
 
 .foto-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
 }
 
 input[type="file"] {
-    background: var(--color-bg);
-    border: 1px dashed rgba(148, 163, 184, 0.7);
-    padding: 0.9rem;
+  padding: 0.9rem;
+  border-radius: 14px;
+  cursor: pointer;
+
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba($gaming-cyan, 0.6);
+  color: $text-secondary;
+
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba($gaming-cyan, 0.08);
+    box-shadow: 0 0 0 1px rgba($gaming-cyan, 0.5);
+  }
+
+  &::file-selector-button {
+    background: linear-gradient(135deg, $gaming-cyan, $gaming-blue);
+    border: none;
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    color: #fff;
+    font-weight: 600;
     cursor: pointer;
-    border-radius: var(--radius-md);
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    transition:
-        border-color var(--transition-fast),
-        background-color var(--transition-fast),
-        box-shadow var(--transition-fast);
+    margin-right: 0.8rem;
+
+    transition: all $transition-fast;
 
     &:hover {
-        background: var(--color-bg-hover);
-        border-color: var(--color-primary);
-        box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.45);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba($gaming-cyan, 0.45);
     }
-
-    &::file-selector-button {
-        background: var(--color-primary);
-        padding: 0.5rem 0.9rem;
-        border: none;
-        border-radius: 999px;
-        color: #ffffff;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 500;
-        margin-right: 0.75rem;
-        transition:
-            background-color var(--transition-fast),
-            transform var(--transition-fast),
-            box-shadow var(--transition-fast);
-
-        &:hover {
-            background: var(--color-primary-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
-        }
-
-        &:active {
-            transform: translateY(0);
-            box-shadow: none;
-        }
-    }
+  }
 }
 
-/* PREVIEW DE IMAGEN */
+/* Preview imagen */
 
 .preview-box img {
-    width: 170px;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
-    transition:
-        transform var(--transition-fast),
-        box-shadow var(--transition-fast),
-        border-color var(--transition-fast);
-    margin-top: 0.5rem;
-    object-fit: cover;
+  width: 170px;
+  margin-top: 0.6rem;
+  border-radius: 16px;
+  object-fit: cover;
 
-    &:hover {
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 18px 32px rgba(0, 0, 0, 0.6);
-        border-color: var(--color-primary);
-    }
+  border: 1px solid rgba($gaming-blue, 0.4);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
+
+  transition: all $transition-fast;
+
+  &:hover {
+    transform: translateY(-3px) scale(1.03);
+    border-color: $gaming-cyan;
+    box-shadow: 0 18px 40px rgba($gaming-cyan, 0.35);
+  }
 }
 
-/* =========================
+/* ===============================
    BOTÓN SUBMIT
-   ========================= */
+   =============================== */
 
 button[type="submit"] {
-    width: 100%;
-    padding: 0.95rem;
-    margin-top: 1.6rem;
-    border: none;
-    border-radius: var(--radius-md);
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 600;
-    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
-    cursor: pointer;
-    transition:
-        transform var(--transition-fast),
-        box-shadow var(--transition-fast),
-        filter var(--transition-fast),
-        opacity var(--transition-fast);
+  width: 100%;
+  margin-top: 1.8rem;
+  padding: 1rem;
 
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
 
-    &:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
-        filter: brightness(1.03);
-    }
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
 
-    &:active:not(:disabled) {
-        transform: translateY(0);
-        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.6);
-    }
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    $gaming-cyan,
+    $gaming-blue
+  );
 
-    &:disabled {
-        background: rgba(148, 163, 184, 0.6);
-        cursor: not-allowed;
-        box-shadow: none;
-        opacity: 0.8;
-    }
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba($gaming-cyan, 0.3);
+
+  transition: all $transition-fast;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 22px 44px rgba(0, 0, 0, 0.85),
+      0 0 40px rgba($gaming-cyan, 0.45);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
 }
 
-/* =========================
-   ANIMACIONES
-   ========================= */
-
-@keyframes form-fade-in {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes form-slide-up {
-    from {
-        opacity: 0;
-        transform: translateY(16px) scale(0.99);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* =========================
+/* ===============================
    RESPONSIVE
-   ========================= */
+   =============================== */
 
 @media (max-width: 720px) {
-    form {
-        padding: 2rem 1.4rem;
-    }
+  form {
+    padding: 2rem 1.5rem;
+  }
 
-    h2 {
-        font-size: 1.8rem;
-    }
+  h2 {
+    font-size: 1.9rem;
+  }
 }

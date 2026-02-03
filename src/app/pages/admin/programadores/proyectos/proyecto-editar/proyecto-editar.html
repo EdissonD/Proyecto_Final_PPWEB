@@ -1,4 +1,5 @@
-<h2>Editar proyecto</h2>
+<h2 *ngIf="!cargando">Editar proyecto</h2>
+<p *ngIf="cargando">Cargando proyecto...</p>
 
 <form [formGroup]="form" (ngSubmit)="guardar()">
 
