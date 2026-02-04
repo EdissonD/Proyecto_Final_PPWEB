@@ -1,47 +1,78 @@
-<div class="inicio-wrapper" *ngIf="(usuario$ | async) as usuario; else invitado">
+<!-- USUARIO LOGUEADO -->
+<div class="inicio-hero" *ngIf="(usuario$ | async) as usuario; else invitado">
 
-    <h1>Bienvenido al sistema</h1>
-    <p class="subtitulo">
-        Hola {{ usuario.nombre || usuario.email }} 👋
-    </p>
+  <div class="hero-grid">
+
+    <header class="inicio-header">
+      <span class="hero-eyebrow">Panel personal</span>
+
+      <h1>
+        Bienvenido de nuevo <span class="highlight">👋</span>
+      </h1>
+
+      <p class="subtitulo">
+        Hola {{ usuario.nombre || usuario.email }}
+        <span class="rol">{{ usuario.rol | titlecase }}</span>
+      </p>
+    </header>
 
     <div class="acciones">
-        <button type="button" (click)="irAPanel(usuario)">
-            Ir a mi panel
-        </button>
+      <button class="btn-principal" (click)="irAPanel(usuario)">
+        🚀 Ir a mi panel
+      </button>
 
-        <a routerLink="/usuarios">Explorar programadores</a>
+      <a routerLink="/usuarios" class="btn-secundario">
+        👨‍💻 Explorar programadores
+      </a>
 
-        <a *ngIf="usuario.rol === 'usuario'" routerLink="/mis-asesorias">
-            Mis asesorías
-        </a>
+      <a *ngIf="usuario.rol === 'usuario'" routerLink="/mis-asesorias" class="btn-secundario">
+        📅 Mis asesorías
+      </a>
 
-        <a *ngIf="usuario.rol === 'programador'" routerLink="/programador/asesorias">
-            Asesorías recibidas
-        </a>
+      <a *ngIf="usuario.rol === 'programador'" routerLink="/programador/asesorias" class="btn-secundario">
+        📥 Asesorías recibidas
+      </a>
     </div>
+
+  </div>
 </div>
 
+<!-- INVITADO -->
 <ng-template #invitado>
-    <h1>Bienvenido al sistema</h1>
-    <p class="subtitulo">
-        Puedes explorar los portafolios o iniciar sesión.
-    </p>
+  <div class="inicio-hero invitado">
 
-    <div class="acciones">
-        <a routerLink="/usuarios">Ver programadores</a>
-        <a routerLink="/login">Iniciar sesión</a>
+    <header class="inicio-header">
+      <span class="hero-eyebrow">Plataforma de asesorías</span>
+
+      <h1>Conecta con programadores expertos</h1>
+
+      <p class="subtitulo">
+        Explora portafolios profesionales y agenda asesorías personalizadas
+        según tus necesidades.
+      </p>
+    </header>
+
+    <div class="acciones acciones-centradas">
+      <a routerLink="/usuarios" class="btn-principal">
+        👨‍💻 Ver programadores
+      </a>
+
+      <a routerLink="/login" class="btn-secundario">
+        🔐 Iniciar sesión
+      </a>
     </div>
+  </div>
 </ng-template>
 
+<!-- CTA FINAL -->
 <section class="inicio-asesorias">
-    <h2>¿Necesitas una asesoría?</h2>
-    <p>
-        Explora los portafolios y agenda una asesoría con el programador que prefieras.
-    </p>
+  <h2>¿Listo para una asesoría personalizada?</h2>
+  <p>
+    Encuentra programadores verificados, revisa sus portafolios
+    y agenda una asesoría en pocos pasos.
+  </p>
 
-    <a routerLink="/usuarios" class="btn-agendar-inicio">
-        Ver programadores y agendar asesoría
-    </a>
+  <a routerLink="/usuarios" class="btn-agendar-inicio">
+    💬 Ver programadores y agendar
+  </a>
 </section>
-

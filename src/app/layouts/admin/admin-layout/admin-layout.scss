@@ -1,6 +1,7 @@
 /* ===============================
    Sistema de Color Gaming
    =============================== */
+@use 'sass:color';
 
 // Paleta Gaming Principal
 $gaming-cyan: #00d4ff;
@@ -581,7 +582,7 @@ $transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   text-shadow: 0 0 10px rgba($gaming-cyan, 0.5);
 }
 
-/* Logout Gaming */
+/* Logout Gaming - CORREGIDO */
 .logout-btn {
   border: none;
   background: rgba($gaming-magenta, 0.15);
@@ -632,7 +633,8 @@ $transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     i {
       transform: translateX(2px);
       filter: drop-shadow(0 0 10px rgba($gaming-magenta, 0.8));
-      color: lighten($gaming-magenta, 10%);
+      // CORREGIDO: Reemplazar lighten() con color.adjust()
+      color: color.adjust($gaming-magenta, $lightness: 10%);
     }
   }
   

@@ -1,6 +1,7 @@
 /* ===============================
    Sistema de Color Gaming - Programador
    =============================== */
+@use 'sass:color';
 
 // Paleta Gaming Principal
 $gaming-cyan: #00d4ff;
@@ -339,11 +340,12 @@ header {
       }
     }
     
-    // Botón de salir especial
+    // Botón de salir especial - CORREGIDO
     button {
       background: rgba($gaming-magenta, 0.1);
       border-color: rgba($gaming-magenta, 0.3);
-      color: lighten($gaming-magenta, 15%);
+      // CORREGIDO: Reemplazar lighten() con color.adjust()
+      color: color.adjust($gaming-magenta, $lightness: 15%);
       
       &::before {
         background: rgba($gaming-magenta, 0.2);
@@ -352,7 +354,8 @@ header {
       &:hover {
         background: rgba($gaming-magenta, 0.2);
         border-color: rgba($gaming-magenta, 0.5);
-        color: lighten($gaming-magenta, 20%);
+        // CORREGIDO: Reemplazar lighten() con color.adjust()
+        color: color.adjust($gaming-magenta, $lightness: 20%);
         box-shadow: 
           0 8px 20px rgba($gaming-magenta, 0.3),
           0 0 20px rgba($gaming-magenta, 0.2);

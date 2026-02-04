@@ -1,6 +1,7 @@
 /* ===============================
    Sistema de Color Gaming - Public
    =============================== */
+@use 'sass:color';
 
 // Paleta Gaming Principal
 $gaming-cyan: #00d4ff;
@@ -389,11 +390,12 @@ $transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       }
     }
     
-    // Botón salir especial
+    // Botón salir especial - CORREGIDO
     button {
       background: rgba($gaming-magenta, 0.12);
       border-color: rgba($gaming-magenta, 0.35);
-      color: lighten($gaming-magenta, 18%);
+      // CORREGIDO: Reemplazar lighten() con color.adjust()
+      color: color.adjust($gaming-magenta, $lightness: 18%);
       
       &::before {
         background: rgba($gaming-magenta, 0.2);
@@ -402,7 +404,8 @@ $transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       &:hover {
         background: rgba($gaming-magenta, 0.2);
         border-color: rgba($gaming-magenta, 0.5);
-        color: lighten($gaming-magenta, 25%);
+        // CORREGIDO: Reemplazar lighten() con color.adjust()
+        color: color.adjust($gaming-magenta, $lightness: 25%);
         box-shadow: 
           0 8px 20px rgba($gaming-magenta, 0.3),
           0 0 20px rgba($gaming-magenta, 0.2);

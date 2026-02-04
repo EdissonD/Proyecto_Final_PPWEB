@@ -1,328 +1,680 @@
+/* ===============================
+   Sistema de Color Gaming - Nuevo Programador
+   =============================== */
+@use 'sass:color';
+
+// Paleta Gaming
+$gaming-cyan: #00d4ff;
+$gaming-magenta: #ff3366;
+$gaming-purple: #9945ff;
+$gaming-green: #00ff88;
+$gaming-yellow: #ffb800;
+
+// Backgrounds
+$bg-dark: #0a0e27;
+$bg-secondary: #131830;
+$bg-card: #1a1f3a;
+$bg-elevated: rgba(26, 31, 58, 0.85);
+
+// Textos
+$text-primary: #ffffff;
+$text-secondary: #a0aec0;
+$text-muted: #64748b;
+
+// Transiciones
+$transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-med: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+
+/* ===============================
+   Host Container Gaming
+   =============================== */
+
 :host {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     min-height: 100vh;
-    padding: 2.3rem 1.3rem;
+    padding: 2.5rem 1.5rem;
+    
     background:
-        radial-gradient(circle at top, rgba(29, 185, 84, 0.18), transparent 55%),
-        var(--color-bg);
-    color: var(--color-text);
-    animation: nuevo-programador-fade-in 0.4s ease-out;
+        radial-gradient(circle at top, rgba($gaming-cyan, 0.15), transparent 60%),
+        radial-gradient(circle at bottom left, rgba($gaming-purple, 0.1), transparent 50%),
+        $bg-dark;
+    
+    color: $text-primary;
+    position: relative;
+    animation: fadeIn 0.5s ease-out;
+    
+    // Patrón de fondo
+    &::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        opacity: 0.03;
+        background-image: 
+            linear-gradient(rgba($gaming-cyan, 0.5) 1px, transparent 1px),
+            linear-gradient(90deg, rgba($gaming-cyan, 0.5) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+    }
 }
 
-/* =========================
-   TÍTULO
-   ========================= */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ===============================
+   TÍTULO Gaming con Efecto Typing
+   =============================== */
 
 .title-typing {
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
-    font-size: 1.9rem;
+    gap: 0.7rem;
+    font-size: 2.2rem;
     font-weight: 800;
-    margin-bottom: 1.8rem;
+    margin-bottom: 2rem;
     letter-spacing: 0.02em;
     position: relative;
-    color: var(--color-text);
-
+    
+    background: linear-gradient(
+        135deg,
+        $gaming-cyan 0%,
+        $gaming-purple 50%,
+        $gaming-magenta 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    
+    animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    
     i {
-        color: var(--color-primary);
-        font-size: 1.4rem;
+        background: linear-gradient(135deg, $gaming-cyan, $gaming-purple);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.8rem;
+        filter: drop-shadow(0 0 12px rgba($gaming-cyan, 0.6));
+        animation: iconPulse 2s ease-in-out infinite;
     }
-
-    /* Simulación de cursor a la derecha del título */
+    
+    // Cursor parpadeante gaming
     &::after {
         content: "";
-        width: 2px;
-        height: 1.3em;
-        background: var(--color-primary);
-        margin-left: 0.25rem;
-        animation: typing-cursor 1.1s steps(2, start) infinite;
+        width: 3px;
+        height: 1.4em;
+        background: $gaming-cyan;
+        margin-left: 0.3rem;
+        border-radius: 2px;
+        box-shadow: 0 0 10px rgba($gaming-cyan, 0.8);
+        animation: typingCursor 1.2s steps(2, start) infinite;
     }
 }
 
-/* =========================
-   FORM / CARD
-   ========================= */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 12px rgba($gaming-cyan, 0.6));
+        transform: scale(1);
+    }
+    50% {
+        filter: drop-shadow(0 0 20px rgba($gaming-cyan, 1));
+        transform: scale(1.05);
+    }
+}
+
+@keyframes typingCursor {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* ===============================
+   FORMULARIO Gaming
+   =============================== */
 
 .form-programador {
     width: 100%;
-    max-width: 720px;
-    padding: 2.4rem 2.3rem;
-    border-radius: var(--radius-lg);
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-elevated);
-    backdrop-filter: blur(12px);
-    animation: nuevo-programador-slide-up 0.4s ease-out;
-}
-
-/* Filas del formulario */
-
-.form-row {
-    margin-bottom: 1.35rem;
-    display: flex;
-    flex-direction: column;
-}
-
-/* =========================
-   LABELS
-   ========================= */
-
-.form-row label {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--color-text);
-    margin-bottom: 0.35rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    i {
-        color: var(--color-primary);
-        font-size: 1rem;
+    max-width: 780px;
+    padding: 2.5rem 2.5rem 2.2rem;
+    border-radius: 20px;
+    
+    background: $bg-elevated;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    
+    border: 1px solid rgba($gaming-cyan, 0.3);
+    
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba($gaming-cyan, 0.15) inset,
+        0 0 60px rgba($gaming-cyan, 0.1);
+    
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+    
+    // Borde superior brillante
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba($gaming-cyan, 0.6) 20%,
+            rgba($gaming-purple, 0.8) 50%,
+            rgba($gaming-cyan, 0.6) 80%,
+            transparent
+        );
+        border-radius: 20px 20px 0 0;
     }
 }
 
-/* =========================
-   CAMPOS DE TEXTO / TEXTAREA
-   ========================= */
-
-.form-row input[type="text"],
-.form-row input[type="email"],
-.form-row textarea {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0.9rem 1.05rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    background-color: var(--color-bg);
-    color: var(--color-text);
-    font-size: 0.95rem;
-    transition:
-        border-color var(--transition-fast),
-        background-color var(--transition-fast),
-        box-shadow var(--transition-fast),
-        transform var(--transition-fast);
-
-    &::placeholder {
-        color: var(--color-text-muted);
-    }
-
-    &:focus {
-        outline: none;
-        border-color: var(--color-primary);
-        background-color: var(--color-bg-hover);
-        box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.55);
-        transform: translateY(-1px);
-    }
-}
-
-.form-row textarea {
-    resize: vertical;
-    min-height: 120px;
-}
-
-/* Estados Angular (si los usas en este form) */
-.form-row input.ng-invalid.ng-touched,
-.form-row textarea.ng-invalid.ng-touched {
-    border-color: var(--color-danger);
-    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.65);
-}
-
-.form-row input.ng-valid.ng-touched,
-.form-row textarea.ng-valid.ng-touched {
-    border-color: var(--color-success);
-    box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.65);
-}
-
-/* =========================
-   INPUT FILE / FOTO
-   ========================= */
-
-.form-row input[type="file"] {
-    padding: 0.75rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border);
-    background: var(--color-bg);
-    cursor: pointer;
-    color: var(--color-text-muted);
-    transition:
-        border-color var(--transition-fast),
-        background-color var(--transition-fast),
-        box-shadow var(--transition-fast);
-
-    &:hover {
-        border-color: var(--color-primary);
-        background-color: var(--color-bg-hover);
-        box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.5);
-    }
-
-    &::file-selector-button {
-        margin-right: 0.8rem;
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 999px;
-        background: var(--color-primary);
-        color: #ffffff;
-        font-size: 0.85rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition:
-            background-color var(--transition-fast),
-            transform var(--transition-fast),
-            box-shadow var(--transition-fast);
-
-        &:hover {
-            background: var(--color-primary-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
-        }
-
-        &:active {
-            transform: translateY(0);
-            box-shadow: none;
-        }
-    }
-}
-
-/* PREVIEW DE FOTO */
-
-.preview {
-    margin-top: 0.6rem;
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-
-    p {
-        margin: 0 0 0.4rem;
-    }
-
-    img {
-        width: 170px;
-        max-width: 100%;
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--color-border);
-        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
-        object-fit: cover;
-        transition:
-            transform var(--transition-fast),
-            box-shadow var(--transition-fast),
-            border-color var(--transition-fast);
-
-        &:hover {
-            transform: translateY(-2px) scale(1.02);
-            border-color: var(--color-primary);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-        }
-    }
-}
-
-/* =========================
-   ACCIONES / BOTÓN GUARDAR
-   ========================= */
-
-.form-actions {
-    margin-top: 1.6rem;
-}
-
-.form-actions button[type="submit"] {
-    width: 100%;
-    padding: 0.95rem;
-    border-radius: var(--radius-md);
-    border: none;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.04em;
-    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.65);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition:
-        background-color var(--transition-fast),
-        box-shadow var(--transition-fast),
-        transform var(--transition-fast),
-        filter var(--transition-fast),
-        opacity var(--transition-fast);
-
-    &:hover:not(:disabled) {
-        transform: translateY(-2px);
-        filter: brightness(1.03);
-        box-shadow: 0 22px 45px rgba(0, 0, 0, 0.85);
-    }
-
-    &:active:not(:disabled) {
-        transform: translateY(0);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7);
-    }
-
-    &:disabled {
-        background: rgba(148, 163, 184, 0.75);
-        cursor: not-allowed;
-        box-shadow: none;
-        opacity: 0.9;
-    }
-}
-
-/* =========================
-   ANIMACIONES
-   ========================= */
-
-@keyframes nuevo-programador-fade-in {
+@keyframes slideUp {
     from {
         opacity: 0;
+        transform: translateY(30px) scale(0.98);
     }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes nuevo-programador-slide-up {
-    from {
-        opacity: 0;
-        transform: translateY(18px) scale(0.99);
-    }
-
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
 }
 
-@keyframes typing-cursor {
-    0% {
-        opacity: 1;
-    }
+/* ===============================
+   FILAS DEL FORMULARIO
+   =============================== */
 
-    50% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
+.form-row {
+    margin-bottom: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    
+    @for $i from 1 through 12 {
+        &:nth-child(#{$i}) {
+            animation-delay: #{0.1 + ($i * 0.04)}s;
+        }
     }
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===============================
+   LABELS Gaming
+   =============================== */
+
+.form-row label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $gaming-cyan;
+    margin-bottom: 0.6rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba($gaming-cyan, 0.4);
+    
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    i {
+        color: $gaming-purple;
+        font-size: 1.1rem;
+        filter: drop-shadow(0 0 8px rgba($gaming-purple, 0.6));
+    }
+}
+
+/* ===============================
+   INPUTS Gaming
+   =============================== */
+
+.form-row input[type="text"],
+.form-row input[type="email"],
+.form-row textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.95rem 1.15rem;
+    border-radius: 12px;
+    border: 1px solid rgba($gaming-cyan, 0.3);
+    background: rgba($bg-dark, 0.6);
+    color: $text-primary;
+    font-size: 0.95rem;
+    font-weight: 500;
+    
+    transition: all $transition-med;
+    
+    &::placeholder {
+        color: $text-muted;
+        opacity: 0.7;
+    }
+    
+    &:focus {
+        outline: none;
+        border-color: $gaming-cyan;
+        background: rgba($bg-dark, 0.8);
+        
+        box-shadow: 
+            0 0 0 3px rgba($gaming-cyan, 0.2),
+            0 8px 20px rgba($gaming-cyan, 0.3),
+            0 0 30px rgba($gaming-cyan, 0.15) inset;
+        
+        transform: translateY(-2px);
+    }
+    
+    &:hover:not(:focus) {
+        border-color: rgba($gaming-cyan, 0.5);
+        background: rgba($bg-dark, 0.7);
+    }
+}
+
+.form-row textarea {
+    resize: vertical;
+    min-height: 130px;
+    line-height: 1.6;
+    font-family: inherit;
+    
+    // Scrollbar personalizado
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: rgba($bg-dark, 0.3);
+        border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: rgba($gaming-cyan, 0.4);
+        border-radius: 4px;
+        
+        &:hover {
+            background: rgba($gaming-cyan, 0.6);
+        }
+    }
+}
+
+/* ===============================
+   VALIDACIONES Angular Gaming
+   =============================== */
+
+.form-row input.ng-invalid.ng-touched,
+.form-row textarea.ng-invalid.ng-touched {
+    border-color: $gaming-magenta;
+    box-shadow: 
+        0 0 0 3px rgba($gaming-magenta, 0.2),
+        0 4px 12px rgba($gaming-magenta, 0.3);
+    
+    &:focus {
+        box-shadow: 
+            0 0 0 3px rgba($gaming-magenta, 0.3),
+            0 8px 20px rgba($gaming-magenta, 0.4);
+    }
+}
+
+.form-row input.ng-valid.ng-touched,
+.form-row textarea.ng-valid.ng-touched {
+    border-color: $gaming-green;
+    box-shadow: 
+        0 0 0 3px rgba($gaming-green, 0.15),
+        0 4px 12px rgba($gaming-green, 0.2);
+    
+    &:focus {
+        box-shadow: 
+            0 0 0 3px rgba($gaming-green, 0.25),
+            0 8px 20px rgba($gaming-green, 0.3);
+    }
+}
+
+/* ===============================
+   INPUT FILE Gaming
+   =============================== */
+
+.form-row input[type="file"] {
+    padding: 0.9rem;
+    border-radius: 12px;
+    border: 2px dashed rgba($gaming-cyan, 0.4);
+    background: rgba($bg-dark, 0.4);
+    cursor: pointer;
+    color: $text-secondary;
+    
+    transition: all $transition-med;
+    
+    &:hover {
+        border-color: rgba($gaming-cyan, 0.7);
+        background: rgba($bg-dark, 0.6);
+        box-shadow: 
+            0 0 0 3px rgba($gaming-cyan, 0.15),
+            0 8px 20px rgba($gaming-cyan, 0.2);
+    }
+    
+    &::file-selector-button {
+        margin-right: 1rem;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, $gaming-cyan, color.adjust($gaming-cyan, $lightness: -10%));
+        color: $bg-dark;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        
+        transition: all $transition-med;
+        
+        box-shadow: 0 4px 12px rgba($gaming-cyan, 0.4);
+        
+        &:hover {
+            background: linear-gradient(135deg, color.adjust($gaming-cyan, $lightness: 5%), $gaming-cyan);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba($gaming-cyan, 0.6);
+        }
+        
+        &:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba($gaming-cyan, 0.4);
+        }
+    }
+}
+
+/* ===============================
+   PREVIEW DE FOTO Gaming
+   =============================== */
+
+.preview {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: $text-secondary;
+    
+    p {
+        margin: 0 0 0.6rem;
+        font-weight: 600;
+        color: $gaming-cyan;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.85rem;
+    }
+    
+    img {
+        width: 180px;
+        max-width: 100%;
+        border-radius: 16px;
+        border: 2px solid rgba($gaming-cyan, 0.4);
+        box-shadow: 
+            0 8px 24px rgba(0, 0, 0, 0.6),
+            0 0 30px rgba($gaming-cyan, 0.2);
+        object-fit: cover;
+        
+        transition: all $transition-med;
+        
+        &:hover {
+            transform: translateY(-4px) scale(1.03);
+            border-color: rgba($gaming-cyan, 0.8);
+            box-shadow: 
+                0 12px 32px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba($gaming-cyan, 0.4);
+        }
+    }
+}
+
+/* ===============================
+   MENSAJES Gaming
+   =============================== */
+
+p[style*="color: green"],
+p[style*="color: red"] {
+    margin: 1rem 0;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+p[style*="color: green"] {
+    background: rgba($gaming-green, 0.15);
+    border: 1px solid rgba($gaming-green, 0.4);
+    color: $gaming-green !important;
+    box-shadow: 0 4px 12px rgba($gaming-green, 0.2);
+    
+    &::before {
+        content: "✓";
+        font-size: 1.2rem;
+    }
+}
+
+p[style*="color: red"] {
+    background: rgba($gaming-magenta, 0.15);
+    border: 1px solid rgba($gaming-magenta, 0.4);
+    color: $gaming-magenta !important;
+    box-shadow: 0 4px 12px rgba($gaming-magenta, 0.2);
+    
+    &::before {
+        content: "⚠";
+        font-size: 1.2rem;
+    }
+}
+
+/* ===============================
+   BOTÓN GUARDAR Gaming
+   =============================== */
+
+.form-actions {
+    margin-top: 2rem;
+}
+
+.form-actions button[type="submit"] {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 12px;
+    border: none;
+    
+    background: linear-gradient(
+        135deg,
+        $gaming-cyan 0%,
+        color.adjust($gaming-cyan, $lightness: -10%) 100%
+    );
+    
+    color: $bg-dark;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    
+    box-shadow: 
+        0 8px 24px rgba($gaming-cyan, 0.4),
+        0 0 30px rgba($gaming-cyan, 0.2) inset;
+    
+    border: 1px solid rgba($gaming-cyan, 0.5);
+    
+    position: relative;
+    overflow: hidden;
+    
+    transition: all $transition-med;
+    
+    // Efecto ripple
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    
+    &:hover:not(:disabled) {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 
+            0 12px 32px rgba($gaming-cyan, 0.6),
+            0 0 40px rgba($gaming-cyan, 0.3) inset;
+        border-color: rgba($gaming-cyan, 0.8);
+        
+        &::before {
+            width: 300px;
+            height: 300px;
+        }
+    }
+    
+    &:active:not(:disabled) {
+        transform: translateY(-1px) scale(1);
+        box-shadow: 
+            0 6px 20px rgba($gaming-cyan, 0.5),
+            0 0 25px rgba($gaming-cyan, 0.2) inset;
+    }
+    
+    &:disabled {
+        background: rgba($text-muted, 0.3);
+        cursor: not-allowed;
+        box-shadow: none;
+        opacity: 0.6;
+        border-color: transparent;
+        
+        &::before {
+            display: none;
+        }
+    }
+}
+
+/* ===============================
+   RESPONSIVE Gaming
+   =============================== */
+
+@media (max-width: 768px) {
+    :host {
+        padding: 2rem 1.2rem;
+    }
+    
+    .form-programador {
+        padding: 2rem 1.8rem;
+    }
+    
+    .title-typing {
+        font-size: 1.9rem;
+        
+        i {
+            font-size: 1.6rem;
+        }
+    }
+}
 
 @media (max-width: 720px) {
     :host {
-        padding: 1.8rem 0.9rem;
+        padding: 1.8rem 1rem;
         align-items: stretch;
     }
-
+    
     .form-programador {
-        padding: 2rem 1.5rem;
+        padding: 1.8rem 1.5rem;
+        border-radius: 16px;
     }
-
+    
     .title-typing {
-        font-size: 1.6rem;
+        font-size: 1.7rem;
+        
+        &::after {
+            height: 1.2em;
+        }
+    }
+    
+    .form-row {
+        margin-bottom: 1.3rem;
+    }
+    
+    .form-row label {
+        font-size: 0.85rem;
+    }
+    
+    .form-row input[type="text"],
+    .form-row input[type="email"],
+    .form-row textarea {
+        font-size: 0.9rem;
+        padding: 0.85rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title-typing {
+        font-size: 1.5rem;
+        gap: 0.5rem;
+        
+        i {
+            font-size: 1.3rem;
+        }
+    }
+    
+    .form-row input[type="file"]::file-selector-button {
+        margin-right: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* ===============================
+   Modo Reducido de Movimiento
+   =============================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ===============================
+   Accesibilidad
+   =============================== */
+
+*:focus-visible {
+    outline: 2px solid $gaming-cyan;
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+    .form-row input,
+    .form-row textarea {
+        border-width: 2px;
+    }
+    
+    button {
+        border: 2px solid currentColor;
     }
 }

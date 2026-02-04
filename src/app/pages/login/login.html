@@ -1,54 +1,57 @@
 <div class="login-page">
 
-  <div class="login-card">
-    <!-- Toggle de tema arriba a la derecha -->
-    <div class="login-card-header">
+  <article class="login-card">
+
+    <!-- HEADER -->
+    <header class="login-header">
       <div class="brand-pill">
         <span class="brand-icon">👨‍💻</span>
-        <span class="brand-text">Gestión </span>
+        <span class="brand-text">Gestión</span>
       </div>
 
       <app-theme-toggle></app-theme-toggle>
+    </header>
+
+    <!-- LOGO -->
+    <div class="logo-orbit" aria-hidden="true">
+      <span class="orbit-ring"></span>
+      <span class="orbit-core">🚀</span>
     </div>
 
-    <!-- Icono central -->
-    <div class="logo-orbit">
-      <div class="orbit-ring"></div>
-      <div class="orbit-core">
-        <span>🚀</span>
-      </div>
-    </div>
+    <!-- TEXTO -->
+    <section class="login-text">
+      <h2>Plataforma de gestión de programadores</h2>
+      <p>
+        Inicia sesión de forma segura con Google y gestiona
+        portafolios, asesorías y proyectos desde un solo lugar.
+      </p>
+    </section>
 
-    <!-- Texto principal -->
-    <h2 class="typing-text">
-      Plataforma de gestión de programadores
-    </h2>
-
-    <p class="descripcion">
-      Inicia sesión de forma segura con tu cuenta de Google y gestiona
-      portafolios, asesorías y proyectos en un solo lugar.
-    </p>
-
-    <!-- Botón Google -->
-    <button (click)="loginGoogle()" [disabled]="cargando" class="google-btn">
-      <span class="google-icon">
-        <span class="g-segment g-blue"></span>
-        <span class="g-segment g-red"></span>
-        <span class="g-segment g-yellow"></span>
-        <span class="g-segment g-green"></span>
+    <!-- BOTÓN GOOGLE -->
+    <button
+      type="button"
+      class="google-btn"
+      (click)="loginGoogle()"
+      [disabled]="cargando"
+      aria-busy="{{ cargando }}"
+    >
+      <span class="google-icon" aria-hidden="true">
+        <span class="g blue"></span>
+        <span class="g red"></span>
+        <span class="g yellow"></span>
+        <span class="g green"></span>
       </span>
 
       <span class="google-text">
-        {{ cargando ? 'Conectando con Google...' : 'Continuar con Google' }}
+        {{ cargando ? 'Conectando con Google…' : 'Continuar con Google' }}
       </span>
-
-      <span class="btn-glow-pulse" aria-hidden="true"></span>
     </button>
 
-    <!-- Texto pequeño de confianza -->
-    <p class="trust-text">
-      Solo utilizamos tu correo para identificarte en el sistema.
-      No compartimos tu información con terceros.
-    </p>
-  </div>
+    <!-- FOOTER -->
+    <footer class="trust-text">
+      🔒 Usamos tu correo solo para identificarte.
+      Nunca compartimos tu información.
+    </footer>
+
+  </article>
 </div>

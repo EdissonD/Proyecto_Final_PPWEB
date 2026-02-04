@@ -14,6 +14,15 @@
             <th>Acciones</th>
         </tr>
     </thead>
+    <tbody *ngIf="lista.length === 0" class="skeleton">
+  <tr *ngFor="let i of [1,2,3,4,5]">
+    <td><div class="skeleton-box avatar"></div></td>
+    <td><div class="skeleton-box text"></div></td>
+    <td><div class="skeleton-box text"></div></td>
+    <td><div class="skeleton-box text small"></div></td>
+    <td><div class="skeleton-box actions"></div></td>
+  </tr>
+</tbody>
     <tbody>
         <tr *ngFor="let p of lista">
             <td><img *ngIf="p.foto" [src]="p.foto" width="70"></td>

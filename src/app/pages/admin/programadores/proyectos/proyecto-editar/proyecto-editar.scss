@@ -1,234 +1,222 @@
+/* ===============================
+   Sistema de Color Gaming - Editar Proyecto
+   =============================== */
+@use 'sass:color';
+
+// Paleta Gaming
+$gaming-cyan: #00d4ff;
+$gaming-magenta: #ff3366;
+$gaming-purple: #9945ff;
+$gaming-green: #00ff88;
+$gaming-yellow: #ffb800;
+
+// Backgrounds
+$bg-dark: #0a0e27;
+$bg-secondary: #131830;
+$bg-card: #1a1f3a;
+$bg-elevated: rgba(26, 31, 58, 0.85);
+
+// Textos
+$text-primary: #ffffff;
+$text-secondary: #a0aec0;
+$text-muted: #64748b;
+
+// Transiciones
+$transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-med: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+
+/* ===============================
+   Host Container Gaming
+   =============================== */
+
 :host {
   display: flex;
   min-height: 100vh;
-  padding: 2.2rem 1rem;
+  padding: 2.5rem 1.2rem;
   justify-content: center;
   align-items: flex-start;
+  
   background:
-    radial-gradient(circle at top, rgba(29, 185, 84, 0.16), transparent 55%),
-    var(--color-bg);
-  animation: project-form-fade-in 0.4s ease-out;
-}
-
-/* =========================
-   TÍTULO
-   ========================= */
-
-h2 {
-  color: var(--color-text);
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin-bottom: 1.8rem;
-  text-align: center;
-  letter-spacing: 0.01em;
+    radial-gradient(circle at top, rgba($gaming-purple, 0.15), transparent 60%),
+    radial-gradient(circle at bottom right, rgba($gaming-cyan, 0.1), transparent 50%),
+    $bg-dark;
+  
   position: relative;
-
-  &::after {
+  animation: fadeIn 0.5s ease-out;
+  
+  // Patrón de fondo
+  &::before {
     content: "";
-    width: 70px;
-    height: 3px;
-    background: var(--color-primary);
-    display: block;
-    margin: 10px auto 0;
-    border-radius: 999px;
-    box-shadow: 0 0 12px rgba(29, 185, 84, 0.6);
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.03;
+    background-image: 
+      linear-gradient(rgba($gaming-cyan, 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba($gaming-cyan, 0.5) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
   }
 }
 
-/* =========================
-   FORMULARIO / CARD
-   ========================= */
-
-form {
-  width: 100%;
-  max-width: 620px;
-  padding: 2.3rem 2.1rem;
-  border-radius: var(--radius-lg);
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-elevated);
-  backdrop-filter: blur(10px);
-  animation: project-form-slide-up 0.4s ease-out;
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1.2rem;
-  }
-}
-
-/* =========================
-   LABELS
-   ========================= */
-
-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: 0.45rem;
-}
-
-/* =========================
-   INPUTS / SELECT / TEXTAREA
-   ========================= */
-
-input[type="text"],
-input[type="url"],
-select,
-textarea {
-  width: 100%;
-  box-sizing: border-box;
-  background-color: var(--color-bg);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  padding: 0.8rem 1rem;
-  font-size: 0.95rem;
-  color: var(--color-text);
-  transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    background-color var(--transition-fast),
-    transform var(--transition-fast);
-
-  &::placeholder {
-    color: var(--color-text-muted);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    background-color: var(--color-bg-hover);
-    box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.55);
-    transform: translateY(-1px);
-  }
-
-  &:disabled {
-    background-color: rgba(15, 23, 42, 0.6);
-    cursor: not-allowed;
-    opacity: 0.8;
-  }
-}
-
-/* =========================
-   VALIDACIONES ANGULAR
-   ========================= */
-
-input.ng-invalid.ng-touched,
-textarea.ng-invalid.ng-touched,
-select.ng-invalid.ng-touched {
-  border-color: var(--color-danger);
-  box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.65);
-}
-
-input.ng-valid.ng-touched,
-textarea.ng-valid.ng-touched,
-select.ng-valid.ng-touched {
-  border-color: var(--color-success);
-  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.65);
-}
-
-textarea {
-  min-height: 110px;
-  resize: vertical;
-  line-height: 1.5;
-}
-
-/* =========================
-   SELECT CUSTOM
-   ========================= */
-
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 0.8rem center;
-  background-repeat: no-repeat;
-  background-size: 1.05rem 1.05rem;
-  padding-right: 2.4rem;
-}
-
-/* =========================
-   BOTONES
-   ========================= */
-
-button {
-  border-radius: var(--radius-md);
-  font-size: 0.95rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition:
-    background-color var(--transition-fast),
-    color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    transform var(--transition-fast),
-    opacity var(--transition-fast);
-}
-
-/* Botón principal */
-
-button[type="submit"] {
-  width: 100%;
-  margin-top: 1.2rem;
-  padding: 0.9rem 1.5rem;
-  background: linear-gradient(
-    135deg,
-    var(--color-primary),
-    var(--color-primary-hover)
-  );
-  color: #fff;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
-
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.7);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.6);
-  }
-
-  &:disabled {
-    background: rgba(148, 163, 184, 0.7);
-    cursor: not-allowed;
-    box-shadow: none;
-  }
-}
-
-/* Botón cancelar */
-
-button[type="button"] {
-  margin-top: 0.7rem;
-  width: 100%;
-  padding: 0.8rem 1.5rem;
-  background: transparent;
-  color: var(--color-text-muted);
-  border: 1px solid var(--color-border);
-
-  &:hover {
-    background-color: var(--color-bg-hover);
-    color: var(--color-text);
-    transform: translateY(-1px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
-  }
-}
-
-/* =========================
-   ANIMACIONES
-   ========================= */
-
-@keyframes project-form-fade-in {
+@keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes project-form-slide-up {
+/* ===============================
+   TÍTULO Gaming
+   =============================== */
+
+h2 {
+  color: $text-primary;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  text-align: center;
+  letter-spacing: 0.02em;
+  
+  background: linear-gradient(
+    135deg,
+    $gaming-purple 0%,
+    $gaming-cyan 50%,
+    $gaming-green 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  position: relative;
+  animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  // Línea decorativa inferior
+  &::after {
+    content: "";
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      $gaming-purple,
+      $gaming-cyan,
+      $gaming-green
+    );
+    display: block;
+    margin: 12px auto 0;
+    border-radius: 999px;
+    box-shadow: 0 0 15px rgba($gaming-cyan, 0.6);
+    animation: glow 2s ease-in-out infinite;
+  }
+}
+
+@keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(18px) scale(0.99);
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba($gaming-cyan, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba($gaming-cyan, 1);
+  }
+}
+
+/* Estado de carga */
+p {
+  color: $text-secondary;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  
+  &::before {
+    content: "";
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: $gaming-purple;
+    border-right-color: $gaming-cyan;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===============================
+   FORMULARIO Gaming
+   =============================== */
+
+form {
+  width: 100%;
+  max-width: 680px;
+  padding: 2.5rem 2.5rem 2.2rem;
+  border-radius: 20px;
+  
+  background: $bg-elevated;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  
+  border: 1px solid rgba($gaming-purple, 0.3);
+  
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba($gaming-purple, 0.15) inset,
+    0 0 60px rgba($gaming-purple, 0.1);
+  
+  position: relative;
+  z-index: 1;
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+  
+  // Borde superior brillante
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($gaming-purple, 0.6) 20%,
+      rgba($gaming-cyan, 0.8) 50%,
+      rgba($gaming-purple, 0.6) 80%,
+      transparent
+    );
+    border-radius: 20px 20px 0 0;
+  }
+  
+  > div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    
+    @for $i from 1 through 7 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{0.1 + ($i * 0.05)}s;
+      }
+    }
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
   }
   to {
     opacity: 1;
@@ -236,20 +224,448 @@ button[type="button"] {
   }
 }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================
+   LABELS Gaming
+   =============================== */
+
+label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: $gaming-cyan;
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba($gaming-cyan, 0.4);
+  
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  
+  // Icono decorativo opcional
+  &::before {
+    content: "▸";
+    color: $gaming-purple;
+    font-size: 0.8rem;
+  }
+}
+
+/* ===============================
+   INPUTS Gaming
+   =============================== */
+
+input[type="text"],
+input[type="url"],
+select,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  
+  background: rgba($bg-dark, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba($gaming-purple, 0.3);
+  
+  padding: 0.9rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: $text-primary;
+  
+  transition: all $transition-med;
+  
+  position: relative;
+  
+  &::placeholder {
+    color: $text-muted;
+    opacity: 0.7;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: $gaming-cyan;
+    background: rgba($bg-dark, 0.8);
+    
+    box-shadow: 
+      0 0 0 3px rgba($gaming-cyan, 0.2),
+      0 8px 20px rgba($gaming-cyan, 0.3),
+      0 0 30px rgba($gaming-cyan, 0.15) inset;
+    
+    transform: translateY(-2px);
+  }
+  
+  &:hover:not(:focus) {
+    border-color: rgba($gaming-purple, 0.5);
+    background: rgba($bg-dark, 0.7);
+  }
+  
+  &:disabled {
+    background: rgba($bg-dark, 0.4);
+    border-color: rgba($gaming-purple, 0.2);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+/* ===============================
+   VALIDACIONES Angular Gaming
+   =============================== */
+
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border-color: $gaming-magenta;
+  box-shadow: 
+    0 0 0 3px rgba($gaming-magenta, 0.2),
+    0 4px 12px rgba($gaming-magenta, 0.3);
+  
+  &:focus {
+    box-shadow: 
+      0 0 0 3px rgba($gaming-magenta, 0.3),
+      0 8px 20px rgba($gaming-magenta, 0.4);
+  }
+}
+
+input.ng-valid.ng-touched,
+textarea.ng-valid.ng-touched,
+select.ng-valid.ng-touched {
+  border-color: $gaming-green;
+  box-shadow: 
+    0 0 0 3px rgba($gaming-green, 0.15),
+    0 4px 12px rgba($gaming-green, 0.2);
+  
+  &:focus {
+    box-shadow: 
+      0 0 0 3px rgba($gaming-green, 0.25),
+      0 8px 20px rgba($gaming-green, 0.3);
+  }
+}
+
+/* ===============================
+   TEXTAREA Gaming
+   =============================== */
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.6;
+  font-family: inherit;
+  
+  // Scrollbar personalizado
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba($bg-dark, 0.3);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba($gaming-purple, 0.4);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba($gaming-purple, 0.6);
+    }
+  }
+}
+
+/* ===============================
+   SELECT Gaming
+   =============================== */
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2300d4ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 1rem center;
+  background-repeat: no-repeat;
+  background-size: 1.2rem 1.2rem;
+  padding-right: 3rem;
+  
+  cursor: pointer;
+  
+  option {
+    background: $bg-card;
+    color: $text-primary;
+    padding: 0.5rem;
+  }
+}
+
+/* ===============================
+   BOTONES Gaming
+   =============================== */
+
+button {
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  
+  position: relative;
+  overflow: hidden;
+  
+  transition: all $transition-med;
+  
+  // Efecto ripple
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  &:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  span {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Botón GUARDAR - CORREGIDO */
+button[type="submit"] {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 1rem 1.8rem;
+  
+  background: linear-gradient(
+    135deg,
+    $gaming-purple 0%,
+    color.adjust($gaming-purple, $lightness: -8%) 100%
+  );
+  color: $text-primary;
+  border: 1px solid rgba($gaming-purple, 0.5);
+  
+  box-shadow: 
+    0 8px 24px rgba($gaming-purple, 0.4),
+    0 0 30px rgba($gaming-purple, 0.2) inset;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 
+      0 12px 32px rgba($gaming-purple, 0.6),
+      0 0 40px rgba($gaming-purple, 0.3) inset;
+    border-color: rgba($gaming-purple, 0.8);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(-1px) scale(1);
+    box-shadow: 
+      0 6px 20px rgba($gaming-purple, 0.5),
+      0 0 25px rgba($gaming-purple, 0.2) inset;
+  }
+  
+  &:disabled {
+    background: rgba($text-muted, 0.3);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.6;
+    border-color: transparent;
+    
+    &::before {
+      display: none;
+    }
+  }
+}
+
+/* Botón CANCELAR */
+button[type="button"] {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.9rem 1.8rem;
+  
+  background: rgba($bg-dark, 0.4);
+  color: $text-secondary;
+  border: 1px solid rgba($gaming-cyan, 0.3);
+  
+  &:hover {
+    background: rgba($gaming-cyan, 0.15);
+    color: $text-primary;
+    border-color: rgba($gaming-cyan, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 8px 20px rgba(0, 0, 0, 0.4),
+      0 0 20px rgba($gaming-cyan, 0.2);
+  }
+  
+  &:active {
+    transform: translateY(0) scale(0.98);
+  }
+}
+
+/* ===============================
+   Estados de Loading
+   =============================== */
+
+button:disabled {
+  position: relative;
+  
+  // Opcional: agregar spinner en botón
+  &.loading::after {
+    content: "";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: $text-primary;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+/* ===============================
+   RESPONSIVE Gaming
+   =============================== */
+
+@media (max-width: 768px) {
+  :host {
+    padding: 2rem 1rem;
+  }
+  
+  form {
+    padding: 2rem 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.7rem;
+  }
+}
 
 @media (max-width: 640px) {
   :host {
-    padding: 1.4rem 0.75rem;
+    padding: 1.5rem 0.8rem;
   }
-
+  
   form {
-    padding: 1.9rem 1.4rem;
+    padding: 1.8rem 1.4rem;
+    border-radius: 16px;
+    
+    > div {
+      margin-bottom: 1.2rem;
+    }
   }
-
+  
   h2 {
     font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    
+    &::after {
+      width: 60px;
+      margin-top: 10px;
+    }
+  }
+  
+  label {
+    font-size: 0.85rem;
+  }
+  
+  input[type="text"],
+  input[type="url"],
+  select,
+  textarea {
+    font-size: 0.9rem;
+    padding: 0.8rem 1rem;
+  }
+  
+  button[type="submit"],
+  button[type="button"] {
+    font-size: 0.9rem;
+    padding: 0.85rem 1.5rem;
+  }
+}
+
+/* ===============================
+   Modo Reducido de Movimiento
+   =============================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===============================
+   Accesibilidad
+   =============================== */
+
+*:focus-visible {
+  outline: 2px solid $gaming-cyan;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  input,
+  select,
+  textarea {
+    border-width: 2px;
+  }
+  
+  button {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ===============================
+   Mensajes de Error (opcional)
+   =============================== */
+
+.error-message {
+  color: $gaming-magenta;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  
+  &::before {
+    content: "⚠";
+    font-size: 1rem;
+  }
+}
+
+.success-message {
+  color: $gaming-green;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  
+  &::before {
+    content: "✓";
+    font-size: 1rem;
   }
 }

@@ -1,332 +1,207 @@
 // ======================================================
-// 🎨 PALETA GLOBAL
+// VARIABLES
 // ======================================================
+$accent: #22c55e;
+$accent-soft: rgba(34, 197, 94, 0.25);
 
-// ---- MODO OSCURO ----
-$accent-main: #22c55e;
-$accent-glow: rgba(34, 197, 94, 0.35);
-
-$accent-secondary: #f97316;
-$accent-tertiary: #a855f7;
-
-$bg-main: #050510;
-$bg-card: rgba(20, 10, 35, 0.88);
+$bg-dark: #050510;
+$card-dark: rgba(20, 10, 35, 0.85);
 
 $text-main: #f8fafc;
-$text-muted: #c4b5fd;
+$text-muted: #cbd5f5;
 
-$border-soft: rgba(168, 85, 247, 0.45);
+$border-soft: rgba(168, 85, 247, 0.35);
 
-// ---- MODO CLARO ----
-$light-bg-main: #f8fafc;
-$light-bg-card: rgba(255, 255, 255, 0.92);
-
-$light-text-main: #0f172a;
-$light-text-muted: #475569;
-
-$light-border: rgba(34, 197, 94, 0.35);
-
-// ---- TRANSICIONES ----
-$transition-fast: 0.18s ease;
-$transition-med: 0.28s ease;
-
+$transition: 0.25s ease;
 
 // ======================================================
-// CONTENEDOR GENERAL
+// PAGE
 // ======================================================
 .login-page {
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 1.25rem;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
 
   background:
-    radial-gradient(circle at top, rgba(168, 85, 247, 0.25), transparent 55%),
-    radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.18), transparent 60%),
-    $bg-main;
+    radial-gradient(circle at top, rgba(168, 85, 247, 0.22), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.15), transparent 60%),
+    $bg-dark;
 
+  font-family: "Inter", system-ui, sans-serif;
   color: $text-main;
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-
-  position: relative;
 }
-
 
 // ======================================================
-// FLASH BLANCO AL CAMBIAR A MODO CLARO
-// ======================================================
-.login-page::before {
-  content: "";
-  position: relative;
-  inset: 0;
-  overflow: hidden;
-  background: #ffffff;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 999;
-}
-
-[data-theme="light"] .login-page::before {
-  animation: flashWhite 0.45s ease forwards;
-}
-
-@keyframes flashWhite {
-  0%   { opacity: 0; }
-  20%  { opacity: 0.85; }
-  100% { opacity: 0; }
-}
-
-
-// ======================================================
-// TARJETA
+// CARD
 // ======================================================
 .login-card {
   width: 100%;
   max-width: 420px;
-  padding: 2.4rem 2.1rem 2.1rem;
-
-  background: $bg-card;
+  padding: 2.4rem 2.2rem;
   border-radius: 1.6rem;
+
+  background: $card-dark;
   border: 1px solid $border-soft;
 
+  backdrop-filter: blur(16px) saturate(140%);
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.85),
-    0 0 0 1px rgba(168, 85, 247, 0.35);
-
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
+    0 30px 70px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 
   display: flex;
   flex-direction: column;
-  gap: 1.3rem;
+  gap: 1.5rem;
 
-  animation: cardIn 0.75s $transition-med forwards;
-
-  transition:
-    background 0.45s ease,
-    box-shadow 0.45s ease,
-    border-color 0.35s ease;
+  animation: card-in 0.6s ease forwards;
 }
 
-@keyframes cardIn {
+@keyframes card-in {
   from {
     opacity: 0;
-    transform: translateY(25px) scale(0.96);
+    transform: translateY(30px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: none;
   }
 }
 
+// ======================================================
+// HEADER
+// ======================================================
+.login-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-// ======================================================
-// BRAND
-// ======================================================
 .brand-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.25rem 0.7rem;
+  padding: 0.3rem 0.7rem;
   border-radius: 999px;
 
-  background: radial-gradient(circle at top left, #1a102f, #0b0618);
-  border: 1px solid rgba(249, 115, 22, 0.6);
-  color: #fde68a;
+  background: linear-gradient(135deg, #1a102f, #0b0618);
+  border: 1px solid rgba(249, 115, 22, 0.45);
 
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 0.09em;
+  color: #fde68a;
 }
 
-
 // ======================================================
-// LOGO ORBITAL
+// LOGO
 // ======================================================
 .logo-orbit {
   position: relative;
-  width: 96px;
-  height: 96px;
-  margin: 0.2rem auto 0.4rem;
+  width: 90px;
+  height: 90px;
+  margin: 0.4rem auto 0.2rem;
 }
 
 .orbit-ring {
   position: absolute;
   inset: 0;
-  border-radius: 999px;
-  border: 2px dashed rgba(249, 115, 22, 0.7);
-  animation: spin 12s linear infinite;
+  border-radius: 50%;
+  border: 2px dashed rgba(249, 115, 22, 0.6);
+  animation: spin 14s linear infinite;
+}
+
+.orbit-core {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at top, #fef3c7, #2e1065);
+
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+
+  box-shadow:
+    0 0 0 3px rgba(46, 16, 101, 1),
+    0 18px 30px rgba(0, 0, 0, 0.8);
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-.orbit-core {
-  position: absolute;
-  inset: 12px;
-  border-radius: 999px;
-
-  background: radial-gradient(circle at 30% 20%, #fef3c7, #2e1065);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  box-shadow:
-    0 0 0 3px rgba(46, 16, 101, 1),
-    0 18px 30px rgba(0, 0, 0, 0.9);
-}
-
-
 // ======================================================
-// TEXTO
+// TEXT
 // ======================================================
-.typing-text {
-  font-size: 1.3rem;
-  font-weight: 700;
+.login-text {
   text-align: center;
-  color: #fdf4ff;
 
-  animation: titleIn 0.7s $transition-med;
-}
-
-@keyframes titleIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+  h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  p {
+    font-size: 0.95rem;
+    color: $text-muted;
+    line-height: 1.55;
   }
 }
 
-.descripcion {
-  font-size: 0.96rem;
-  text-align: center;
-  color: $text-muted;
-}
-
-
 // ======================================================
-// BOTÓN GOOGLE – GLASS + PULSE
+// GOOGLE BUTTON
 // ======================================================
 .google-btn {
   width: 100%;
-  padding: 0.85rem 1rem;
+  padding: 0.85rem 1.1rem;
   border-radius: 999px;
 
   background: linear-gradient(135deg, #2e1065, #431407);
   color: $text-main;
 
-  border: 1px solid rgba(168, 85, 247, 0.6);
+  border: 1px solid rgba(168, 85, 247, 0.5);
   font-weight: 600;
 
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
 
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
+  transition: transform $transition, box-shadow $transition;
 
-  box-shadow:
-    0 16px 40px rgba(0, 0, 0, 0.9),
-    0 0 0 1px rgba(46, 16, 101, 1);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85);
 
-  transition:
-    transform $transition-fast,
-    box-shadow $transition-fast,
-    background 0.35s ease,
-    color 0.35s ease;
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.95);
+  }
 
-  -webkit-tap-highlight-color: transparent;
-}
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+  }
 
-// ---- HOVER ----
-.google-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  border-color: $accent-main;
-}
-
-// ---- ACTIVE (DESKTOP) ----
-.google-btn:active:not(:disabled) {
-  transform: scale(0.96);
-
-  background: linear-gradient(135deg, #ffffff, #ecfeff);
-  color: #020617;
-
-  box-shadow:
-    0 6px 16px rgba(15, 23, 42, 0.25),
-    0 0 0 3px rgba(34, 197, 94, 0.25);
-}
-
-// ---- PULSE ----
-.google-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: rgba(34, 197, 94, 0.25);
-  opacity: 0;
-}
-
-.google-btn:active::after {
-  animation: pulseClick 0.45s ease;
-}
-
-@keyframes pulseClick {
-  from { opacity: 0.35; transform: scale(1); }
-  to   { opacity: 0; transform: scale(1.25); }
-}
-
-
-// ======================================================
-// ACTIVE DISTINTO PARA MOBILE
-// ======================================================
-@media (hover: none) and (pointer: coarse) {
-  .google-btn:active:not(:disabled) {
-    transform: scale(0.94);
-    box-shadow:
-      0 4px 12px rgba(15, 23, 42, 0.35),
-      0 0 0 4px rgba(34, 197, 94, 0.35);
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
 
-
 // ======================================================
-// 🌞 MODO CLARO
+// TRUST TEXT
 // ======================================================
-[data-theme="light"] .login-page {
-  background:
-    radial-gradient(circle at top, rgba(34, 197, 94, 0.18), transparent 55%),
-    $light-bg-main;
-
-  color: $light-text-main;
+.trust-text {
+  font-size: 0.75rem;
+  color: $text-muted;
+  text-align: center;
+  line-height: 1.4;
 }
 
-[data-theme="light"] .login-card {
-  background: $light-bg-card;
-  border: 1px solid $light-border;
-
-  box-shadow:
-    0 20px 45px rgba(15, 23, 42, 0.12),
-    0 0 0 1px rgba(34, 197, 94, 0.25);
-}
-
-[data-theme="light"] .google-btn {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.75),
-    rgba(236, 254, 255, 0.9)
-  );
-
-  color: $light-text-main;
-  border-color: $light-border;
-
-  backdrop-filter: blur(10px);
+// ======================================================
+// MOBILE
+// ======================================================
+@media (max-width: 420px) {
+  .login-card {
+    padding: 2rem 1.6rem;
+  }
 }
