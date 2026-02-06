@@ -3,14 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { MenuComponent } from '../../components/menu/menu';
-import {
-  ProyectosService,
-  Proyecto,
-  TipoProyecto,
-  TipoParticipacion
-} from '../../services/proyectos';
-import { AuthService, UsuarioApp } from '../../services/auth';
+import { ProyectosService, Proyecto } from '../../services/proyectos';
+import { AuthService } from '../../services/auth';
 import { NotificacionesService } from '../../services/notificaciones';
+
+type Modo = 'lista' | 'nuevo' | 'editar';
 
 @Component({
   selector: 'app-programador',
@@ -20,92 +17,74 @@ import { NotificacionesService } from '../../services/notificaciones';
   styleUrls: ['./programador.scss'],
 })
 export class ProgramadorComponent implements OnInit {
-
-  usuario: UsuarioApp | null = null;
+  usuario: any | null = null;
   proyectos: Proyecto[] = [];
 
   cargando = true;
-  modo: 'lista' | 'nuevo' | 'editar' = 'lista';
+  modo: Modo = 'lista';
   proyectoEditando: Proyecto | null = null;
 
   form!: FormGroup;
-
-  tiposProyecto = [
-    { valor: 'academico' as TipoProyecto, label: 'Académico' },
-    { valor: 'laboral' as TipoProyecto, label: 'Laboral' }
-  ];
-
-  tiposParticipacion = [
-    { valor: 'frontend' as TipoParticipacion, label: 'Frontend' },
-    { valor: 'backend' as TipoParticipacion, label: 'Backend' },
-    { valor: 'bd' as TipoParticipacion, label: 'Base de datos' },
-    { valor: 'fullstack' as TipoParticipacion, label: 'Fullstack' }
-  ];
 
   constructor(
     private auth: AuthService,
     private proyectosService: ProyectosService,
     private fb: FormBuilder,
     private noti: NotificacionesService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      nombre: ['', Validators.required],
+      titulo: ['', Validators.required],
       descripcion: ['', Validators.required],
-      tipoProyecto: ['academico', Validators.required],
-      tipoParticipacion: ['frontend', Validators.required],
       tecnologias: ['', Validators.required],
-      repoUrl: [''],
-      demoUrl: ['']
+      urlRepo: [''],
+      urlDemo: ['']
     });
 
-    this.auth.usuario$.subscribe(usuario => {
-      this.usuario = usuario;
+    this.auth.usuario$.subscribe(u => {
+      this.usuario = u;
+      const idProgramador = this.getIdProgramador(u);
 
-      if (usuario?.idProgramador) {
-        this.cargarProyectos(usuario.idProgramador);
-      } else {
+      if (idProgramador) this.cargarProyectos(idProgramador);
+      else this.cargando = false;
+    });
+  }
+
+  private getIdProgramador(u: any): string | null {
+    return u?.idProgramador || u?.programadorId || null;
+  }
+
+  private cargarProyectos(idProgramador: string) {
+    this.cargando = true;
+    this.proyectosService.obtenerPorProgramador(idProgramador).subscribe({
+      next: (lista) => {
+        this.proyectos = lista || [];
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.noti.error('No se pudieron cargar los proyectos.');
         this.cargando = false;
       }
     });
   }
 
-  private cargarProyectos(idProgramador: string) {
-    this.cargando = true;
-    this.proyectosService.getProyectosDeProgramador(idProgramador)
-      .subscribe(lista => {
-        this.proyectos = lista;
-        this.cargando = false;
-      });
-  }
-
   nuevoProyecto() {
     this.modo = 'nuevo';
     this.proyectoEditando = null;
-    this.form.reset({
-      nombre: '',
-      descripcion: '',
-      tipoProyecto: 'academico',
-      tipoParticipacion: 'frontend',
-      tecnologias: '',
-      repoUrl: '',
-      demoUrl: ''
-    });
+    this.form.reset({ titulo: '', descripcion: '', tecnologias: '', urlRepo: '', urlDemo: '' });
   }
 
   editarProyecto(p: Proyecto) {
     this.modo = 'editar';
     this.proyectoEditando = p;
-
     this.form.patchValue({
-      nombre: p.nombre,
+      titulo: p.titulo,
       descripcion: p.descripcion,
-      tipoProyecto: p.tipoProyecto,
-      tipoParticipacion: p.tipoParticipacion,
       tecnologias: p.tecnologias,
-      repoUrl: p.repoUrl || '',
-      demoUrl: p.demoUrl || ''
+      urlRepo: p.urlRepo || '',
+      urlDemo: p.urlDemo || ''
     });
   }
 
@@ -115,90 +94,104 @@ export class ProgramadorComponent implements OnInit {
     this.form.reset();
   }
 
-  async guardarProyecto() {
-    if (!this.usuario?.idProgramador) {
-      this.noti.error('Error: No se encontró el ID del programador.');
-      return;
-    }
-
+  guardarProyecto() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.noti.confirmar('Complete todos los campos requeridos.');
+      this.noti.error('Completa los campos requeridos.');
       return;
     }
 
-    const valores = this.form.value;
+    const v = this.form.value;
     this.cargando = true;
 
-    try {
-      if (this.modo === 'nuevo') {
+    if (this.modo === 'nuevo') {
+      const body: Omit<Proyecto, 'id'> = {
+        titulo: v.titulo,
+        descripcion: v.descripcion,
+        tecnologias: v.tecnologias,
+        urlRepo: v.urlRepo || '',
+        urlDemo: v.urlDemo || '',
+        creadoEn: new Date().toISOString()
+      };
 
-        const proyecto: Proyecto = {
-          idProgramador: this.usuario.idProgramador,
-          nombre: valores.nombre,
-          descripcion: valores.descripcion,
-          tipoProyecto: valores.tipoProyecto,
-          tipoParticipacion: valores.tipoParticipacion,
-          tecnologias: valores.tecnologias,
-          repoUrl: valores.repoUrl || '',
-          demoUrl: valores.demoUrl || '',
-          creadoEn: new Date().toISOString()
-        };
+      this.proyectosService.crearProyecto(body).subscribe({
+        next: () => {
+          this.noti.exito('Proyecto creado correctamente.');
+          this.postGuardarOk();
+        },
+        error: (err) => {
+          console.error(err);
+          this.noti.error('Ocurrió un error al crear el proyecto.');
+          this.cargando = false;
+        }
+      });
 
-        await this.proyectosService.crearProyecto(proyecto);
-        this.noti.exito('Proyecto creado correctamente.');
-
-      } else if (this.modo === 'editar' && this.proyectoEditando?.id) {
-
-        const cambios: Partial<Proyecto> = {
-          nombre: valores.nombre,
-          descripcion: valores.descripcion,
-          tipoProyecto: valores.tipoProyecto,
-          tipoParticipacion: valores.tipoParticipacion,
-          tecnologias: valores.tecnologias,
-          repoUrl: valores.repoUrl || '',
-          demoUrl: valores.demoUrl || ''
-        };
-
-        await this.proyectosService.actualizarProyecto(this.proyectoEditando.id, cambios);
-        this.noti.exito('Proyecto actualizado correctamente.');
-      }
-
-      this.modo = 'lista';
-      this.proyectoEditando = null;
-      this.form.reset();
-
-      this.cargarProyectos(this.usuario.idProgramador);
-
-    } catch (err) {
-      console.error(err);
-      this.noti.error('Ocurrió un error al guardar el proyecto.');
-    } finally {
-      this.cargando = false;
+      return;
     }
+
+    if (this.modo === 'editar' && this.proyectoEditando?.id) {
+      const cambios: Partial<Proyecto> = {
+        titulo: v.titulo,
+        descripcion: v.descripcion,
+        tecnologias: v.tecnologias,
+        urlRepo: v.urlRepo || '',
+        urlDemo: v.urlDemo || ''
+      };
+
+      this.proyectosService.actualizarProyecto(this.proyectoEditando.id, cambios).subscribe({
+        next: () => {
+          this.noti.exito('Proyecto actualizado correctamente.');
+          this.postGuardarOk();
+        },
+        error: (err) => {
+          console.error(err);
+          this.noti.error('Ocurrió un error al actualizar el proyecto.');
+          this.cargando = false;
+        }
+      });
+
+      return;
+    }
+
+    this.cargando = false;
+  }
+
+  private postGuardarOk() {
+    this.modo = 'lista';
+    this.proyectoEditando = null;
+    this.form.reset();
+
+    const idProgramador = this.getIdProgramador(this.usuario);
+    if (idProgramador) this.cargarProyectos(idProgramador);
+    else this.cargando = false;
   }
 
   async eliminarProyecto(p: Proyecto) {
     if (!p.id) return;
 
-    const confirmar = await this.noti.confirmar(
-      '¿Eliminar este proyecto?',
-      'Esta acción no se puede deshacer.'
+    const ok = await Promise.resolve(
+      this.noti.confirmar('¿Eliminar este proyecto?', 'Esta acción no se puede deshacer.')
     );
-
-    if (!confirmar) return;
-    if (!this.usuario?.idProgramador) return;
+    if (!ok) return;
 
     this.cargando = true;
 
-    try {
-      await this.proyectosService.eliminarProyecto(p.id);
-      this.noti.exito('Proyecto eliminado correctamente.');
-      this.cargarProyectos(this.usuario.idProgramador);
-    } catch (err) {
-      console.error(err);
-      this.noti.error('Ocurrió un error al eliminar el proyecto.');
-      this.cargando = false;
-    }
+    this.proyectosService.eliminarProyecto(p.id).subscribe({
+      next: () => {
+        this.noti.exito('Proyecto eliminado correctamente.');
+        const idProgramador = this.getIdProgramador(this.usuario);
+        if (idProgramador) this.cargarProyectos(idProgramador);
+        else this.cargando = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.noti.error('Ocurrió un error al eliminar el proyecto.');
+        this.cargando = false;
+      }
+    });
+  }
+
+  trackByProyecto(_: number, p: Proyecto) {
+    return p.id;
   }
 }

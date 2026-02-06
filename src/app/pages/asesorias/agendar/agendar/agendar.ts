@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
-import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
-import { ProgramadoresService, Programador } from '../../../../services/programadores';
-import { AuthService, UsuarioApp } from '../../../../services/auth';
+import { AsesoriasService } from '../../../../services/asesorias';
+import { ProgramadoresService, ProgramadorPublicoDTO } from '../../../../services/programadores';
 import { NotificacionesService } from '../../../../services/notificaciones';
 
-import { registerLocaleData } from '@angular/common';
-import localeEs from '@angular/common/locales/es';
 registerLocaleData(localeEs);
 
 @Component({
@@ -23,22 +21,22 @@ export class AgendarAsesoriaComponent implements OnInit {
 
   form!: FormGroup;
   idProgramador!: string;
-  programador: Programador | null = null;
+
+  programador: ProgramadorPublicoDTO | null = null;
   cargando = false;
 
   horasDisponibles: string[] = [];
-  usuarioActual: UsuarioApp | null = null;
-  asesoriasProgramador: Asesoria[] = [];
 
   hoy!: Date;
   hoyStr!: string;
   fechaSeleccionada!: Date;
   fechaSeleccionadaStr!: string;
 
-  disponibilidadDiaSeleccionado: {
-    hora: string;
-    ocupado: boolean;
-  }[] = [];
+  // slots del día
+  disponibilidadDiaSeleccionado: { hora: string; ocupado: boolean; }[] = [];
+
+  // ocupadas backend
+  ocupadas: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -46,14 +44,13 @@ export class AgendarAsesoriaComponent implements OnInit {
     private router: Router,
     private asesoriasService: AsesoriasService,
     private programadoresService: ProgramadoresService,
-    private authService: AuthService,
-    private noti: NotificacionesService       // ✔ Notificaciones agregadas
-  ) { }
+    private noti: NotificacionesService
+  ) {}
 
   ngOnInit(): void {
     this.idProgramador = this.route.snapshot.paramMap.get('idProgramador')!;
 
-    // Inicializar fechas
+    // Fechas
     this.hoy = this.normalizarFecha(new Date());
     this.fechaSeleccionada = new Date(this.hoy);
     this.hoyStr = this.formatearFecha(this.hoy);
@@ -67,35 +64,21 @@ export class AgendarAsesoriaComponent implements OnInit {
       comentario: ['']
     });
 
-    // Traer datos del programador
-    this.programadoresService.getProgramador(this.idProgramador)
-      .subscribe((p) => {
+    // Programador (backend)
+    this.programadoresService.getProgramador(this.idProgramador).subscribe({
+      next: (p) => {
         this.programador = p || null;
+        // OJO: backend DTO usa horasDisponibles (igual que tu modelo)
         this.horasDisponibles = p?.horasDisponibles || [];
-        this.actualizarDisponibilidadDiaSeleccionado();
-      });
-
-    // Traer asesorías ya agendadas
-    this.asesoriasService.getAsesoriasPorProgramador(this.idProgramador)
-      .subscribe(lista => {
-        this.asesoriasProgramador = lista;
-        this.actualizarDisponibilidadDiaSeleccionado();
-      });
-
-    // Usuario actual
-    this.authService.usuario$.subscribe(usuario => {
-      this.usuarioActual = usuario;
-
-      if (usuario) {
-        this.form.patchValue({
-          nombreSolicitante: usuario.nombre,
-          emailSolicitante: usuario.email
-        });
-      }
+        this.actualizarOcupadasYSlots();
+      },
+      error: (e) => console.error(e)
     });
+
+    // Inicial: cargar ocupadas
+    this.actualizarOcupadasYSlots();
   }
 
-  // Normaliza la fecha
   private normalizarFecha(fecha: Date): Date {
     return new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
   }
@@ -107,20 +90,40 @@ export class AgendarAsesoriaComponent implements OnInit {
     return `${yyyy}-${mm}-${dd}`;
   }
 
+  private actualizarOcupadasYSlots() {
+    const fechaStr = this.formatearFecha(this.fechaSeleccionada);
+    this.fechaSeleccionadaStr = fechaStr;
+
+    if (!this.idProgramador) return;
+
+    // ✅ backend: horas ocupadas
+    this.asesoriasService.getOcupadas(this.idProgramador, fechaStr).subscribe({
+      next: (lista) => {
+        this.ocupadas = lista || [];
+        this.actualizarDisponibilidadDiaSeleccionado();
+      },
+      error: (err) => {
+        console.error(err);
+        this.ocupadas = [];
+        this.actualizarDisponibilidadDiaSeleccionado();
+      }
+    });
+  }
+
   private actualizarDisponibilidadDiaSeleccionado() {
     if (!this.horasDisponibles || this.horasDisponibles.length === 0) {
       this.disponibilidadDiaSeleccionado = [];
       return;
     }
 
-    const fechaStr = this.formatearFecha(this.fechaSeleccionada);
-    this.fechaSeleccionadaStr = fechaStr;
+    const fechaStr = this.fechaSeleccionadaStr;
 
-    this.disponibilidadDiaSeleccionado = this.horasDisponibles.map(horaSlot => {
-      const ocupado = this.asesoriasProgramador.some(a =>
-        a.fecha === fechaStr &&
-        a.hora === horaSlot &&
-        a.estado !== 'rechazada'
+    this.disponibilidadDiaSeleccionado = this.horasDisponibles.map((horaSlot) => {
+      // backend devuelve asesorías con fecha/hora y estado != rechazada
+      const ocupado = this.ocupadas.some((a: any) =>
+        (a?.fecha === fechaStr) &&
+        (a?.hora?.startsWith(horaSlot) || a?.hora === horaSlot) &&
+        (String(a?.estado || '').toLowerCase() !== 'rechazada')
       );
 
       return { hora: horaSlot, ocupado };
@@ -131,20 +134,17 @@ export class AgendarAsesoriaComponent implements OnInit {
     this.fechaSeleccionada = this.normalizarFecha(
       new Date(this.fechaSeleccionada.getTime() + 86400000)
     );
-    this.actualizarDisponibilidadDiaSeleccionado();
+    this.actualizarOcupadasYSlots();
   }
 
   diaAnterior() {
     const fechaAnterior = this.normalizarFecha(
       new Date(this.fechaSeleccionada.getTime() - 86400000)
     );
-
-    if (this.formatearFecha(fechaAnterior) < this.hoyStr) {
-      return;
-    }
+    if (this.formatearFecha(fechaAnterior) < this.hoyStr) return;
 
     this.fechaSeleccionada = fechaAnterior;
-    this.actualizarDisponibilidadDiaSeleccionado();
+    this.actualizarOcupadasYSlots();
   }
 
   seleccionarHora(slot: { hora: string; ocupado: boolean }) {
@@ -156,47 +156,41 @@ export class AgendarAsesoriaComponent implements OnInit {
     });
   }
 
-  async enviarSolicitud() {
+  enviarSolicitud() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.noti.error("Debes completar todos los campos obligatorios");
+      this.noti.error('Debes completar todos los campos obligatorios');
       return;
     }
 
     this.cargando = true;
-    const formValue = this.form.value;
+    const v = this.form.value;
 
-    const data: Asesoria = {
+    // ✅ backend: formato exacto esperado
+    const body = {
       idProgramador: this.idProgramador,
-      nombreSolicitante: formValue.nombreSolicitante,
-      emailSolicitante: formValue.emailSolicitante,
-      fecha: formValue.fecha,
-      hora: formValue.hora,
-      comentario: formValue.comentario,
-      estado: 'pendiente',
-      creadoEn: new Date().toISOString()
+      nombreSolicitante: v.nombreSolicitante,
+      emailSolicitante: v.emailSolicitante,
+      fecha: v.fecha,
+      hora: v.hora,
+      comentario: v.comentario || ''
     };
 
-    if (this.usuarioActual) {
-      data.idSolicitante = this.usuarioActual.uid;
-    }
-
-    try {
-      await this.asesoriasService.crearAsesoria(data);
-
-      this.noti.exito("Tu solicitud fue enviada correctamente. El programador la revisará.");
-
-      this.router.navigate(['/portafolio', this.idProgramador]);
-
-    } catch (err) {
-      console.error(err);
-      this.noti.error("Ocurrió un error al enviar la solicitud");
-    } finally {
-      this.cargando = false;
-    }
+    this.asesoriasService.crearPublica(body as any).subscribe({
+      next: () => {
+        this.noti.exito('Tu solicitud fue enviada correctamente. El programador la revisará.');
+        this.router.navigate(['/portafolio', this.idProgramador]);
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.noti.error('Ocurrió un error al enviar la solicitud');
+        this.cargando = false;
+      }
+    });
   }
-  trackByHora(_: number, slot: any) {
-  return slot.hora;
-}
 
+  trackByHora(_: number, slot: any) {
+    return slot.hora;
+  }
 }

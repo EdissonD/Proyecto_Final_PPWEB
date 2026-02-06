@@ -1,118 +1,65 @@
 import { Injectable } from '@angular/core';
-import {
-  Firestore,
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where
-} from '@angular/fire/firestore';
-import { Observable, from, map } from 'rxjs';
-
-// Definición de tipos específicos
-export type TipoProyecto = 'academico' | 'laboral';
-export type TipoParticipacion = 'frontend' | 'backend' | 'bd' | 'fullstack';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 export interface Proyecto {
-  id?: string;
-  idProgramador: string; // ID del dueño del proyecto
-
-  nombre: string;
+  id: string;              // ✅ ya no opcional (para editar/eliminar sin casts)
+  idProgramador?: string;  // (si tu backend lo envía / usa)
+  titulo: string;
   descripcion: string;
-
-  // 🔹 Campos actualizados:
-  tipoProyecto: TipoProyecto;           // 'academico' | 'laboral'
-  tipoParticipacion: TipoParticipacion; // 'frontend' | 'backend' | 'bd' | 'fullstack'
-  tecnologias: string;                  // Ej: "Angular, Firebase, Node.js" (Ahora es string, no array)
-  repoUrl?: string;                     // Enlace al repositorio
-  demoUrl?: string;                     // Enlace al demo
-
-  creadoEn: string;                     // Fecha en formato ISO
+  tecnologias: string;
+  urlRepo?: string;
+  urlDemo?: string;
+  estado?: string;
+  creadoEn?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ProyectosService {
+  private base = `${environment.apiUrl}/api/proyectos`;
 
-  constructor(private firestore: Firestore) { }
+  constructor(private http: HttpClient) {}
 
-  // LISTAR proyectos filtrando por ID del programador
+  // ======================
+  // API "original" (obtener*)
+  // ======================
+
+  obtenerTodos(): Observable<Proyecto[]> {
+    return this.http.get<Proyecto[]>(this.base);
+  }
+
+  obtenerUno(id: string): Observable<Proyecto> {
+    return this.http.get<Proyecto>(`${this.base}/${id}`);
+  }
+
+  obtenerPorProgramador(idProgramador: string): Observable<Proyecto[]> {
+    return this.http.get<Proyecto[]>(`${this.base}/programador/${idProgramador}`);
+  }
+
+  crearProyecto(body: Omit<Proyecto, 'id'>): Observable<any> {
+    return this.http.post<any>(this.base, body);
+  }
+
+  actualizarProyecto(id: string, body: Partial<Proyecto>): Observable<any> {
+    return this.http.put<any>(`${this.base}/${id}`, body);
+  }
+
+  eliminarProyecto(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.base}/${id}`);
+  }
+
+  // ======================
+  // ALIAS (para tus componentes viejos)
+  // ======================
+
+  // lo que en tus componentes estabas llamando: getProyectosDeProgramador(...)
   getProyectosDeProgramador(idProgramador: string): Observable<Proyecto[]> {
-    const ref = collection(this.firestore, 'proyectos');
-    // Consulta: Dame los documentos de la colección 'proyectos' donde 'idProgramador' sea igual al ID actual
-    const q = query(ref, where('idProgramador', '==', idProgramador));
-
-    return from(getDocs(q)).pipe(
-      map(snap =>
-        snap.docs.map(d => {
-          const data = d.data() as Proyecto;
-          return { id: d.id, ...data };
-        })
-      )
-    );
+    return this.obtenerPorProgramador(idProgramador);
   }
 
-  // OBTENER 1 proyecto por su ID único (ya no requiere idProgramador en la ruta)
-  getProyecto(id: string): Observable<Proyecto | null> {
-    const refDoc = doc(this.firestore, 'proyectos', id);
-    return from(getDoc(refDoc)).pipe(
-      map(snap => {
-        if (!snap.exists()) return null;
-        const data = snap.data() as Proyecto;
-        return { id: snap.id, ...data };
-      })
-    );
-  }
-
-  // CREAR proyecto
-  crearProyecto(data: Proyecto) {
-    const ref = collection(this.firestore, 'proyectos');
-
-    // Limpieza de datos: elimina propiedades undefined para evitar errores en Firestore
-    const limpio: any = { ...data };
-    Object.keys(limpio).forEach(key => {
-      if (limpio[key] === undefined) {
-        delete limpio[key];
-      }
-    });
-
-    return addDoc(ref, limpio);
-  }
-
-  // ACTUALIZAR proyecto
-  actualizarProyecto(id: string, cambios: Partial<Proyecto>) {
-    const refDoc = doc(this.firestore, 'proyectos', id);
-
-    const limpio: any = { ...cambios };
-    Object.keys(limpio).forEach(key => {
-      if (limpio[key] === undefined) {
-        delete limpio[key];
-      }
-    });
-
-    return updateDoc(refDoc, limpio);
-  }
-
-  // ELIMINAR proyecto
-  eliminarProyecto(id: string) {
-    const refDoc = doc(this.firestore, 'proyectos', id);
-    return deleteDoc(refDoc);
-  }
-
-
-  getProyectos(idProgramador: string): Observable<Proyecto[]> {
-    return this.getProyectosDeProgramador(idProgramador);
-  }
-
-  // 🔹 Alias compatible con la firma antigua (idProgramador, idProyecto)
-  deleteProyecto(idProgramador: string, idProyecto: string) {
-    // idProgramador no lo necesitamos para borrar,
-    // pero dejamos el parámetro para no tocar el componente
-    return this.eliminarProyecto(idProyecto);
+  // lo que estabas llamando: getProyecto(...)
+  getProyecto(id: string): Observable<Proyecto> {
+    return this.obtenerUno(id);
   }
 }

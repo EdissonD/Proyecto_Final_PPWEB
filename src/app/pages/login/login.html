@@ -22,35 +22,35 @@
     <section class="login-text">
       <h2>Plataforma de gestión de programadores</h2>
       <p>
-        Inicia sesión de forma segura con Google y gestiona
+        Inicia sesión con tu cuenta del sistema y gestiona
         portafolios, asesorías y proyectos desde un solo lugar.
       </p>
     </section>
 
-    <!-- BOTÓN GOOGLE -->
-    <button
-      type="button"
-      class="google-btn"
-      (click)="loginGoogle()"
-      [disabled]="cargando"
-      aria-busy="{{ cargando }}"
-    >
-      <span class="google-icon" aria-hidden="true">
-        <span class="g blue"></span>
-        <span class="g red"></span>
-        <span class="g yellow"></span>
-        <span class="g green"></span>
-      </span>
+    <!-- ✅ FORM BACKEND -->
+    <div class="form-login">
+      <label class="label">Email</label>
+      <input class="input" type="email" [(ngModel)]="email" placeholder="correo@dominio.com" />
 
-      <span class="google-text">
-        {{ cargando ? 'Conectando con Google…' : 'Continuar con Google' }}
-      </span>
-    </button>
+      <label class="label">Contraseña</label>
+      <input class="input" type="password" [(ngModel)]="password" placeholder="••••••••" />
+
+      <button
+        type="button"
+        class="google-btn"
+        (click)="entrar()"
+        [disabled]="cargando"
+        aria-busy="{{ cargando }}"
+      >
+        <span class="google-text">
+          {{ cargando ? 'Iniciando sesión…' : 'Entrar' }}
+        </span>
+      </button>
+    </div>
 
     <!-- FOOTER -->
     <footer class="trust-text">
-      🔒 Usamos tu correo solo para identificarte.
-      Nunca compartimos tu información.
+      🔒 Tu sesión se valida con token JWT del backend.
     </footer>
 
   </article>

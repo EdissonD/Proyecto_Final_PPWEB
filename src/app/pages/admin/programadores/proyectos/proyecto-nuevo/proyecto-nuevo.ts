@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
-// Se agregan TipoProyecto y TipoParticipacion a los imports
-import { ProyectosService, Proyecto, TipoProyecto, TipoParticipacion } from '../../../../../services/proyectos';
-import { NotificacionesService } from '../../../../../services/notificaciones'; // ✅ 4 niveles hacia arriba
+import { ProyectosService, Proyecto } from '../../../../../services/proyectos';
+import { NotificacionesService } from '../../../../../services/notificaciones';
 
 @Component({
   selector: 'app-proyecto-nuevo',
@@ -17,22 +16,8 @@ import { NotificacionesService } from '../../../../../services/notificaciones'; 
 export class ProyectoNuevoComponent implements OnInit {
 
   form!: FormGroup;
-  idProgramador!: string;
+  idProgramador = '';
   cargando = false;
-
-  // --- SE AGREGARON ESTOS ARRAYS DEL PRIMER CÓDIGO ---
-  tiposProyecto: { valor: TipoProyecto; label: string }[] = [
-    { valor: 'academico', label: 'Académico' },
-    { valor: 'laboral', label: 'Laboral' }
-  ];
-
-  tiposParticipacion: { valor: TipoParticipacion; label: string }[] = [
-    { valor: 'frontend', label: 'Frontend' },
-    { valor: 'backend', label: 'Backend' },
-    { valor: 'bd', label: 'Base de datos' },
-    { valor: 'fullstack', label: 'Fullstack' }
-  ];
-  // ---------------------------------------------------
 
   constructor(
     private fb: FormBuilder,
@@ -40,54 +25,49 @@ export class ProyectoNuevoComponent implements OnInit {
     private router: Router,
     private proyectosService: ProyectosService,
     private noti: NotificacionesService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    // /admin/programadores/:id/proyectos/nuevo
-    this.idProgramador = this.route.snapshot.paramMap.get('id')!;
+    this.idProgramador = this.route.snapshot.paramMap.get('id') || '';
 
     this.form = this.fb.group({
-      nombre: ['', Validators.required],
+      titulo: ['', Validators.required],
       descripcion: ['', Validators.required],
-      tipoProyecto: ['academico', Validators.required],
-      tipoParticipacion: ['frontend', Validators.required],
       tecnologias: ['', Validators.required],
-      repoUrl: [''],
-      demoUrl: ['']
+      urlRepo: [''],
+      urlDemo: ['']
     });
   }
 
-  async guardar() {
+  guardar() {
     if (this.form.invalid) return;
 
     this.cargando = true;
+    const v = this.form.value;
 
-    const valores = this.form.value;
-
+    // ⚠️ OJO: si tu backend exige idProgramador, debes incluirlo en el modelo Proyecto
+    // (o enviarlo como parámetro al endpoint). Si NO lo exige, déjalo así.
     const proyecto: Proyecto = {
-      idProgramador: this.idProgramador,
-      nombre: valores.nombre,
-      descripcion: valores.descripcion,
-      tipoProyecto: valores.tipoProyecto,
-      tipoParticipacion: valores.tipoParticipacion,
-      tecnologias: valores.tecnologias,
-      repoUrl: valores.repoUrl || '',
-      demoUrl: valores.demoUrl || '',
-      // Se agrega la fecha de creación que estaba en el primer código
+      titulo: v.titulo,
+      descripcion: v.descripcion,
+      tecnologias: v.tecnologias,
+      urlRepo: v.urlRepo || '',
+      urlDemo: v.urlDemo || '',
       creadoEn: new Date().toISOString()
-    };
+    } as Proyecto;
 
-    try {
-      await this.proyectosService.crearProyecto(proyecto);
-    this.noti.exito('Proyecto creado correctamente.');
-      this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
-    } catch (err) {
-      console.error(err);
-      this.noti.error('Error al crear el proyecto');
-    } finally {
-      // El bloque finally asegura que el spinner se apague pase lo que pase
-      this.cargando = false;
-    }
+    this.proyectosService.crearProyecto(proyecto).subscribe({
+      next: () => {
+        this.noti.exito('Proyecto creado correctamente');
+        this.router.navigate(['/admin/programadores', this.idProgramador, 'proyectos']);
+      },
+      error: (e) => {
+        console.error(e);
+        this.noti.error('Error al crear el proyecto');
+        this.cargando = false;
+      },
+      complete: () => (this.cargando = false)
+    });
   }
 
   cancelar() {

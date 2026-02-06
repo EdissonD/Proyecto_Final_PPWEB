@@ -1,123 +1,61 @@
 import { Injectable } from '@angular/core';
-import {
-  Firestore,
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc,
-  getDoc,
-  updateDoc
-} from '@angular/fire/firestore';
-import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
-import { Observable, from, map } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
-// INTERFAZ ACTUALIZADA
-export interface Programador {
-  id?: string;
+export interface ProgramadorPublicoDTO {
+  id: string;
+  nombre: string;
+  foto?: string | null;
+  especialidad?: string | null;
+  descripcion?: string | null;
+  disponibilidad?: string | null;
+  horasDisponibles?: string[];
+  usuarioId?: string;
+}
+
+export interface ProgramadorGuardarDTO {
   nombre: string;
   descripcion: string;
   especialidad: string;
-  fotoUrl?: string;
-  emailContacto?: string;
-  whatsapp?: string;
-  github?: string;
-  linkedin?: string;
-  portafolio?: string;
-  foto?: string;
-  rol?: string;
-  horasDisponibles?: string[]; // Mantengo el que tenías por si acaso
 
-  // 🔹 NUEVO CAMPO SOLICITADO
-  disponibilidad?: string;   // ejemplo: "Lunes a Viernes, 14:00 - 18:00"
+  fotoUrl?: string | null;
+
+  emailContacto?: string | null;
+  github?: string | null;
+  linkedin?: string | null;
+  portafolio?: string | null;
+  whatsapp?: string | null;
+
+  disponibilidad?: string | null;
+  horasDisponibles?: string[];
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ProgramadoresService {
+  private base = `${environment.apiUrl}/api/programadores`;
 
-  constructor(
-    private firestore: Firestore,
-    private storage: Storage
-  ) { }
+  constructor(private http: HttpClient) {}
 
-  //  LISTAR PROGRAMADORES
-  getProgramadores(): Observable<Programador[]> {
-    const programadoresRef = collection(this.firestore, 'programadores');
-
-    return from(getDocs(programadoresRef)).pipe(
-      map((snap) =>
-        snap.docs.map((d) => {
-          const data = d.data() as Programador;
-          return { id: d.id, ...data };
-        })
-      )
-    );
+  // ✅ Público
+  getProgramadores(): Observable<ProgramadorPublicoDTO[]> {
+    return this.http.get<ProgramadorPublicoDTO[]>(this.base);
   }
 
-  //  CREAR PROGRAMADOR (CON FOTO)
-  async crearProgramador(data: Programador, archivoFoto: File | null) {
-    let urlFoto = '';
-
-    if (archivoFoto) {
-      const nombreArchivo = `${Date.now()}_${archivoFoto.name}`;
-      const ruta = `programadores/${nombreArchivo}`;
-
-      const storageRef = ref(this.storage, ruta);
-      await uploadBytes(storageRef, archivoFoto);
-      urlFoto = await getDownloadURL(storageRef);
-    }
-
-    const programadoresRef = collection(this.firestore, 'programadores');
-
-    // Firestore guardará 'disponibilidad' automáticamente si viene en 'data'
-    return addDoc(programadoresRef, {
-      ...data,
-      foto: urlFoto,
-      rol: 'programador',
-    });
+  getProgramador(id: string): Observable<ProgramadorPublicoDTO> {
+    return this.http.get<ProgramadorPublicoDTO>(`${this.base}/${id}`);
   }
 
-  //  BORRAR DESDE LA TABLA
-  async deleteProgramador(id: string) {
-    const refDoc = doc(this.firestore, 'programadores', id);
-    await deleteDoc(refDoc);
+  // ✅ Admin (JSON)
+  crearProgramador(body: ProgramadorGuardarDTO): Observable<any> {
+    return this.http.post(this.base, body);
   }
 
-  //  OBTENER 1 SOLO (PARA EDITAR)
-  getProgramador(id: string): Observable<Programador> {
-    const refDoc = doc(this.firestore, 'programadores', id);
-
-    return from(getDoc(refDoc)).pipe(
-      map((snap) => {
-        const data = snap.data() as Programador;
-        return { id: snap.id, ...data };
-      })
-    );
+  updateProgramador(id: string, body: ProgramadorGuardarDTO): Observable<any> {
+    return this.http.put(`${this.base}/${id}`, body);
   }
 
-  //  ACTUALIZAR (CON O SIN NUEVA FOTO)
-  async updateProgramador(
-    id: string,
-    data: Partial<Programador>,
-    archivoFotoNuevo: File | null
-  ) {
-    const refDoc = doc(this.firestore, 'programadores', id);
-
-    const datosActualizar: any = { ...data };
-
-    if (archivoFotoNuevo) {
-      const nombreArchivo = `${Date.now()}_${archivoFotoNuevo.name}`;
-      const ruta = `programadores/${nombreArchivo}`;
-
-      const storageRef = ref(this.storage, ruta);
-      await uploadBytes(storageRef, archivoFotoNuevo);
-      const urlFoto = await getDownloadURL(storageRef);
-
-      datosActualizar.foto = urlFoto;
-    }
-
-    await updateDoc(refDoc, datosActualizar);
+  deleteProgramador(id: string): Observable<any> {
+    return this.http.delete(`${this.base}/${id}`);
   }
 }

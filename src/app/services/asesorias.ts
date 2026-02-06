@@ -1,98 +1,101 @@
 import { Injectable } from '@angular/core';
-import {
-  Firestore,
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  query,
-  where
-} from '@angular/fire/firestore';
-import { Observable, from, map, of } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
+// ✅ Lo que tus pages importan
 export interface Asesoria {
   id?: string;
-  idProgramador: string;         // id del documento del programador
-  idSolicitante?: string;        // uid del usuario (si está logueado)
+
+  fecha: string; // backend devuelve LocalDate como string
+  hora: string;  // backend devuelve LocalTime como string
+  estado: 'pendiente' | 'aprobada' | 'rechazada' | string;
+
+  comentario?: string;
+  respuestaProgramador?: string;
+
+  nombreSolicitante?: string;
+  emailSolicitante?: string;
+
+  // el backend puede devolver objetos
+  programador?: any;
+  usuario?: any;
+}
+
+export interface AsesoriaCreatePublica {
+  idProgramador: string;
   nombreSolicitante: string;
   emailSolicitante: string;
-  fecha: string;                 // 'YYYY-MM-DD'
-  hora: string;                  // 'HH:mm'
+  fecha: string; // YYYY-MM-DD
+  hora: string;  // HH:mm
   comentario?: string;
-  estado: 'pendiente' | 'aprobada' | 'rechazada';
-  respuestaProgramador?: string;
-  creadoEn: string;              // ISO string
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AsesoriasService {
+  private base = `${environment.apiUrl}/api/asesorias`;
 
-  constructor(private firestore: Firestore) { }
+  constructor(private http: HttpClient) {}
 
-  // Asesorías solicitadas por un usuario (mis-asesorias)
-  getAsesoriasPorSolicitante(idSolicitante: string): Observable<Asesoria[]> {
-    const ref = collection(this.firestore, 'asesorias');
-    const q = query(ref, where('idSolicitante', '==', idSolicitante));
-
-    return from(getDocs(q)).pipe(
-      map(snap =>
-        snap.docs.map(d => {
-          const data = d.data() as Asesoria;
-          return { id: d.id, ...data };
-        })
-      )
-    );
+  // ✅ público: crear asesoría
+  crearPublica(body: AsesoriaCreatePublica): Observable<Asesoria> {
+    return this.http.post<Asesoria>(`${this.base}/publica`, body);
   }
 
-  crearAsesoria(data: Asesoria) {
-    const ref = collection(this.firestore, 'asesorias');
-
-    const limpio: any = { ...data };
-    Object.keys(limpio).forEach(key => {
-      if (limpio[key] === undefined) {
-        delete limpio[key];
-      }
-    });
-
-    return addDoc(ref, limpio);
+  // ✅ público: horas ocupadas
+  getOcupadas(idProgramador: string, fecha: string): Observable<Asesoria[]> {
+    return this.http.get<Asesoria[]>(`${this.base}/ocupadas/${idProgramador}/${fecha}`);
   }
 
-  // 👉 Asesorías de un programador concreto
-  getAsesoriasPorProgramador(idProgramador?: string): Observable<Asesoria[]> {
-    if (!idProgramador) {
-      return of([]);
+  // ✅ privado usuario: mis asesorías (JWT)
+  misAsesorias(): Observable<Asesoria[]> {
+    return this.http.get<Asesoria[]>(`${this.base}/mis`);
+  }
+
+  // ✅ privado programador: asesorías del programador logueado (JWT)
+  asesoriasProgramador(): Observable<Asesoria[]> {
+    return this.http.get<Asesoria[]>(`${this.base}/programador`);
+  }
+
+  // ✅ privado: aprobar/rechazar + respuesta (JWT)
+  actualizarAsesoria(
+    id: string,
+    body: { estado?: string; respuestaProgramador?: string }
+  ): Observable<Asesoria> {
+    return this.http.put<Asesoria>(`${this.base}/${id}`, body);
+  }
+
+  // ✅ privado: filtros
+  filtradas(params: { estado?: string; desde?: string; hasta?: string }): Observable<Asesoria[]> {
+    let httpParams = new HttpParams();
+    if (params.estado) httpParams = httpParams.set('estado', params.estado);
+    if (params.desde) httpParams = httpParams.set('desde', params.desde);
+    if (params.hasta) httpParams = httpParams.set('hasta', params.hasta);
+
+    return this.http.get<Asesoria[]>(`${this.base}/programador/filtradas`, { params: httpParams });
+  }
+
+  // =====================================================
+  // ✅ COMPATIBILIDAD para componentes viejos (Firestore)
+  // =====================================================
+
+  // antes: getAsesoriasPorSolicitante(uid) => ahora /mis (JWT)
+  getAsesoriasPorSolicitante(_idSolicitante: string): Observable<Asesoria[]> {
+    return this.misAsesorias();
+  }
+
+  // antes: getAsesoriasPorProgramador(idProgramador) => ahora /programador (JWT)
+  getAsesoriasPorProgramador(_idProgramador: string): Observable<Asesoria[]> {
+    return this.asesoriasProgramador();
+  }
+
+  // antes: crearAsesoria(data) => ahora crearPublica(data)
+  crearAsesoria(data: any): any {
+    return this.crearPublica(data);
+  }
+
+    // antes: updateAsesoria(id, cambios)
+    updateAsesoria(id: string, cambios: { estado?: string; respuestaProgramador?: string }): Observable<Asesoria> {
+      return this.actualizarAsesoria(id, cambios);
     }
-
-    const ref = collection(this.firestore, 'asesorias');
-    const q = query(ref, where('idProgramador', '==', idProgramador));
-
-    return from(getDocs(q)).pipe(
-      map(snap =>
-        snap.docs.map(d => {
-          const data = d.data() as Asesoria;
-          return { id: d.id, ...data };
-        })
-      )
-    );
   }
-
-  getAsesoria(id: string): Observable<Asesoria> {
-    const refDoc = doc(this.firestore, 'asesorias', id);
-
-    return from(getDoc(refDoc)).pipe(
-      map(snap => {
-        const data = snap.data() as Asesoria;
-        return { id: snap.id, ...data };
-      })
-    );
-  }
-
-  updateAsesoria(id: string, cambios: Partial<Asesoria>) {
-    const refDoc = doc(this.firestore, 'asesorias', id);
-    return updateDoc(refDoc, cambios);
-  }
-}

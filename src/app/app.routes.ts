@@ -3,10 +3,10 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login';
 import { InicioComponent } from './pages/inicio/inicio';
 import { UsuariosComponent } from './pages/usuarios/usuarios';
+
 import { AdminComponent } from './pages/admin/admin';
 import { ProgramadorComponent } from './pages/programador/programador';
 
-import { ProgramadoresComponent } from './pages/admin/programadores/programadores';
 import { ProgramadorNuevoComponent } from './pages/admin/programadores/programador-nuevo';
 import { EditarComponent } from './pages/admin/programadores/editar/editar';
 
@@ -26,43 +26,45 @@ import { PublicLayoutComponent } from './layouts/public/public-layout/public-lay
 import { AdminLayoutComponent } from './layouts/admin/admin-layout/admin-layout';
 import { ProgramadorLayoutComponent } from './layouts/programador/programador-layout/programador-layout';
 
+// ✅ NUEVO: reportes admin
+import { ReportesComponent } from './pages/admin/reportes/reportes.component';
+
 export const routes: Routes = [
-  // redirección inicial -> a la página pública de inicio
+  // redirección inicial
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
 
-  // login queda fuera de los layouts
+  // login fuera de layouts
   { path: 'login', component: LoginComponent },
 
   // ===========================
-  // LAYOUT PÚBLICO (usuario externo / general)
+  // LAYOUT PÚBLICO
   // ===========================
   {
     path: '',
     component: PublicLayoutComponent,
     children: [
-      // página principal pública
       { path: 'inicio', component: InicioComponent },
 
       // explorar programadores
       { path: 'usuarios', component: UsuariosComponent },
 
-      // portafolio público de un programador
+      // portafolio público
       { path: 'portafolio/:id', component: PortafolioComponent },
 
-      // agendar asesoría (permitido sin login)
+      // agendar asesoría (público)
       { path: 'asesoria/:idProgramador', component: AgendarAsesoriaComponent },
 
-      // mis asesorías (requiere estar logueado, pero usa el layout público)
+      // mis asesorías (requiere login)
       {
         path: 'mis-asesorias',
         component: MisAsesoriasComponent,
-        canActivate: [rolGuard] // sin data.rol -> basta estar logueado
+        canActivate: [rolGuard] // si no hay data.rol, solo valida autenticación
       }
     ]
   },
 
   // ===========================
-  // LAYOUT ADMIN (solo rol admin)
+  // LAYOUT ADMIN
   // ===========================
   {
     path: 'admin',
@@ -70,15 +72,16 @@ export const routes: Routes = [
     canActivate: [rolGuard],
     data: { rol: 'admin' },
     children: [
-      // dashboard admin
       { path: '', component: AdminComponent },
 
-      // gestión de programadores
-      { path: 'programadores', component: ProgramadoresComponent },
+      // ✅ NUEVO: Reportes Administrativos
+      { path: 'reportes', component: ReportesComponent },
+
+      // programadores
       { path: 'programadores/nuevo', component: ProgramadorNuevoComponent },
       { path: 'programadores/editar/:id', component: EditarComponent },
 
-      // gestión de proyectos de un programador
+      // proyectos admin por programador
       { path: 'programadores/:id/proyectos', component: ProyectosAdminComponent },
       { path: 'programadores/:id/proyectos/nuevo', component: ProyectoNuevoComponent },
       { path: 'programadores/:id/proyectos/editar/:idProyecto', component: ProyectoEditarComponent }
@@ -86,7 +89,7 @@ export const routes: Routes = [
   },
 
   // ===========================
-  // LAYOUT PROGRAMADOR (solo rol programador)
+  // LAYOUT PROGRAMADOR
   // ===========================
   {
     path: 'programador',
@@ -94,10 +97,9 @@ export const routes: Routes = [
     canActivate: [rolGuard],
     data: { rol: 'programador' },
     children: [
-      // dashboard / gestión de proyectos del propio programador
       { path: '', component: ProgramadorComponent },
 
-      // alias para /programador/proyectos
+      // alias
       { path: 'proyectos', component: ProgramadorComponent },
 
       // asesorías que recibe el programador
@@ -105,6 +107,6 @@ export const routes: Routes = [
     ]
   },
 
-  // wildcard al final
+  // wildcard
   { path: '**', redirectTo: 'inicio' }
 ];

@@ -1,36 +1,47 @@
 <div class="proyectos-admin">
 
-    <h2>Proyectos del programador</h2>
+  <h2>Proyectos del programador</h2>
 
-    <button (click)="nuevoProyecto()">Nuevo proyecto</button>
+  <button type="button" (click)="nuevoProyecto()">Nuevo proyecto</button>
 
-    <table *ngIf="proyectos.length > 0; else sinProyectos">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Rol</th>
-                <th>Tecnologías</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+  <p *ngIf="cargando">Cargando...</p>
 
-        <tbody>
-            <tr *ngFor="let p of proyectos">
-                <td>{{ p.nombre }}</td>
-                <td>{{ p.tipoProyecto }}</td>
-                <td>{{ p.tipoParticipacion }}</td>
-                <td>{{ p.tecnologias }}</td>
-                <td>
-                    <button (click)="editarProyecto(p.id!)">Editar</button>
-                    <button (click)="eliminarProyecto(p.id!)">Eliminar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  <table *ngIf="!cargando && proyectos.length > 0; else sinProyectos">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Tecnologías</th>
+        <th>Repo</th>
+        <th>Demo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
 
-    <ng-template #sinProyectos>
-        <p>No hay proyectos registrados para este programador.</p>
-    </ng-template>
+    <tbody>
+      <tr *ngFor="let p of proyectos; trackBy: trackByProyecto">
+        <td>{{ p.titulo }}</td>
+        <td>{{ p.tecnologias }}</td>
+
+        <td>
+          <a *ngIf="p.urlRepo" [href]="p.urlRepo" target="_blank" rel="noopener">Repo</a>
+          <span *ngIf="!p.urlRepo">-</span>
+        </td>
+
+        <td>
+          <a *ngIf="p.urlDemo" [href]="p.urlDemo" target="_blank" rel="noopener">Demo</a>
+          <span *ngIf="!p.urlDemo">-</span>
+        </td>
+
+        <td>
+          <button type="button" (click)="editarProyecto(p.id)">Editar</button>
+          <button type="button" (click)="eliminarProyecto(p.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #sinProyectos>
+    <p *ngIf="!cargando">No hay proyectos registrados para este programador.</p>
+  </ng-template>
 
 </div>

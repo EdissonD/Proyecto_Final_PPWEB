@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 
-import { ProgramadoresService, Programador } from '../../../../services/programadores';
+import { ProgramadoresService, ProgramadorPublicoDTO, ProgramadorGuardarDTO } from '../../../../services/programadores';
 import { NotificacionesService } from '../../../../services/notificaciones';
+import { CloudinaryService } from '../../../../services/cloudinary.service';
 
 @Component({
   selector: 'app-editar-programador',
@@ -14,135 +15,150 @@ import { NotificacionesService } from '../../../../services/notificaciones';
   imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class EditarComponent implements OnInit {
-
   form!: FormGroup;
   id!: string;
 
-  // Variables para manejo de foto
   preview: string = '';
   archivoFotoNuevo: File | null = null;
 
-  cargando: boolean = false;
+  cargando = false;
 
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private programadoresService: ProgramadoresService,
+    private cloudinary: CloudinaryService,
     private router: Router,
     private noti: NotificacionesService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id')!;
+    this.id = this.route.snapshot.paramMap.get('id') || '';
 
     this.form = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       especialidad: ['', Validators.required],
-      github: [''],
-      linkedin: [''],
-      portafolio: [''],
-      emailContacto: [''],
-      whatsapp: [''],
       disponibilidad: [''],
-      horasDisponiblesTexto: ['']
+      horasDisponiblesTexto: [''] // "09:00, 10:30"
     });
 
     this.cargarDatos();
   }
 
   cargarDatos() {
-    this.programadoresService.getProgramador(this.id)
-      .subscribe((data: Programador | undefined) => {
-        if (!data) return;
+    if (!this.id) return;
 
+    this.programadoresService.getProgramador(this.id).subscribe({
+      next: (data: ProgramadorPublicoDTO) => {
         this.form.patchValue({
           nombre: data.nombre,
-          descripcion: data.descripcion,
-          especialidad: data.especialidad,
-          github: data.github || '',
-          linkedin: data.linkedin || '',
-          portafolio: data.portafolio || '',
-          emailContacto: data.emailContacto || '',
-          whatsapp: data.whatsapp || '',
+          descripcion: data.descripcion || '',
+          especialidad: data.especialidad || '',
           disponibilidad: data.disponibilidad || '',
-          horasDisponiblesTexto: data.horasDisponibles?.join(', ') || ''
+          horasDisponiblesTexto: (data.horasDisponibles || []).join(', ')
         });
 
-        // Foto actual
-        if (data.foto) {
-          this.preview = data.foto;
-        } else if ((data as any)['fotoUrl']) {
-          this.preview = (data as any)['fotoUrl'];
-        }
-      });
+        this.preview = data.foto || '';
+      },
+      error: (e) => {
+        console.error(e);
+        this.noti.error('No se pudo cargar el programador');
+      }
+    });
   }
 
-  onFileSelected(event: any) {
-    const file: File | undefined = event.target.files?.[0];
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
 
     this.archivoFotoNuevo = file;
 
     const reader = new FileReader();
-    reader.onload = () => {
-      this.preview = reader.result as string;
-    };
+    reader.onload = () => (this.preview = reader.result as string);
     reader.readAsDataURL(file);
   }
 
-  async guardarCambios() {
+  guardarCambios() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      this.noti.info("Por favor completa todos los campos obligatorios.");
+      this.noti.error('Completa los campos obligatorios');
       return;
     }
 
     this.cargando = true;
 
-    const value = this.form.value;
+    const v = this.form.value;
 
-    let horasDisponibles: string[] = [];
-    if (value.horasDisponiblesTexto) {
-      horasDisponibles = value.horasDisponiblesTexto
-        .split(',')
-        .map((h: string) => h.trim())
-        .filter((h: string) => h !== '');
-    }
+    const horasDisponibles: string[] = (v.horasDisponiblesTexto || '')
+      .split(',')
+      .map((h: string) => h.trim())
+      .filter((h: string) => !!h);
 
-    const datos: Partial<Programador> = {
-      nombre: value.nombre,
-      descripcion: value.descripcion,
-      especialidad: value.especialidad,
-      github: value.github,
-      linkedin: value.linkedin,
-      portafolio: value.portafolio,
-      emailContacto: value.emailContacto,
-      whatsapp: value.whatsapp,
-      disponibilidad: value.disponibilidad || '',
-      horasDisponibles: horasDisponibles
+    const enviar = (fotoUrl?: string | null) => {
+      const body: ProgramadorGuardarDTO = {
+        nombre: v.nombre,
+        descripcion: v.descripcion,
+        especialidad: v.especialidad,
+        disponibilidad: v.disponibilidad || null,
+        horasDisponibles,
+        // si no hay nueva foto, NO cambias fotoUrl (manda null solo si quieres borrarla)
+        fotoUrl: fotoUrl ?? null,
+      };
+
+      this.programadoresService.updateProgramador(this.id, body).subscribe({
+        next: () => {
+          this.noti.exito('Programador actualizado correctamente');
+          this.router.navigate(['/admin/programadores']);
+        },
+        error: (e) => {
+          console.error(e);
+          this.noti.error('Error al actualizar el programador');
+          this.cargando = false;
+        },
+        complete: () => (this.cargando = false)
+      });
     };
 
-    try {
-      // Enviar cambios + foto opcional
-      await this.programadoresService.updateProgramador(
-        this.id,
-        datos,
-        this.archivoFotoNuevo
-      );
+    // Si NO cambió foto: no mandes fotoUrl (mejor) → pero tu DTO manda null.
+    // Si quieres mantener la anterior, aquí lo correcto es NO enviar el campo.
+    // Para mantener simple: si no hay nueva foto, mandamos null SOLO si quieres permitir "borrar foto".
+    // Te recomiendo: si no cambió foto, NO tocar fotoUrl -> manda undefined:
 
-      this.noti.exito("Programador actualizado correctamente.");
+    if (!this.archivoFotoNuevo) {
+      // alternativa mejor:
+      const body: ProgramadorGuardarDTO = {
+        nombre: v.nombre,
+        descripcion: v.descripcion,
+        especialidad: v.especialidad,
+        disponibilidad: v.disponibilidad || null,
+        horasDisponibles
+      };
 
-      // Redirigir después de 1 segundo para UX suave
-      setTimeout(() => {
-        this.router.navigate(['/admin/programadores']);
-      }, 800);
-
-    } catch (err) {
-      console.error(err);
-      this.noti.error('Ocurrió un error al actualizar el programador.');
-    } finally {
-      this.cargando = false;
+      this.programadoresService.updateProgramador(this.id, body).subscribe({
+        next: () => {
+          this.noti.exito('Programador actualizado correctamente');
+          this.router.navigate(['/admin/programadores']);
+        },
+        error: (e) => {
+          console.error(e);
+          this.noti.error('Error al actualizar el programador');
+          this.cargando = false;
+        },
+        complete: () => (this.cargando = false)
+      });
+      return;
     }
+
+    // Si cambió foto, sube a Cloudinary y manda URL
+    this.cloudinary.uploadImage(this.archivoFotoNuevo).subscribe({
+      next: ({ url }) => enviar(url),
+      error: (e) => {
+        console.error(e);
+        this.noti.error('Error subiendo imagen a Cloudinary');
+        this.cargando = false;
+      }
+    });
   }
 }

@@ -1,28 +1,53 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
-import { ProgramadoresService, Programador } from '../../services/programadores';
+import { ProgramadoresService, ProgramadorPublicoDTO } from '../../services/programadores';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './usuarios.html',
   styleUrls: ['./usuarios.scss'],
-  imports: [CommonModule, RouterModule]
 })
 export class UsuariosComponent implements OnInit {
 
-  programadores: Programador[] = [];
+  programadores: ProgramadorPublicoDTO[] = [];
   cargando = true;
 
-  constructor(private programadoresService: ProgramadoresService) { }
+  esAdmin = false;
+
+  constructor(
+    private programadoresService: ProgramadoresService,
+    private auth: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.programadoresService.getProgramadores()
-      .subscribe(lista => {
-        this.programadores = lista;
+    this.auth.usuario$.subscribe(u => {
+      this.esAdmin = (u?.rol === 'admin');
+    });
+
+    this.programadoresService.getProgramadores().subscribe({
+      next: (lista: ProgramadorPublicoDTO[]) => {
+        this.programadores = lista || [];
         this.cargando = false;
-      });
+      },
+      error: (e: unknown) => {
+        console.error(e);
+        this.programadores = [];
+        this.cargando = false;
+      }
+    });
+  }
+
+  irNuevoProgramador() {
+    this.router.navigate(['/admin/programadores/nuevo']);
+  }
+
+  trackByProgramador(_: number, p: ProgramadorPublicoDTO) {
+    return p.id;
   }
 }

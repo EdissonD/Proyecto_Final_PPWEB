@@ -2,123 +2,123 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { ProgramadoresService } from '../../../services/programadores';
-import { NotificacionesService } from '../../../services/notificaciones'; // ✅ 4 niveles hacia arriba
+
+import { ProgramadoresService, ProgramadorGuardarDTO } from '../../../services/programadores';
+import { NotificacionesService } from '../../../services/notificaciones';
+import { CloudinaryService } from '../../../services/cloudinary.service';
 
 @Component({
-    selector: 'app-programador-nuevo',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, RouterModule],
-    templateUrl: './programador-nuevo.html',
-    styleUrls: ['./programador-nuevo.scss']
+  selector: 'app-programador-nuevo',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  templateUrl: './programador-nuevo.html',
+  styleUrls: ['./programador-nuevo.scss']
 })
 export class ProgramadorNuevoComponent {
 
-    form: FormGroup;
-    archivoFoto: File | null = null; // Aquí guardamos el archivo crudo
-    previewUrl: string | null = null;
-    cargando = false;
-    mensaje = '';
-    error = '';
+  form: FormGroup;
+  archivoFoto: File | null = null;
+  previewUrl: string | null = null;
 
-    constructor(
-        private fb: FormBuilder,
-        private programadoresService: ProgramadoresService, // Servicio inyectado
-        private router: Router,
-        private noti: NotificacionesService
-    ) {
-        this.form = this.fb.group({
-            nombre: ['', Validators.required],
-            descripcion: ['', Validators.required],
-            especialidad: ['', Validators.required],
-            github: [''],
-            linkedin: [''],
-            portafolio: [''],
-            emailContacto: [''],
-            whatsapp: [''],
-            disponibilidad: [''],
-            horasDisponiblesTexto: ['']
-        });
+  cargando = false;
+
+  constructor(
+    private fb: FormBuilder,
+    private programadoresService: ProgramadoresService,
+    private cloudinary: CloudinaryService,
+    private router: Router,
+    private noti: NotificacionesService
+  ) {
+    this.form = this.fb.group({
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      especialidad: ['', Validators.required],
+
+      github: [''],
+      linkedin: [''],
+      portafolio: [''],
+      emailContacto: [''],
+      whatsapp: [''],
+
+      disponibilidad: [''],
+      horasDisponiblesTexto: [''] // "09:00, 10:30, 16:00"
+    });
+  }
+
+  onFotoSeleccionada(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      this.archivoFoto = null;
+      this.previewUrl = null;
+      return;
     }
 
-    onFotoSeleccionada(event: Event) {
-        const input = event.target as HTMLInputElement;
+    this.archivoFoto = input.files[0];
 
-        if (!input.files || input.files.length === 0) {
-            this.archivoFoto = null;
-            this.previewUrl = null;
-            return;
-        }
+    const reader = new FileReader();
+    reader.onload = () => (this.previewUrl = reader.result as string);
+    reader.readAsDataURL(this.archivoFoto);
+  }
 
-        // 1. Guardamos el archivo para enviarlo al servicio después
-        this.archivoFoto = input.files[0];
-
-        // 2. Generamos la vista previa localmente
-        const reader = new FileReader();
-        reader.onload = () => {
-            this.previewUrl = reader.result as string;
-        };
-        reader.readAsDataURL(this.archivoFoto);
+  guardar() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.noti.error('Completa los campos obligatorios');
+      return;
     }
 
-    async guardar() {
-        if (this.form.invalid) {
-            this.form.markAllAsTouched();
-            return;
-        }
+    if (!this.archivoFoto) {
+      this.noti.error('Debes seleccionar una imagen');
+      return;
+    }
 
-        if (!this.archivoFoto) {
-            this.error = 'Debes seleccionar una imagen';
-            return;
-        }
+    this.cargando = true;
 
-        this.cargando = true;
-        this.mensaje = '';
-        this.error = '';
+    const v = this.form.value;
 
-        const value = this.form.value;
+    const horasDisponibles: string[] = (v.horasDisponiblesTexto || '')
+      .split(',')
+      .map((h: string) => h.trim())
+      .filter((h: string) => !!h);
 
-        // Procesar las horas (string -> array)
-        let horasDisponibles: string[] = [];
-        if (value.horasDisponiblesTexto) {
-            horasDisponibles = value.horasDisponiblesTexto
-                .split(',')
-                .map((h: string) => h.trim())
-                .filter((h: string) => h !== '');
-        }
+    // 1) Subir a Cloudinary
+    this.cloudinary.uploadImage(this.archivoFoto).subscribe({
+      next: ({ url }) => {
+        // 2) Enviar JSON al backend
+        const body: ProgramadorGuardarDTO = {
+          nombre: v.nombre,
+          descripcion: v.descripcion,
+          especialidad: v.especialidad,
+          fotoUrl: url,
 
-        // Preparar el objeto de datos (SIN la URL de la foto todavía)
-        const data = {
-            nombre: value.nombre,
-            descripcion: value.descripcion,
-            especialidad: value.especialidad,
-            github: value.github,
-            linkedin: value.linkedin,
-            portafolio: value.portafolio,
-            emailContacto: value.emailContacto,
-            whatsapp: value.whatsapp,
-            disponibilidad: value.disponibilidad || '',
-            horasDisponibles: horasDisponibles
-            // La propiedad 'foto' NO se manda aquí, el servicio la crea al subir el archivo
+          emailContacto: v.emailContacto || null,
+          github: v.github || null,
+          linkedin: v.linkedin || null,
+          portafolio: v.portafolio || null,
+          whatsapp: v.whatsapp || null,
+
+          disponibilidad: v.disponibilidad || null,
+          horasDisponibles
         };
 
-        try {
-            await this.programadoresService.crearProgramador(data, this.archivoFoto);
-
-            // Notificación bonita ✅
+        this.programadoresService.crearProgramador(body).subscribe({
+          next: () => {
             this.noti.exito('Programador agregado correctamente');
-
-            // Redirigir al listado
             this.router.navigate(['/admin/programadores']);
-
-        } catch (e) {
+          },
+          error: (e) => {
             console.error(e);
-
-            // Notificación de error ✅
-            this.noti.error('Ocurrió un error al guardar el programador');
-
-        } finally {
+            this.noti.error('Error guardando en el backend');
             this.cargando = false;
-        }
-    }
+          }
+        });
+      },
+      error: (e) => {
+        console.error(e);
+        this.noti.error('Error subiendo imagen a Cloudinary');
+        this.cargando = false;
+      }
+    });
+  }
 }

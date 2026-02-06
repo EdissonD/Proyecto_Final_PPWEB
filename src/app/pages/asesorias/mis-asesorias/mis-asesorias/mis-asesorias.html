@@ -26,7 +26,7 @@
 
   <tbody>
     <tr *ngFor="let a of asesorias; trackBy: trackByAsesoria">
-      <td>{{ nombreProgramador(a.idProgramador) }}</td>
+      <td>{{ nombreProgramador(idProgramadorDe(a)) }}</td>
       <td>{{ a.fecha }}</td>
       <td>{{ a.hora }}</td>
       <td>{{ a.comentario || '-' }}</td>

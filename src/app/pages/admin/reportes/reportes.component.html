@@ -1,0 +1,129 @@
+<div class="reportes">
+
+  <h2>Reportes Administrativos</h2>
+
+  <form [formGroup]="form" class="filtros" (ngSubmit)="$event.preventDefault(); cargarTodo();">
+    <div class="fila">
+      <div class="campo">
+        <label>Desde</label>
+        <input type="date" formControlName="from">
+      </div>
+
+      <div class="campo">
+        <label>Hasta</label>
+        <input type="date" formControlName="to">
+      </div>
+
+      <div class="campo">
+        <label>ID Programador (opcional)</label>
+        <input type="text" placeholder="UUID" formControlName="programadorId">
+      </div>
+    </div>
+
+    <div class="fila">
+      <div class="campo">
+        <label>Estado asesoría</label>
+        <select formControlName="estadoAsesoria">
+          <option value="">(Todos)</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="aprobada">Aprobada</option>
+          <option value="rechazada">Rechazada</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label>Estado proyecto (opcional)</label>
+        <input type="text" placeholder="ej: activo / inactivo" formControlName="estadoProyecto">
+      </div>
+
+      <div class="acciones">
+        <button type="button" (click)="cargarTodo()">Aplicar filtros</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- ===================== -->
+  <!-- ASESORÍAS -->
+  <!-- ===================== -->
+  <section class="card">
+    <div class="card-head">
+      <h3>Dashboard: Asesorías</h3>
+      <div class="btns">
+        <button type="button" (click)="descargarAsesoriasXlsx()">Excel</button>
+        <button type="button" (click)="descargarAsesoriasPdf()">PDF</button>
+      </div>
+    </div>
+
+    <div *ngIf="cargandoAsesorias" class="estado">Cargando asesorías...</div>
+
+    <table *ngIf="!cargandoAsesorias && asesorias.length > 0">
+      <thead>
+        <tr>
+          <th>Programador</th>
+          <th>Pendientes</th>
+          <th>Aprobadas</th>
+          <th>Rechazadas</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of asesorias; trackBy: trackByProg">
+          <td>
+            <div class="nombre">{{ r.nombre }}</div>
+            <small class="muted">{{ r.programadorId }}</small>
+          </td>
+          <td>{{ r.pendiente }}</td>
+          <td>{{ r.aprobada }}</td>
+          <td>{{ r.rechazada }}</td>
+          <td><b>{{ r.total }}</b></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!cargandoAsesorias && asesorias.length === 0" class="estado">
+      Sin datos para los filtros actuales.
+    </div>
+  </section>
+
+  <!-- ===================== -->
+  <!-- PROYECTOS -->
+  <!-- ===================== -->
+  <section class="card">
+    <div class="card-head">
+      <h3>Dashboard: Proyectos</h3>
+      <div class="btns">
+        <button type="button" (click)="descargarProyectosXlsx()">Excel</button>
+        <button type="button" (click)="descargarProyectosPdf()">PDF</button>
+      </div>
+    </div>
+
+    <div *ngIf="cargandoProyectos" class="estado">Cargando proyectos...</div>
+
+    <table *ngIf="!cargandoProyectos && proyectos.length > 0">
+      <thead>
+        <tr>
+          <th>Programador</th>
+          <th>Activos</th>
+          <th>Inactivos</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of proyectos; trackBy: trackByProg">
+          <td>
+            <div class="nombre">{{ r.nombre }}</div>
+            <small class="muted">{{ r.programadorId }}</small>
+          </td>
+          <td>{{ r.activos }}</td>
+          <td>{{ r.inactivos }}</td>
+          <td><b>{{ r.total }}</b></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!cargandoProyectos && proyectos.length === 0" class="estado">
+      Sin datos para los filtros actuales.
+    </div>
+  </section>
+
+</div>

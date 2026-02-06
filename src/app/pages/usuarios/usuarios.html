@@ -1,4 +1,10 @@
-<h2><i class="fa-solid fa-code"></i> Explorar portafolios</h2>
+<div class="header-row">
+  <h2><i class="fa-solid fa-code"></i> Explorar portafolios</h2>
+
+  <button *ngIf="esAdmin" class="btn-primary" (click)="irNuevoProgramador()">
+    <i class="fa-solid fa-user-plus"></i> Agregar programador
+  </button>
+</div>
 
 <div *ngIf="cargando" class="estado cargando">
   <i class="fa-solid fa-spinner fa-spin"></i> Cargando programadores...
@@ -9,37 +15,25 @@
 </div>
 
 <div class="grid" *ngIf="!cargando && programadores.length > 0">
-
-  <article class="card" *ngFor="let p of programadores">
+  <article class="card" *ngFor="let p of programadores; trackBy: trackByProgramador">
 
     <div class="foto">
       <img *ngIf="p.foto" [src]="p.foto" alt="Foto de {{ p.nombre }}" />
     </div>
 
     <div class="info">
-
       <h3><i class="fa-solid fa-user"></i> {{ p.nombre }}</h3>
 
-      <span class="badge-especialidad">
+      <span class="badge-especialidad" *ngIf="p.especialidad">
         <i class="fa-solid fa-laptop-code"></i>
         {{ p.especialidad }}
       </span>
 
-      <p class="descripcion">{{ p.descripcion }}</p>
+      <p class="descripcion" *ngIf="p.descripcion">{{ p.descripcion }}</p>
 
       <p *ngIf="p.disponibilidad" class="disponibilidad">
         <i class="fa-solid fa-clock"></i> {{ p.disponibilidad }}
       </p>
-
-      <div class="links">
-        <a *ngIf="p.github" [href]="p.github" target="_blank">
-          <i class="fa-brands fa-github"></i> GitHub
-        </a>
-
-        <a *ngIf="p.linkedin" [href]="p.linkedin" target="_blank">
-          <i class="fa-brands fa-linkedin"></i> LinkedIn
-        </a>
-      </div>
 
       <div class="acciones">
         <button [routerLink]="['/portafolio', p.id]">
@@ -50,9 +44,7 @@
           <i class="fa-solid fa-calendar-check"></i> Agendar asesoría
         </button>
       </div>
-
     </div>
 
   </article>
-
 </div>

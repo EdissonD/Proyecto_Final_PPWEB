@@ -2,55 +2,37 @@
 
 <form [formGroup]="form" (ngSubmit)="guardar()">
 
-    <div>
-        <label>Nombre del proyecto</label>
-        <input type="text" formControlName="nombre">
-    </div>
+  <div>
+    <label>Nombre del proyecto</label>
+    <input type="text" formControlName="titulo">
+  </div>
 
-    <div>
-        <label>Descripción</label>
-        <textarea rows="4" formControlName="descripcion"></textarea>
-    </div>
+  <div>
+    <label>Descripción</label>
+    <textarea rows="4" formControlName="descripcion"></textarea>
+  </div>
 
-    <div>
-        <label>Tipo de proyecto</label>
-        <select formControlName="tipoProyecto">
-            <option *ngFor="let t of tiposProyecto" [value]="t.valor">
-                {{ t.label }}
-            </option>
-        </select>
-    </div>
+  <div>
+    <label>Tecnologías utilizadas</label>
+    <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, MySQL...">
+  </div>
 
-    <div>
-        <label>Tipo de participación</label>
-        <select formControlName="tipoParticipacion">
-            <option *ngFor="let t of tiposParticipacion" [value]="t.valor">
-                {{ t.label }}
-            </option>
-        </select>
-    </div>
+  <div>
+    <label>Repositorio (GitHub, GitLab...)</label>
+    <input type="url" formControlName="urlRepo" placeholder="https://github.com/...">
+  </div>
 
-    <div>
-        <label>Tecnologías utilizadas</label>
-        <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, MySQL...">
-    </div>
+  <div>
+    <label>Demo / despliegue (Firebase, Vercel, etc.)</label>
+    <input type="url" formControlName="urlDemo" placeholder="https://mi-app.web.app/...">
+  </div>
 
-    <div>
-        <label>Repositorio (GitHub, GitLab...)</label>
-        <input type="url" formControlName="repoUrl" placeholder="https://github.com/...">
-    </div>
+  <button type="submit" [disabled]="cargando || form.invalid">
+    {{ cargando ? 'Guardando...' : 'Guardar proyecto' }}
+  </button>
 
-    <div>
-        <label>Demo / despliegue (Firebase, Vercel, etc.)</label>
-        <input type="url" formControlName="demoUrl" placeholder="https://mi-app.web.app/...">
-    </div>
-
-    <button type="submit" [disabled]="cargando || form.invalid">
-        {{ cargando ? 'Guardando...' : 'Guardar proyecto' }}
-    </button>
-
-    <button type="button" (click)="cancelar()">
-        Cancelar
-    </button>
+  <button type="button" (click)="cancelar()">
+    Cancelar
+  </button>
 
 </form>

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-
-import { AuthService, UsuarioApp } from '../../../services/auth';
-import { NotificacionComponent } from '../../../components/notificacion/notificacion';
 import { Observable } from 'rxjs';
+
+import { AuthService } from '../../../services/auth';
+import { NotificacionComponent } from '../../../components/notificacion/notificacion';
 import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-toggle';
+
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
@@ -14,18 +15,17 @@ import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-tog
   imports: [CommonModule, RouterModule, NotificacionComponent, ThemeToggleComponent]
 })
 export class AdminLayoutComponent {
-
-  usuario$: Observable<UsuarioApp | null>;
+  usuario$: Observable<any | null>;
 
   constructor(
-    private authService: AuthService,
+    private auth: AuthService,
     private router: Router
   ) {
-    this.usuario$ = this.authService.usuario$;
+    this.usuario$ = this.auth.usuario$;
   }
 
-  async logout() {
-    await this.authService.logout();
+  logout() {
+    this.auth.logout();
     this.router.navigate(['/login']);
   }
 }

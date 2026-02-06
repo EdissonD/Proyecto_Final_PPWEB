@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-
-import { AuthService, UsuarioApp } from '../../../services/auth';
-import { NotificacionComponent } from '../../../components/notificacion/notificacion';
 import { Observable } from 'rxjs';
+
+import { AuthService } from '../../../services/auth';
+import { NotificacionComponent } from '../../../components/notificacion/notificacion';
 import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-toggle';
+
 @Component({
   selector: 'app-programador-layout',
   standalone: true,
@@ -14,8 +15,7 @@ import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-tog
   imports: [CommonModule, RouterModule, NotificacionComponent, ThemeToggleComponent]
 })
 export class ProgramadorLayoutComponent {
-
-  usuario$: Observable<UsuarioApp | null>;
+  usuario$: Observable<any | null>;
 
   constructor(
     private auth: AuthService,
@@ -24,8 +24,8 @@ export class ProgramadorLayoutComponent {
     this.usuario$ = this.auth.usuario$;
   }
 
-  async logout() {
-    await this.auth.logout();
+  logout() {
+    this.auth.logout();
     this.router.navigate(['/login']);
   }
 }

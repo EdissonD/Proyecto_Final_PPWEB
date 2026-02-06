@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
-import { ProgramadoresService, Programador } from '../../../services/programadores';
+import { ProgramadoresService, ProgramadorPublicoDTO } from '../../../services/programadores';
 import { ProyectosService, Proyecto } from '../../../services/proyectos';
 
 @Component({
@@ -10,38 +10,58 @@ import { ProyectosService, Proyecto } from '../../../services/proyectos';
   standalone: true,
   templateUrl: './portafolio.html',
   styleUrls: ['./portafolio.scss'],
-  imports: [CommonModule, RouterModule]
+  imports: [CommonModule, RouterModule],
 })
 export class PortafolioComponent implements OnInit {
 
-  programador: Programador | null = null;
-  proyectosAcademicos: Proyecto[] = [];
-  proyectosLaborales: Proyecto[] = [];
+  programador: ProgramadorPublicoDTO | null = null;
+  proyectos: Proyecto[] = [];
 
-  // Agregamos la variable de estado
   cargando = true;
 
   constructor(
     private route: ActivatedRoute,
     private programadoresService: ProgramadoresService,
     private proyectosService: ProyectosService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    const idProgramador = this.route.snapshot.paramMap.get('id')!;
+    const idProgramador = this.route.snapshot.paramMap.get('id') || '';
 
-    this.programadoresService.getProgramador(idProgramador)
-      .subscribe(p => this.programador = p);
+    if (!idProgramador) {
+      this.cargando = false;
+      return;
+    }
 
-    // Mantenemos tu método original 'getProyectosDeProgramador'
-    // pero agregamos la lógica para apagar el 'cargando'
-    this.proyectosService.getProyectosDeProgramador(idProgramador)
-      .subscribe(lista => {
-        this.proyectosAcademicos = lista.filter(p => p.tipoProyecto === 'academico');
-        this.proyectosLaborales = lista.filter(p => p.tipoProyecto === 'laboral');
+    // 1) programador
+    this.programadoresService.getProgramador(idProgramador).subscribe({
+      next: (p) => (this.programador = p),
+      error: (err) => {
+        console.error(err);
+        this.programador = null;
+      },
+    });
 
-        // Aquí indicamos que ya terminó de cargar
+    // 2) proyectos del programador (backend)
+    this.proyectosService.obtenerPorProgramador(idProgramador).subscribe({
+      next: (lista) => {
+        this.proyectos = (lista || []) as Proyecto[];
         this.cargando = false;
-      });
+      },
+      error: (err) => {
+        console.error(err);
+        this.proyectos = [];
+        this.cargando = false;
+      },
+    });
+  }
+
+  trackByProyecto(_: number, p: Proyecto) {
+    return p.id || p.titulo;
+  }
+
+  techs(p: Proyecto): string[] {
+    if (!p.tecnologias) return [];
+    return p.tecnologias.split(',').map(t => t.trim()).filter(Boolean);
   }
 }

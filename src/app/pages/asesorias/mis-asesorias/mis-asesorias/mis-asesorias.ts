@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { AsesoriasService, Asesoria } from '../../../../services/asesorias';
-import { AuthService } from '../../../../services/auth';
-import { ProgramadoresService, Programador } from '../../../../services/programadores';
+import { AsesoriasService } from '../../../../services/asesorias';
+import { ProgramadoresService, ProgramadorPublicoDTO } from '../../../../services/programadores';
 
 @Component({
   selector: 'app-mis-asesorias',
@@ -15,55 +14,54 @@ import { ProgramadoresService, Programador } from '../../../../services/programa
 })
 export class MisAsesoriasComponent implements OnInit {
 
-  asesorias: Asesoria[] = [];
+  asesorias: any[] = [];
   cargando = true;
 
-  // para mostrar nombre del programador en la tabla
-  mapProgramadores = new Map<string, Programador>();
+  mapProgramadores = new Map<string, ProgramadorPublicoDTO>();
 
   constructor(
     private asesoriasService: AsesoriasService,
-    private authService: AuthService,
     private programadoresService: ProgramadoresService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    // 1. Obtenemos el usuario logueado
-    this.authService.usuario$.subscribe(usuario => {
-      if (!usuario) {
+    this.asesoriasService.misAsesorias().subscribe({
+      next: (lista) => {
+        this.asesorias = Array.isArray(lista) ? lista : [];
+
+        const idsProgramadores = Array.from(new Set(
+          this.asesorias
+            .map(a => a?.programador?.id)
+            .filter((x: any) => !!x)
+        ));
+
+        for (const id of idsProgramadores) {
+          if (this.mapProgramadores.has(id)) continue;
+
+          this.programadoresService.getProgramador(id).subscribe({
+            next: (p) => { if (p) this.mapProgramadores.set(id, p); },
+            error: () => { /* no rompe pantalla */ }
+          });
+        }
+
         this.cargando = false;
-        return;
+      },
+      error: (err) => {
+        console.error(err);
+        this.cargando = false;
       }
-
-      // 2. Buscamos sus asesorías
-      this.asesoriasService.getAsesoriasPorSolicitante(usuario.uid)
-        .subscribe(async (lista) => {
-          this.asesorias = lista;
-
-          // 3. Traemos info básica de cada programador para mostrar su nombre
-          const idsProgramadores = Array.from(new Set(lista.map(a => a.idProgramador)));
-
-          for (const id of idsProgramadores) {
-            // evitamos pedir dos veces el mismo
-            if (this.mapProgramadores.has(id)) continue;
-
-            this.programadoresService.getProgramador(id)
-              .subscribe(p => {
-                if (p) this.mapProgramadores.set(id, p);
-              });
-          }
-
-          this.cargando = false;
-        });
     });
   }
 
-  nombreProgramador(idProgramador: string): string {
-    const p = this.mapProgramadores.get(idProgramador);
-    return p ? p.nombre : 'Programador';
+  idProgramadorDe(a: any): string {
+    return a?.programador?.id || '';
   }
-  trackByAsesoria(_: number, a: any) {
-  return a.id;
-}
 
+  nombreProgramador(programadorId: string): string {
+    return this.mapProgramadores.get(programadorId)?.nombre ?? 'Programador';
+  }
+
+  trackByAsesoria(_: number, a: any) {
+    return a?.id;
+  }
 }

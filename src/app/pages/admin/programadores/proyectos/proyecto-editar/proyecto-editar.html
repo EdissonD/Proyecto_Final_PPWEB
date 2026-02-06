@@ -1,57 +1,39 @@
 <h2 *ngIf="!cargando">Editar proyecto</h2>
 <p *ngIf="cargando">Cargando proyecto...</p>
 
-<form [formGroup]="form" (ngSubmit)="guardar()">
+<form *ngIf="!cargando" [formGroup]="form" (ngSubmit)="guardar()">
 
-    <div>
-        <label>Nombre del proyecto</label>
-        <input type="text" formControlName="nombre">
-    </div>
+  <div>
+    <label>Nombre del proyecto</label>
+    <input type="text" formControlName="titulo">
+  </div>
 
-    <div>
-        <label>Descripción</label>
-        <textarea rows="4" formControlName="descripcion"></textarea>
-    </div>
+  <div>
+    <label>Descripción</label>
+    <textarea rows="4" formControlName="descripcion"></textarea>
+  </div>
 
-    <div>
-        <label>Tipo de proyecto</label>
-        <select formControlName="tipoProyecto">
-            <option *ngFor="let t of tiposProyecto" [value]="t.valor">
-                {{ t.label }}
-            </option>
-        </select>
-    </div>
+  <div>
+    <label>Tecnologías</label>
+    <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, ...">
+  </div>
 
-    <div>
-        <label>Tipo de participación</label>
-        <select formControlName="tipoParticipacion">
-            <option *ngFor="let t of tiposParticipacion" [value]="t.valor">
-                {{ t.label }}
-            </option>
-        </select>
-    </div>
+  <div>
+    <label>Repositorio</label>
+    <input type="url" formControlName="urlRepo">
+  </div>
 
-    <div>
-        <label>Tecnologías utilizadas</label>
-        <input type="text" formControlName="tecnologias" placeholder="Angular, Firebase, ...">
-    </div>
+  <div>
+    <label>Demo / despliegue</label>
+    <input type="url" formControlName="urlDemo">
+  </div>
 
-    <div>
-        <label>Repositorio</label>
-        <input type="url" formControlName="repoUrl">
-    </div>
+  <button type="submit" [disabled]="cargando || form.invalid">
+    {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
+  </button>
 
-    <div>
-        <label>Demo / despliegue</label>
-        <input type="url" formControlName="demoUrl">
-    </div>
-
-    <button type="submit" [disabled]="cargando || form.invalid">
-        {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
-    </button>
-
-    <button type="button" (click)="cancelar()">
-        Cancelar
-    </button>
+  <button type="button" (click)="cancelar()">
+    Cancelar
+  </button>
 
 </form>
